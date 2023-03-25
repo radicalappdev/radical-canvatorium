@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Scene, Vector3, Color3, Color4, MeshBuilder, HemisphericLight } from "babylonjs";
+import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight } from "babylonjs";
 import { GridMaterial } from "babylonjs-materials";
 import { labColors } from "./labtheme";
 
@@ -63,4 +63,33 @@ export const labCreateLights = (scene: Scene) => {
   scene.clearColor = Color4.FromHexString(labColors.slate7);
 };
 
-// ... existing imports and functions
+export const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void) => {
+  // Create and customize the scene
+  const engine = new Engine(canvas);
+  const scene = new Scene(engine);
+
+  // Create a camera
+  labCreateCamera(canvas, scene);
+
+  // Create a room
+  labCreateRoom(scene);
+
+  // Create lights
+  labCreateLights(scene);
+
+  // Call the createLabContent function with the created scene
+  createLabContent(scene);
+
+  engine.runRenderLoop(() => {
+    scene.render();
+  });
+
+  window.addEventListener("resize", () => {
+    engine.resize();
+  });
+
+  return {
+    engine,
+    scene
+  };
+};
