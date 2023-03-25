@@ -20,6 +20,8 @@ const createScene = async (canvas) => {
     // Create a camera
     labCreateCamera(scene);
 
+    labCreateRoom(scene);
+
     // Create a light
     const light = new BABYLON.HemisphericLight(
       "light",
@@ -35,11 +37,11 @@ const createScene = async (canvas) => {
     );
 
     // Create a ground
-    const ground = BABYLON.MeshBuilder.CreateGround(
-      "ground",
-      { width: 6, height: 6 },
-      scene
-    );
+    // const ground = BABYLON.MeshBuilder.CreateGround(
+    //   "ground",
+    //   { width: 6, height: 6 },
+    //   scene
+    // );
 
 
   engine.runRenderLoop(() => {
