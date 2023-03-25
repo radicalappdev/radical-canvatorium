@@ -8,7 +8,7 @@ interface LabSceneOptions {
   useRoom?: boolean;
 }
 
-export const useBabylonScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
+export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
   let engine: Engine | null = null;
 
   const handleResize = () => {

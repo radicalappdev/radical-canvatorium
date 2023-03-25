@@ -24,8 +24,7 @@ const createLabContent = () => {
 
 };
 
-
 // Without scene options (see lab001.vue for an example)
-useBabylonScene(bjsCanvas, createLabContent);
+useCanvatoriumScene(bjsCanvas, createLabContent);
 
 </script>
