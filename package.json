@@ -10,6 +10,14 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.6.4",
+    "babylonjs-inspector": "^5.52.0",
     "nuxt": "^3.3.2"
+  },
+  "dependencies": {
+    "babylonjs": "^5.52.0",
+    "babylonjs-gui": "^5.52.0",
+    "babylonjs-loaders": "^5.52.0",
+    "babylonjs-materials": "^5.52.0",
+    "babylonjs-procedural-textures": "^5.52.0"
   }
 }
