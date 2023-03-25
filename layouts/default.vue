@@ -7,9 +7,11 @@
         <nuxt-link to="/about" class="mx-2">About</nuxt-link>
       </div>
     </header>
-    <main class="flex-1 mx-4">
-      <slot />
-    </main>
+    <main class="flex-1">
+        <div class="mx-4 py-4">
+            <slot />
+        </div>
+        </main>
     <footer class="fixed bottom-0 w-full h-8 bg-red-500 text-white flex items-center justify-center">
       <p>Canvatorium © Radical Application Development {{ year }}</p>
     </footer>
