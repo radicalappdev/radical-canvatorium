@@ -36,9 +36,9 @@ const labSceneOptions = {
 };
 
 // With scene options
-// useBabylonScene(bjsCanvas, createLabContent, labSceneOptions);
+useBabylonScene(bjsCanvas, createLabContent, labSceneOptions);
 
-// Without scene options
+// Without scene options (see lab002 for an example)
 useBabylonScene(bjsCanvas, createLabContent);
 
 </script>
