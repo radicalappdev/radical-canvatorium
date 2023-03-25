@@ -16,7 +16,7 @@ import { ref } from "vue";
 const bjsCanvas = ref(null);
 
 // Add lab-specific content here using the provided 'scene' instance
-const createLabContent = () => {
+const createLabContent = (scene) => {
 
   // Add a box
     const sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {});

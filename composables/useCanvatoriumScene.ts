@@ -34,6 +34,9 @@ export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, cr
 };
 
 const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
+  const engine = new Engine(canvas);
+  const scene = new Scene(engine);
+
   const defaultOptions: LabSceneOptions = {
     useCamera: true,
     useLights: true,
@@ -41,9 +44,6 @@ const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Sce
   };
 
   const mergedOptions = { ...defaultOptions, ...options };
-
-  const engine = new Engine(canvas);
-  const scene = new Scene(engine);
 
   if (mergedOptions.useCamera) {
     labCreateCamera(canvas, scene);
