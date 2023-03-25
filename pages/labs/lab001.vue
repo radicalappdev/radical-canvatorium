@@ -12,10 +12,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref } from "vue";
 
 const bjsCanvas = ref(null);
-let engine;
+
 // Add lab-specific content here using the provided 'scene' instance
 const createLabContent = () => {
 
@@ -25,26 +25,20 @@ const createLabContent = () => {
 
 };
 
-onMounted(() => {
-  if (bjsCanvas.value) {
-    // If a lab uses the default options, you can just call createLabScene() with the canvas element and the createLabContent function. 
-    // Otherwise, you can pass in an options object with the following properties:
-    const labSceneOptions = {
-        useCamera: true,
-        useLight: true,
-        useRoom: true,
-    };
 
-    const { engine: createdEngine, scene: createdScene } = createLabScene(bjsCanvas.value, createLabContent, labSceneOptions);
-    engine = createdEngine;
-    scene = createdScene;
-  }
-});
 
-onUnmounted(() => {
-  engine.dispose();
-  window.removeEventListener("resize", () => {
-    engine.resize();
-  });
-});
+// If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
+// Otherwise, you can pass in an options object with the following properties:
+const labSceneOptions = {
+  useCamera: true,
+  useLight: true,
+  useRoom: true,
+};
+
+// With scene options
+// useBabylonScene(bjsCanvas, createLabContent, labSceneOptions);
+
+// Without scene options
+useBabylonScene(bjsCanvas, createLabContent);
+
 </script>

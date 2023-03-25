@@ -2,7 +2,7 @@ import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, H
 import { GridMaterial } from "babylonjs-materials";
 import { labColors } from "./labtheme";
 
-interface LabSceneOptions {
+export interface LabSceneOptions {
   useCamera?: boolean;
   useLights?: boolean;
   useRoom?: boolean;
