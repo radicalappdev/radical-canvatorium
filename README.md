@@ -21,3 +21,5 @@ Cannot find type definition file for 'node'.
   The file is in the program because:
     Entry point of type library 'node' specified in compilerOptions
 ```
+
+- [ ] Build lab notes in markdown.

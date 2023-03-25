@@ -1,6 +1,10 @@
 <template>
-    <div><h3>Lab 001</h3>
-    <canvas style="overflow: hidden" id="bjsCanvas" ref="bjsCanvas" /></div>
+    <div>
+        <h3>Lab 001</h3>
+        <div>
+            <canvas id="bjsCanvas" ref="bjsCanvas" />
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -14,14 +18,7 @@ const createScene = async (canvas) => {
   const scene = new BABYLON.Scene(engine);
 
     // Create a camera
-    const camera = new BABYLON.ArcRotateCamera(
-      "camera",
-      Math.PI / 2,
-      Math.PI / 2,
-      2,
-      BABYLON.Vector3.Zero(),
-      scene
-    );
+    labCreateCamera(scene);
 
     // Create a light
     const light = new BABYLON.HemisphericLight(
