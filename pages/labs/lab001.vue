@@ -12,45 +12,46 @@
 import * as BABYLON from "babylonjs";
 
 const bjsCanvas = ref(null);
+let engine;
+let scene;
 
 const createScene = async (canvas) => {
-  // Create and customize the scene
-  const engine = new BABYLON.Engine(canvas);
-  const scene = new BABYLON.Scene(engine);
-
+    // Create and customize the scene
+    engine = new BABYLON.Engine(canvas);
+    scene = new BABYLON.Scene(engine);
+    
     // Create a camera
     labCreateCamera(scene);
-
+    
     // Create a ground
     labCreateRoom(scene);
-
+    
     // Create a light
     labCreateLights(scene);
+    
+    engine.runRenderLoop(() => {
+        scene.render();
+    });
+    
+    window.addEventListener("resize", resizeListener);
+    
+};
 
-    // Create a sphere
-    const sphere = BABYLON.MeshBuilder.CreateSphere(
-      "sphere",
-      { diameter: 1 },
-      scene
-    );
-
-
-
-
-  engine.runRenderLoop(() => {
-    scene.render();
-  });
-  window.addEventListener("resize", function () {
-    engine.resize();
-  });
-
-
+const resizeListener = () => {
+    if (engine) {
+        engine.resize();
+    }
 };
 
 onMounted(() => {
-  if (bjsCanvas.value) {
-    createScene(bjsCanvas.value);
-  }
+    if (bjsCanvas.value) {
+        createScene(bjsCanvas.value);
+    }
+});
+
+onUnmounted(() => {
+    engine.dispose();
+    window.removeEventListener("resize", resizeListener);
 });
 
 </script>

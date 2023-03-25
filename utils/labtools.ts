@@ -1,5 +1,6 @@
 import { ArcRotateCamera, Scene, Vector3, Color3, Color4, MeshBuilder, HemisphericLight } from "babylonjs";
 import { GridMaterial } from "babylonjs-materials";
+import { labColors } from "./labtheme";
 
 export const labCreateCamera = (canvas: HTMLCanvasElement, scene: Scene) => {
   // Add an ArcRotateCamera to the scene and attach it to the canvas
@@ -14,27 +15,6 @@ export const labCreateCamera = (canvas: HTMLCanvasElement, scene: Scene) => {
   camera.attachControl(canvas, true);
 };
 
-const labColors = {
-  purple: "#8854d0",
-  blue: "#3867d6",
-  teal: "#2d98da",
-  cyan: "#0fb9b1",
-
-  green: "#20bf6b",
-  yellow: "#f7b731",
-  orange: "#fa8231",
-  red: "#eb3b5a",
-
-  slate9: "#0f172a",
-  slate8: "#1e293b",
-  slate7: "#334155",
-  slate6: "#475569",
-  slate5: "#64748b",
-  slate4: "#94a3b8",
-  slate3: "#cbd5e1",
-  slate2: "#e2e8f0",
-  slate1: "#f1f5f9"
-};
 export const labCreateRoom = (scene: Scene) => {
   // Add a ground plane to the scene. Used for WebXR teleportation
   const ground = MeshBuilder.CreateGround("ground", { width: 20, height: 20 }, scene);
@@ -82,3 +62,5 @@ export const labCreateLights = (scene: Scene) => {
   // set the scene color to
   scene.clearColor = Color4.FromHexString(labColors.slate7);
 };
+
+// ... existing imports and functions
