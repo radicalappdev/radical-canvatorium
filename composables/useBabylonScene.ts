@@ -2,6 +2,12 @@ import { onMounted, onUnmounted, Ref } from "vue";
 import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight } from "babylonjs";
 import { GridMaterial } from "babylonjs-materials";
 
+interface LabSceneOptions {
+  useCamera?: boolean;
+  useLights?: boolean;
+  useRoom?: boolean;
+}
+
 export const useBabylonScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
   let engine: Engine | null = null;
 
@@ -27,13 +33,7 @@ export const useBabylonScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, create
   });
 };
 
-export interface LabSceneOptions {
-  useCamera?: boolean;
-  useLights?: boolean;
-  useRoom?: boolean;
-}
-
-export const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
+const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
   const defaultOptions: LabSceneOptions = {
     useCamera: true,
     useLights: true,
@@ -46,21 +46,17 @@ export const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (sce
   const scene = new Scene(engine);
 
   if (mergedOptions.useCamera) {
-    // Create a camera
     labCreateCamera(canvas, scene);
   }
 
   if (mergedOptions.useRoom) {
-    // Create a room
     labCreateRoom(scene);
   }
 
   if (mergedOptions.useLights) {
-    // Create lights
     labCreateLights(scene);
   }
 
-  // Call the createLabContent function with the created scene
   createLabContent(scene);
 
   engine.runRenderLoop(() => {
@@ -127,7 +123,7 @@ const labCreateRoom = (scene: Scene) => {
   wall4.material = groundMaterial;
 };
 
-export const labCreateLights = (scene: Scene) => {
+const labCreateLights = (scene: Scene) => {
   // Customize the scene lighting and background color
   const ambientLight1 = new HemisphericLight("light-01", new Vector3(5, 5, 5), scene);
   ambientLight1.intensity = 0.8;
