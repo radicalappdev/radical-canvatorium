@@ -64,7 +64,6 @@ export const labCreateLights = (scene: Scene) => {
 };
 
 export const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void) => {
-  // Create and customize the scene
   const engine = new Engine(canvas);
   const scene = new Scene(engine);
 
