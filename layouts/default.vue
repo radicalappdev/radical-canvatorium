@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <header class="fixed top-0 w-full h-12 bg-red-500 text-white flex items-center justify-between px-4">
+    <header class="fixed top-0 w-full h-12 bg-slate-700 text-white flex items-center justify-between px-4">
       <h1 class="text-lg font-bold">Canvatorium (revamped)</h1>
       <div class="flex">
         <nuxt-link to="/" class="mx-2">Home</nuxt-link>
@@ -13,7 +13,7 @@
             <slot />
         </div>
         </main>
-    <footer class="fixed bottom-0 w-full h-8 bg-red-500 text-white flex items-center justify-center">
+    <footer class="fixed bottom-0 w-full h-8 bg-slate-500 text-white flex items-center justify-center">
       <p>Canvatorium © Radical Application Development {{ year }}</p>
     </footer>
   </div>

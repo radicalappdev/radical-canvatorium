@@ -1,6 +1,7 @@
 <template>
     <div>
-        <h3>Lab 001</h3>
+        <h3 class="text-lg font-bold">Lab 001</h3>
+        <p>This lab is just the starting point of the app. I'm using this as a place where I can work on the shared labtools and work out the layout of the labs page.</p>
         <div>
             <canvas id="bjsCanvas" ref="bjsCanvas" />
         </div>
@@ -20,14 +21,11 @@ const createScene = async (canvas) => {
     // Create a camera
     labCreateCamera(scene);
 
+    // Create a ground
     labCreateRoom(scene);
 
     // Create a light
-    const light = new BABYLON.HemisphericLight(
-      "light",
-      new BABYLON.Vector3(1, 1, 0),
-      scene
-    );
+    labCreateLights(scene);
 
     // Create a sphere
     const sphere = BABYLON.MeshBuilder.CreateSphere(
@@ -36,12 +34,7 @@ const createScene = async (canvas) => {
       scene
     );
 
-    // Create a ground
-    // const ground = BABYLON.MeshBuilder.CreateGround(
-    //   "ground",
-    //   { width: 6, height: 6 },
-    //   scene
-    // );
+
 
 
   engine.runRenderLoop(() => {

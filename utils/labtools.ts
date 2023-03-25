@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Scene, Vector3, Color3, MeshBuilder } from "babylonjs";
+import { ArcRotateCamera, Scene, Vector3, Color3, Color4, MeshBuilder, HemisphericLight } from "babylonjs";
 import { GridMaterial } from "babylonjs-materials";
 
 export const labCreateCamera = (canvas: HTMLCanvasElement, scene: Scene) => {
@@ -14,28 +14,27 @@ export const labCreateCamera = (canvas: HTMLCanvasElement, scene: Scene) => {
   camera.attachControl(canvas, true);
 };
 
-const LabColors = {
-  purple: Color3.FromHexString("#8854d0"),
-  blue: Color3.FromHexString("#3867d6"),
-  teal: Color3.FromHexString("#2d98da"),
-  cyan: Color3.FromHexString("#0fb9b1"),
+const labColors = {
+  purple: "#8854d0",
+  blue: "#3867d6",
+  teal: "#2d98da",
+  cyan: "#0fb9b1",
 
-  green: Color3.FromHexString("#20bf6b"),
-  yellow: Color3.FromHexString("#f7b731"),
-  orange: Color3.FromHexString("#fa8231"),
-  red: Color3.FromHexString("#eb3b5a"),
+  green: "#20bf6b",
+  yellow: "#f7b731",
+  orange: "#fa8231",
+  red: "#eb3b5a",
 
-  dark1: Color3.FromHexString("#2a323e"),
-  dark2: Color3.FromHexString("#3e4a5d"),
-  dark3: Color3.FromHexString("#49576c"),
-  dark4: Color3.FromHexString("#53637b"),
-
-  light1: Color3.FromHexString("#a5b1c2"),
-  light2: Color3.FromHexString("#b4becc"),
-  light3: Color3.FromHexString("#c3cbd7"),
-  light4: Color3.FromHexString("#d3d9e1")
+  slate9: "#0f172a",
+  slate8: "#1e293b",
+  slate7: "#334155",
+  slate6: "#475569",
+  slate5: "#64748b",
+  slate4: "#94a3b8",
+  slate3: "#cbd5e1",
+  slate2: "#e2e8f0",
+  slate1: "#f1f5f9"
 };
-
 export const labCreateRoom = (scene: Scene) => {
   // Add a ground plane to the scene. Used for WebXR teleportation
   const ground = MeshBuilder.CreateGround("ground", { width: 20, height: 20 }, scene);
@@ -45,8 +44,9 @@ export const labCreateRoom = (scene: Scene) => {
   groundMaterial.majorUnitFrequency = 5;
   groundMaterial.gridRatio = 1;
   groundMaterial.backFaceCulling = false;
-  groundMaterial.mainColor = LabColors.light1;
-  groundMaterial.lineColor = new Color3(1.0, 1.0, 1.0);
+  groundMaterial.lineColor = Color3.FromHexString(labColors.slate1);
+  groundMaterial.mainColor = Color3.FromHexString(labColors.slate3);
+
   groundMaterial.opacity = 0.98;
 
   // Assign the material to the ground mesh
@@ -71,4 +71,14 @@ export const labCreateRoom = (scene: Scene) => {
   const wall4 = MeshBuilder.CreatePlane("wall4", { width: 20, height: 10 }, scene);
   wall4.position = new Vector3(0, 5, -10);
   wall4.material = groundMaterial;
+};
+
+export const labCreateLights = (scene: Scene) => {
+  // Customize the scene lighting and background color
+  const ambientLight1 = new HemisphericLight("light-01", new Vector3(5, 5, 5), scene);
+  ambientLight1.intensity = 0.8;
+  const ambientLight2 = new HemisphericLight("light-02", new Vector3(-5, 5, -5), scene);
+  ambientLight2.intensity = 0.8;
+  // set the scene color to
+  scene.clearColor = Color4.FromHexString(labColors.slate7);
 };

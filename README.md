@@ -23,3 +23,4 @@ Cannot find type definition file for 'node'.
 ```
 
 - [ ] Build lab notes in markdown.
+- [ ] Add an overlay to the labs instead of additional elements around the scene: Title, notes, etc.
