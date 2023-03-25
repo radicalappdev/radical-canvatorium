@@ -63,18 +63,38 @@ export const labCreateLights = (scene: Scene) => {
   scene.clearColor = Color4.FromHexString(labColors.slate7);
 };
 
-export const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void) => {
+interface LabSceneOptions {
+  useCamera?: boolean;
+  useLights?: boolean;
+  useRoom?: boolean;
+}
+
+export const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
+  const defaultOptions: LabSceneOptions = {
+    useCamera: true,
+    useLights: true,
+    useRoom: true
+  };
+
+  const mergedOptions = { ...defaultOptions, ...options };
+
   const engine = new Engine(canvas);
   const scene = new Scene(engine);
 
-  // Create a camera
-  labCreateCamera(canvas, scene);
+  if (mergedOptions.useCamera) {
+    // Create a camera
+    labCreateCamera(canvas, scene);
+  }
 
-  // Create a room
-  labCreateRoom(scene);
+  if (mergedOptions.useRoom) {
+    // Create a room
+    labCreateRoom(scene);
+  }
 
-  // Create lights
-  labCreateLights(scene);
+  if (mergedOptions.useLights) {
+    // Create lights
+    labCreateLights(scene);
+  }
 
   // Call the createLabContent function with the created scene
   createLabContent(scene);

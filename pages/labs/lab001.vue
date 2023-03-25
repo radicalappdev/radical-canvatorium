@@ -27,8 +27,17 @@ const createLabContent = () => {
 
 onMounted(() => {
   if (bjsCanvas.value) {
-    const { engine: createdEngine, scene: createdScene } = createLabScene(bjsCanvas.value, createLabContent);
+    // If a lab uses the default options, you can just call createLabScene() with the canvas element and the createLabContent function. 
+    // Otherwise, you can pass in an options object with the following properties:
+    const labSceneOptions = {
+        useCamera: true,
+        useLight: true,
+        useRoom: true,
+    };
+
+    const { engine: createdEngine, scene: createdScene } = createLabScene(bjsCanvas.value, createLabContent, labSceneOptions);
     engine = createdEngine;
+    scene = createdScene;
   }
 });
 
