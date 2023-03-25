@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>About page</h2>
+        <h2>Index page</h2>
         <pre>{{ appConfig.colors }}</pre>
     </div>
 </template>
