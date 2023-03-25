@@ -3,9 +3,8 @@
     <header class="fixed top-0 w-full h-12 bg-slate-800 text-white flex items-center justify-between px-4">
       <h1 class="text-lg font-bold">Canvatorium (revamped)</h1>
       <div class="flex">
-        <nuxt-link to="/" class="mx-2">Home</nuxt-link>
-        <nuxt-link to="/about" class="mx-2">About</nuxt-link>
-        <nuxt-link to="/labs" class="mx-2">Labs</nuxt-link>
+        <nuxt-link to="/" class="mx-2">Featured Labs</nuxt-link>
+        <nuxt-link to="/labs" class="mx-2">All Labs</nuxt-link>
       </div>
     </header>
     <main class="flex-1">

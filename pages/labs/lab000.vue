@@ -2,7 +2,7 @@
     <div>
         <h3 class="text-lg font-bold">Lab 000 – Hello Canvatorium</h3>
         <p>
-            This is a recreation of the original Canvatorium Lab 000. I'm rebuilding the project in Nuxt.
+            This is a recreation of the original Canvatorium Lab 000. Just setting up the shared lab resources. Grid, Lights, Camera, etc.
         </p>
         <div>
             <canvas id="bjsCanvas" ref="bjsCanvas" />
