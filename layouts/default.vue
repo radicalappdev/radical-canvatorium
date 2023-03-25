@@ -5,6 +5,7 @@
       <div class="flex">
         <nuxt-link to="/" class="mx-2">Home</nuxt-link>
         <nuxt-link to="/about" class="mx-2">About</nuxt-link>
+        <nuxt-link to="/labs" class="mx-2">Labs</nuxt-link>
       </div>
     </header>
     <main class="flex-1">
