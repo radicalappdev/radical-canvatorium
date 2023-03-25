@@ -1,7 +1,9 @@
 <template>
     <div>
-        <h2>Index page</h2>
-        <pre>{{ appConfig.colors }}</pre>
+        <h2>Featured Labs</h2>
+        <!-- A grid of cards to features 3-6 laps -->
+
+
     </div>
 </template>
 
