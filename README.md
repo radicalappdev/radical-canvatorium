@@ -11,12 +11,34 @@ Install
 Running in development mode
 `npm run dev -- -o`
 
-### To Do
+### Using self-signed certs with localhost
 
-- [ ] Resolve the issue with tsconfig.json. This happened as soon as I created the project using `npx nuxi init radical-canvatorium`
+WebXR scenes need to be served over HTTPS. While working on the project locally, I often need to test the scene on another device such as an Oculus Quest 2. I followed the steps in the article linked below and configured the project with some self-signed certs that will work for local network testing. The browser may still warn or block these certs, but you can click past the warning and access the scene. If you are working with a VR headset attached to your PC, then you can remove the https object from `nuxt.config.js` and/or remove reset the dev script from `"dev": "nuxt dev --https --ssl-cert cert.pem --ssl-key key.pem",` to `"dev": "nuxt dev`
+
+Alternative: you can use ngrok to forward your local dev server to a URL. I found this to be really slow and prone to errors...
+
+Using mkdir to create the certs at the project root
 
 ```
-Cannot find type definition file for 'node'.
-  The file is in the program because:
-    Entry point of type library 'node' specified in compilerOptions
+mkcert -key-file key.pem -cert-file cert.pem "localhost"
 ```
+
+Update `nuxt.config.ts` to use the server object with https
+
+```ts
+import path from "path";
+import fs from "fs";
+
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  modules: ["@nuxtjs/tailwindcss"],
+  server: {
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, "key.pem")),
+      cert: fs.readFileSync(path.resolve(__dirname, "cert.pem"))
+    }
+  }
+});
+```
+
+Update the dev script in `package.json` to `"dev": "nuxt dev --https --ssl-cert cert.pem --ssl-key key.pem",`
