@@ -18,7 +18,7 @@ import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 const bjsCanvas = ref(null);
 
 // Add lab-specific content here using the provided 'scene' instance
-const createLabContent = (scene)  => {
+const createLabContent = async (scene)  => {
     
     // Lab 001 only. Move the camera to a better position for the initial scene.
     scene.getCameraByName("camera").position = new Vector3(0, 1.4, -4);
@@ -56,6 +56,15 @@ const createLabContent = (scene)  => {
     advancedTexture.addControl(cardText);
     advancedTexture.addControl(subtitleText);
     guiPlane.scaling = new Vector3(5, 5, 5);
+
+    //   const env = scene.createDefaultEnvironment();
+
+    const xr = await scene.createDefaultXRExperienceAsync({
+        // floorMeshes: [env.ground]
+    });
+
+
+
 };
 
 // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
