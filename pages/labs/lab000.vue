@@ -59,9 +59,9 @@ const createLabContent = async (scene)  => {
 
     //   const env = scene.createDefaultEnvironment();
 
-    const xr = await scene.createDefaultXRExperienceAsync({
-        // floorMeshes: [env.ground]
-    });
+    // const xr = await scene.createDefaultXRExperienceAsync({
+    //     // floorMeshes: [env.ground]
+    // });
 
 
 

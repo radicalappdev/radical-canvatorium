@@ -1,11 +1,12 @@
 import { onMounted, onUnmounted, Ref } from "vue";
-import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight } from "babylonjs";
+import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh } from "babylonjs";
 import { GridMaterial } from "babylonjs-materials";
 
 interface LabSceneOptions {
   useCamera?: boolean;
   useLights?: boolean;
   useRoom?: boolean;
+  useWebXRPlayer?: boolean;
 }
 
 export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
@@ -40,21 +41,28 @@ const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Sce
   const defaultOptions: LabSceneOptions = {
     useCamera: true,
     useLights: true,
-    useRoom: true
+    useRoom: true,
+    useWebXRPlayer: true
   };
 
   const mergedOptions = { ...defaultOptions, ...options };
+
+  let teleportMeshes: GroundMesh[] = [];
 
   if (mergedOptions.useCamera) {
     labCreateCamera(canvas, scene);
   }
 
   if (mergedOptions.useRoom) {
-    labCreateRoom(scene);
+    teleportMeshes.push(labCreateRoom(scene));
   }
 
   if (mergedOptions.useLights) {
     labCreateLights(scene);
+  }
+
+  if (mergedOptions.useWebXRPlayer && teleportMeshes.length > 0) {
+    lapCreateWebXRPlayer(scene, teleportMeshes);
   }
 
   createLabContent(scene);
@@ -121,6 +129,9 @@ const labCreateRoom = (scene: Scene) => {
   const wall4 = MeshBuilder.CreatePlane("wall4", { width: 20, height: 10 }, scene);
   wall4.position = new Vector3(0, 5, -10);
   wall4.material = groundMaterial;
+
+  // Return the ground to use for teleportation
+  return ground;
 };
 
 const labCreateLights = (scene: Scene) => {
@@ -131,4 +142,12 @@ const labCreateLights = (scene: Scene) => {
   ambientLight2.intensity = 0.8;
   // set the scene color to
   scene.clearColor = Color4.FromHexString(labColors.slate1);
+};
+
+const lapCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) => {
+  const xr = await scene.createDefaultXRExperienceAsync({
+    floorMeshes: teleportMeshes
+  });
+
+  console.log("xr player created", xr);
 };
