@@ -95,8 +95,8 @@ const labCreateRoom = (scene: Scene) => {
   groundMaterial.majorUnitFrequency = 5;
   groundMaterial.gridRatio = 1;
   groundMaterial.backFaceCulling = false;
-  groundMaterial.lineColor = Color3.FromHexString(labColors.slate1);
-  groundMaterial.mainColor = Color3.FromHexString(labColors.slate3);
+  groundMaterial.lineColor = Color3.FromHexString(labColors.slate8);
+  groundMaterial.mainColor = Color3.FromHexString(labColors.slate7);
   groundMaterial.opacity = 0.98;
 
   // Assign the material to the ground mesh
@@ -130,5 +130,5 @@ const labCreateLights = (scene: Scene) => {
   const ambientLight2 = new HemisphericLight("light-02", new Vector3(-5, 5, -5), scene);
   ambientLight2.intensity = 0.8;
   // set the scene color to
-  scene.clearColor = Color4.FromHexString(labColors.slate7);
+  scene.clearColor = Color4.FromHexString(labColors.slate1);
 };

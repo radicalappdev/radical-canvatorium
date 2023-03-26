@@ -24,7 +24,7 @@ const createLabContent = (scene)  => {
     scene.getCameraByName("camera").position = new Vector3(0, 1.4, -4);
     
     const material = new StandardMaterial("background-material", scene);
-    material.diffuseColor = new Color3.FromHexString(labColors.slate5)
+    material.diffuseColor = new Color3.FromHexString(labColors.slate2)
     material.alpha = 0.8;
     
     const background = MeshBuilder.CreateBox("background", { width: 3, height: 1, depth: 0.1 });
@@ -32,7 +32,7 @@ const createLabContent = (scene)  => {
     background.position.y = 1.1;
     background.enableEdgesRendering();
     background.edgesWidth = 1.5;
-    background.edgesColor = new Color4.FromHexString(labColors.slate1);
+    background.edgesColor = new Color4.FromHexString(labColors.slate7);
 
     const guiPlane = MeshBuilder.CreatePlane("gui-plane")
     guiPlane.parent = background;
@@ -44,12 +44,12 @@ const createLabContent = (scene)  => {
     
     const cardText = new TextBlock("card-text");
     cardText.text = "Canvatorium";
-    cardText.color = "white";
+    cardText.color = labColors.slate8;
     cardText.fontSize = 64;
     
     const subtitleText = new TextBlock("subtitle-text");
     subtitleText.text = "(revamped)";
-    subtitleText.color = "white";
+    subtitleText.color = labColors.slate7;
     subtitleText.fontSize = 32;
     subtitleText.top = 60;
     

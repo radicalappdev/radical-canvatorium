@@ -28,7 +28,6 @@ const createLabContent = (scene) => {
   makeBox("blue", group, scene).position = new BABYLON.Vector3(1, 0, 0);
   makeBox("teal", group, scene).position = new BABYLON.Vector3(2, 0, 0);
   makeBox("cyan", group, scene).position = new BABYLON.Vector3(3, 0, 0);
-
   makeBox("green", group, scene).position = new BABYLON.Vector3(4, 0, 0);
   makeBox("yellow", group, scene).position = new BABYLON.Vector3(5, 0, 0);
   makeBox("orange", group, scene).position = new BABYLON.Vector3(6, 0, 0);
