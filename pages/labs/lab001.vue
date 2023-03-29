@@ -16,6 +16,12 @@ import { MeshBuilder, StandardMaterial, Color3 } from "babylonjs";
 
 const bjsCanvas = ref(null);
 
+definePageMeta({
+    featured: true,
+    title: 'Lab 001 – Picking Colors',
+    description: 'This is a recreation of the original Canvatorium Lab 001. I picked out some colors to use throughout the labs in the future.'
+})
+
 // Add lab-specific content here using the provided 'scene' instance
 const createLabContent = (scene) => {
 

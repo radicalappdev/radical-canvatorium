@@ -1,8 +1,8 @@
 <template>
     <div>
-        <h3 class="text-lg font-bold">{{ route.meta.title }}</h3>
+        <h3 class="text-lg font-bold">Lab 002 – </h3>
         <p>
-            {{ route.meta.description }}
+            
         </p>
         <div>
             <canvas id="bjsCanvas" ref="bjsCanvas" />
@@ -17,19 +17,14 @@ import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
 const bjsCanvas = ref(null);
 
-const route = useRoute()
-
 definePageMeta({
-    featured: true,
-    title: 'Lab 001 – Hello Canvatorium',
-    description: 'This is a recreation of the original Canvatorium Lab 000 where I set up some shared lab resources.'
+    featured: false,
+    title: 'Lab 002 – watch and watchEffect',
+    description: 'Lab 002 – watch and watchEffect'
 })
 
-// Add lab-specific content here using the provided 'scene' instance
 const createLabContent = async (scene)  => {
     
-    // Lab 001 only. Move the camera to a better position for the initial scene.
-    scene.getCameraByName("camera").position = new Vector3(0, 1.4, -4);
     
     const material = new StandardMaterial("background-material", scene);
     material.diffuseColor = new Color3.FromHexString(labColors.slate2)
@@ -41,7 +36,7 @@ const createLabContent = async (scene)  => {
     background.enableEdgesRendering();
     background.edgesWidth = 1.5;
     background.edgesColor = new Color4.FromHexString(labColors.slate7);
-
+    
     const guiPlane = MeshBuilder.CreatePlane("gui-plane")
     guiPlane.parent = background;
     guiPlane.position.y = 0.14;
@@ -64,29 +59,11 @@ const createLabContent = async (scene)  => {
     advancedTexture.addControl(cardText);
     advancedTexture.addControl(subtitleText);
     guiPlane.scaling = new Vector3(5, 5, 5);
-
-    //   const env = scene.createDefaultEnvironment();
-
-    // const xr = await scene.createDefaultXRExperienceAsync({
-    //     // floorMeshes: [env.ground]
-    // });
-
-
-
+    
+    
+    
 };
 
-// If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
-// Otherwise, you can pass in an options object with the following properties:
-const labSceneOptions = {
-    useCamera: true,
-    useLight: true,
-    useRoom: true,
-};
-
-// With scene options
-useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
-
-// Without scene options (see lab001 for an example)
-// useCanvatoriumScene(bjsCanvas, createLabContent);
+useCanvatoriumScene(bjsCanvas, createLabContent);
 
 </script>
