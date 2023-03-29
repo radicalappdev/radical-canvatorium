@@ -3,15 +3,13 @@ import { MeshBuilder } from "babylonjs";
 
 definePageMeta({
     featured: false,
-    title: 'Lab 002 – watch and watchEffect',
-    description: 'Lab 002 – watch and watchEffect'
+    title: 'Lab Template',
+    description: 'Copy this template to create a new lab'
 })
 
 const createLabContent = async (scene)  => {
     
-    
-    MeshBuilder.CreateBox("box", { size: 1 }, scene).position.y = 0.5;
-    
+    MeshBuilder.CreateBox("box", { size: 1 }, scene).position.y = 0.5;  
     
 };
 
