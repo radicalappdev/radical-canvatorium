@@ -1,20 +1,6 @@
-<template>
-  <div>
-    <h3 class="text-lg font-bold">Lab 001</h3>
-    <p>
-      This is a recreation of the original Canvatorium Lab 001. I picked out some colors to use throughout the labs in the future. I created a box for each color and used the standard BabylonJS material.
-    </p>
-    <div>
-      <canvas id="bjsCanvas" ref="bjsCanvas" />
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref } from "vue";
 import { MeshBuilder, StandardMaterial, Color3 } from "babylonjs";
-
-const bjsCanvas = ref(null);
 
 definePageMeta({
     featured: true,
@@ -67,7 +53,11 @@ const makeBox = (colorName, parent, scene) => {
   return mesh;
 };
 
-// Without scene options (see lab000.vue for an example)
+const bjsCanvas = ref(null);
+// Without scene options (see lab001 for an example)
 useCanvatoriumScene(bjsCanvas, createLabContent);
 
 </script>
+<template>
+    <canvas id="bjsCanvas" ref="bjsCanvas" ></canvas>
+</template>

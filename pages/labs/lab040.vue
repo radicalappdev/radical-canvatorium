@@ -1,8 +1,5 @@
 <script setup>
-import { ref } from "vue";
 import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, ScrollViewer } from "babylonjs-gui";
-
-const bjsCanvas = ref(null);
 
 const route = useRoute()
 
@@ -70,7 +67,7 @@ const createLabContent = async (scene) => {
     
 };
 
-// Without scene options (see lab001 for an example)
+const bjsCanvas = ref(null);
 useCanvatoriumScene(bjsCanvas, createLabContent);
 
 </script>

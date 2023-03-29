@@ -1,23 +1,7 @@
-<template>
-    <div>
-        <h3 class="text-lg font-bold">{{ route.meta.title }}</h3>
-        <p>
-            {{ route.meta.description }}
-        </p>
-        <div>
-            <canvas id="bjsCanvas" ref="bjsCanvas" />
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ref } from "vue";
 import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial } from "babylonjs";
 import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
-
-const bjsCanvas = ref(null);
-
-const route = useRoute()
 
 definePageMeta({
     featured: true,
@@ -65,14 +49,6 @@ const createLabContent = async (scene)  => {
     advancedTexture.addControl(subtitleText);
     guiPlane.scaling = new Vector3(5, 5, 5);
 
-    //   const env = scene.createDefaultEnvironment();
-
-    // const xr = await scene.createDefaultXRExperienceAsync({
-    //     // floorMeshes: [env.ground]
-    // });
-
-
-
 };
 
 // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
@@ -83,6 +59,7 @@ const labSceneOptions = {
     useRoom: true,
 };
 
+const bjsCanvas = ref(null);
 // With scene options
 useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 
@@ -90,3 +67,6 @@ useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 // useCanvatoriumScene(bjsCanvas, createLabContent);
 
 </script>
+<template>
+    <canvas id="bjsCanvas" ref="bjsCanvas" ></canvas>
+</template>
