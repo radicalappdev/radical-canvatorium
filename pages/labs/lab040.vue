@@ -1,13 +1,7 @@
-<template>
-    <div>
-        <canvas id="bjsCanvas" ref="bjsCanvas" />
-    </div>
-</template>
-
 <script setup>
 import { ref } from "vue";
 import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial } from "babylonjs";
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control } from "babylonjs-gui";
+import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, ScrollViewer } from "babylonjs-gui";
 
 const bjsCanvas = ref(null);
 
@@ -15,7 +9,7 @@ const route = useRoute()
 
 definePageMeta({
     featured: true,
-    title: 'Lab 040 – Lab Data Overlay',
+    title: 'Lab 040 – Lab Data Overlay with Babylon.js GUI',
     description: 'Using Babylon.js GUI to overlay lab data on the scene instead of using the DOM.'
 })
 
@@ -23,47 +17,67 @@ definePageMeta({
 const createLabContent = async (scene) => {
     // Create a BABYLON GUI AdvancedDynamicTexture
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    
-    // Create a panel to contain all the elements
-    const panel = new StackPanel();
-    panel.width = "220px";
-    panel.fontSize = "14px";
-    panel.background = labColors.slate7;
-    panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    panel.paddingLeft = "10px"; // Offset left by 10px
-    panel.paddingTop = "10px"; // Offset top by 10px
-    advancedTexture.addControl(panel);
+
+    // Create an outer panel to contain the card and place it at the top left of the screen
+    const outerPanel = new StackPanel();
+    // TODO: on small screens, the outer panel should take up the whole screen instead of being pinned to the top left corner.
+    outerPanel.width = "320px";
+    outerPanel.background = labColors.slate8;
+    outerPanel.alpha = 0.8;
+    outerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    outerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  
+  
+    // Create an inner panel to contain the card content. This has no background and is used to add padding to the card content.
+    const innerPanel = new StackPanel();
+    innerPanel.width = "320px";
+    innerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    innerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    innerPanel.paddingTop = "10px";
+    innerPanel.paddingLeft = "10px";
+    innerPanel.paddingRight = "10px";
     
     // Add a header
-    const header = new TextBlock();
-    header.text = route.meta.title;
-    header.height = "36px";
-    header.color = "white";
-    header.paddingLeft = "10px"; 
-    header.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    const title = new TextBlock();
+    title.text = route.meta.title;
+    title.height = "60px";
+    title.color = "white";
+    title.paddingTop = "10px";
+    title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    title.fontSize = "22px";
+    title.textWrapping = true;
     
     // Add a description
     const description = new TextBlock();
     description.text = route.meta.description;
     description.height = "100px";
     description.color = "white";
-    description.paddingLeft = "10px"; 
-    description.paddingRight = "10px"; 
+    description.paddingTop = "10px";
     description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    description.fontSize = "14px";
     description.textWrapping = true;
     
-    
     // Add the header and description to the panel
-    panel.addControl(header);
-    panel.addControl(description);
+    innerPanel.addControl(title);
+    innerPanel.addControl(description);
+    
+    // Add the panel to the outer panel
+    outerPanel.addControl(innerPanel);
+    
+    advancedTexture.addControl(outerPanel);
     
     
 };
-
 
 // Without scene options (see lab001 for an example)
 useCanvatoriumScene(bjsCanvas, createLabContent);
 
 </script>
+
+<template>
+    <div>
+        <canvas id="bjsCanvas" ref="bjsCanvas" />
+    </div>
+</template>
