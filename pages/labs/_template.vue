@@ -15,8 +15,8 @@ const createLabContent = async (scene)  => {
 
 const bjsCanvas = ref(null);
 useCanvatoriumScene(bjsCanvas, createLabContent);
-
 </script>
+
 <template>
     <canvas id="bjsCanvas" ref="bjsCanvas" ></canvas>
 </template>
