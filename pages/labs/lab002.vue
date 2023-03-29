@@ -1,73 +1,77 @@
 <script setup>
-import { AbstractMesh, MeshBuilder, Vector3 } from "babylonjs";
-import { AdvancedDynamicTexture, GUI3DManager, Button3D, TextBlock } from "babylonjs-gui";
+import { MeshBuilder } from "babylonjs";
+import { AdvancedDynamicTexture, Button, TextBlock } from "babylonjs-gui";
 
 definePageMeta({
-    featured: false,
+    featured: true,
     title: 'Lab 002 – watch and watchEffect',
     description: 'Lab 002 – watch and watchEffect'
 })
 
-const sample = ref("default");
-const count = ref(0);
-let reactiveScene;
-
 const createLabContent = async (scene)  => {
     
+    // Set count as a reactive value
+    const count = ref(0);
     
-    reactiveScene = scene;
-    let anchor = new AbstractMesh("anchor", scene);
-    let manager = new GUI3DManager(scene);
+    const plane = MeshBuilder.CreatePlane("plane", { size: 2}, scene);
+    plane.position.y = 1.8;
+    
+    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
+    advancedTexture.name = "card-texture";
+    advancedTexture.background = labColors.slate3;
 
-    makeCard(scene);
-    makeButton(scene, manager, anchor);
+    // Add a title text block
+    const titleText = new TextBlock("title-text");
+    titleText.text = "Modify a count with Vue watch()";
+    titleText.color = "black";
+    titleText.fontSize = 64;
+    titleText.top = -200;
+    advancedTexture.addControl(titleText);
     
+    const counterText = new TextBlock("couter-text");
+    counterText.text = "0";
+    counterText.color = "black";
+    counterText.fontSize = 64;
+    advancedTexture.addControl(counterText);
+
+    // Create a 2d button to increment the count
+    const buttonIncrement = Button.CreateSimpleButton("button", "+");
+    buttonIncrement.top = 250;
+    buttonIncrement.left = "105px";
+    buttonIncrement.width = 0.2;
+    buttonIncrement.height = "200px";
+    buttonIncrement.color = "white";
+    buttonIncrement.fontSize = 64;
+    buttonIncrement.cornerRadius = 20;
+    buttonIncrement.background = labColors.slate4;
+    buttonIncrement.onPointerUpObservable.add(() => {
+        // We can modify the count directly instead of editing the value of the counterText control.
+        count.value++;
+    });
+    advancedTexture.addControl(buttonIncrement);
+
+    // Create a 2d button to decrement the count
+    const buttonDecrement = Button.CreateSimpleButton("button", "–");
+    buttonDecrement.top = 250;
+    buttonDecrement.left = "-105px";
+    buttonDecrement.width = 0.2;
+    buttonDecrement.height = "200px";
+    buttonDecrement.color = "white";
+    buttonDecrement.fontSize = 64;
+    buttonDecrement.cornerRadius = 20;
+    buttonDecrement.background = labColors.slate4;
+    buttonDecrement.onPointerUpObservable.add(() => {
+        // We can modify the count directly instead of editing the value of the counterText control.
+        count.value--;
+    });
+    advancedTexture.addControl(buttonDecrement);
+    
+    // watch() the count value and update the counterText control 
+    watch(count, (newValue) => {
+        scene.getTextureByName("card-texture").getControlByName("couter-text").text = newValue;
+    });
     
 };
-
-const makeCard =(scene) => {
-  
-  var plane = MeshBuilder.CreatePlane("plane", { size: 0.5}, scene);
-  plane.position.y = 2;
-
-  var advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
-  advancedTexture.name = "card-texture";
-  advancedTexture.background = labColors.slate5;
-
-  var cardText = new TextBlock("card-text");
-  cardText.text = "Watch";
-  cardText.color = "white";
-  cardText.fontSize = 64;
-
-  advancedTexture.addControl(cardText);
-  plane.scaling = new Vector3(5, 5, 5);
-};
-
-const makeButton = (scene, manager, anchor) => {
-  // Let's add a button
-  var button = new Button3D("reset");
-  manager.addControl(button);
-  button.linkToTransformNode(anchor);
-  button.position.y = 1;
-
-  var text1 = new TextBlock();
-  text1.text = "Change Values";
-  text1.color = "white";
-  text1.fontSize = 24;
-  button.content = text1;
-
-  button.onPointerUpObservable.add(() => {
-    count.value++;
-    sample.value = "Modified";
-  });
-};
-
-// Watch with a single value
-watch(count, (newValue, oldValue) => {
-  const texture = reactiveScene.getTextureByName("card-texture");
-  texture.getControlByName("card-text").text =
-    "From " + oldValue + " to " + newValue;
-});
 
 const bjsCanvas = ref(null);
 useCanvatoriumScene(bjsCanvas, createLabContent);
