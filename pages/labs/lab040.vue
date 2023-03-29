@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial } from "babylonjs";
 import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, ScrollViewer } from "babylonjs-gui";
 
 const bjsCanvas = ref(null);
@@ -77,7 +76,6 @@ useCanvatoriumScene(bjsCanvas, createLabContent);
 </script>
 
 <template>
-    <div>
-        <canvas id="bjsCanvas" ref="bjsCanvas" />
-    </div>
+    <canvas id="bjsCanvas" ref="bjsCanvas" ></canvas>
 </template>
+
