@@ -27,9 +27,6 @@ const createLabContent = async (scene)  => {
         }
     });
     
-    
-    
-    
 };
 
 const bjsCanvas = ref(null);
