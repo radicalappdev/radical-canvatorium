@@ -242,7 +242,10 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
       const screenshot = Tools.CreateScreenshot(engine, currentCamera, size);
       console.log("screenshot created", screenshot);
     }
-    buttonScreenshot.isVisible = true;
+    // wait a few frames for the screenshot to be created before showing the button again
+    setTimeout(() => {
+      buttonScreenshot.isVisible = true;
+    }, 100);
   });
   // Create a text label for the button
   const buttonScreenshotLabel = new TextBlock();
