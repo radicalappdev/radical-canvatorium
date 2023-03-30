@@ -1,5 +1,6 @@
 import { onMounted, onUnmounted, Ref } from "vue";
 import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh } from "babylonjs";
+import { AdvancedDynamicTexture, TextBlock, StackPanel, Control } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
 
 interface LabSceneOptions {
@@ -64,6 +65,8 @@ const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Sce
   if (mergedOptions.useWebXRPlayer && teleportMeshes.length > 0) {
     lapCreateWebXRPlayer(scene, teleportMeshes);
   }
+
+  labCreateOverlay(scene);
 
   createLabContent(scene);
 
@@ -150,4 +153,63 @@ const lapCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) 
   });
 
   console.log("xr player created", xr);
+};
+
+const labCreateOverlay = (scene: Scene) => {
+  const route = useRoute();
+  // Force these to be strings
+  const titleText: string = (route.meta.title ?? "Lab Title").toString();
+  const descriptionText: string = (route.meta.description ?? "Lab Description").toString();
+
+  // Create a BABYLON GUI AdvancedDynamicTexture
+  const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+  // Create an outer panel to contain the card and place it at the top left of the screen
+  const outerPanel = new StackPanel();
+  // TODO: on small screens, the outer panel should take up the whole screen instead of being pinned to the top left corner.
+  outerPanel.width = "320px";
+  outerPanel.background = labColors.slate8;
+  outerPanel.alpha = 0.8;
+  outerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  outerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+  // Create an inner panel to contain the card content. This has no background and is used to add padding to the card content.
+  const innerPanel = new StackPanel();
+  innerPanel.width = "320px";
+  innerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  innerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  innerPanel.paddingTop = "10px";
+  innerPanel.paddingLeft = "10px";
+  innerPanel.paddingRight = "10px";
+
+  // Add a header
+  const title = new TextBlock();
+  title.text = titleText;
+  title.height = "60px";
+  title.color = "white";
+  title.paddingTop = "10px";
+  title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  title.fontSize = "22px";
+  title.textWrapping = true;
+
+  // Add a description
+  const description = new TextBlock();
+  description.text = descriptionText;
+  description.height = "100px";
+  description.color = "white";
+  description.paddingTop = "10px";
+  description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  description.fontSize = "14px";
+  description.textWrapping = true;
+
+  // Add the header and description to the panel
+  innerPanel.addControl(title);
+  innerPanel.addControl(description);
+
+  // Add the panel to the outer panel
+  outerPanel.addControl(innerPanel);
+
+  advancedTexture.addControl(outerPanel);
 };

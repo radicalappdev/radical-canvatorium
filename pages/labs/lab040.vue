@@ -1,5 +1,5 @@
 <script setup>
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, ScrollViewer } from "babylonjs-gui";
+import { AdvancedDynamicTexture, TextBlock, StackPanel, Control } from "babylonjs-gui";
 
 const route = useRoute()
 
