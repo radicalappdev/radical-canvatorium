@@ -4,8 +4,8 @@ import { AdvancedDynamicTexture, Button, TextBlock } from "babylonjs-gui";
 
 definePageMeta({
     featured: true,
-    title: 'Lab 002 – Reactivity with Babylon.js GUI ',
-    description: 'Lab 002 – Using Vue Watch to increment a count with Babylon.js GUI.'
+    title: 'Lab 002 – Reactivity with Babylon.js GUI',
+    description: 'Using Vue Watch to increment a count with Babylon.js GUI.'
 })
 
 const createLabContent = async (scene)  => {

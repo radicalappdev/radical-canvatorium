@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, Ref } from "vue";
-import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh } from "babylonjs";
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control } from "babylonjs-gui";
+import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera } from "babylonjs";
+import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
 
 interface LabSceneOptions {
@@ -65,7 +65,7 @@ const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Sce
   }
 
   if (mergedOptions.useOverlay) {
-    labCreateOverlay(scene);
+    labCreateOverlay(scene, engine);
   }
 
   if (mergedOptions.useWebXRPlayer && teleportMeshes.length > 0) {
@@ -159,7 +159,7 @@ const lapCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) 
   console.log("xr player created", xr);
 };
 
-const labCreateOverlay = (scene: Scene) => {
+const labCreateOverlay = (scene: Scene, engine: Engine) => {
   const route = useRoute();
   // Force these to be strings
   const titleText: string = (route.meta.title ?? "Lab Title").toString();
@@ -215,6 +215,50 @@ const labCreateOverlay = (scene: Scene) => {
 
   // Add the panel to the outer panel
   outerPanel.addControl(innerPanel);
+
+  // Create a small button in the bottom right corner to toggle the overlay
+  const buttonScreenshot = new Button();
+  buttonScreenshot.width = "120px";
+  buttonScreenshot.height = "60px";
+  buttonScreenshot.color = "white";
+  buttonScreenshot.background = labColors.slate8;
+  buttonScreenshot.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+  buttonScreenshot.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  buttonScreenshot.paddingTop = "10px";
+  buttonScreenshot.paddingBottom = "10px";
+  buttonScreenshot.paddingLeft = "10px";
+  buttonScreenshot.paddingRight = "10px";
+  buttonScreenshot.cornerRadius = 5;
+  buttonScreenshot.thickness = 2;
+  buttonScreenshot.onPointerClickObservable.add(() => {
+    buttonScreenshot.isVisible = false;
+
+    const size = {
+      width: engine.getRenderWidth(),
+      height: engine.getRenderHeight()
+    };
+    const currentCamera = scene.activeCamera;
+    if (currentCamera) {
+      const screenshot = Tools.CreateScreenshot(engine, currentCamera, size);
+      console.log("screenshot created", screenshot);
+    }
+    // wait a few frames for the screenshot to be created before showing the button again
+    setTimeout(() => {
+      buttonScreenshot.isVisible = true;
+    }, 100);
+  });
+  // Create a text label for the button
+  const buttonScreenshotLabel = new TextBlock();
+  buttonScreenshotLabel.text = "Screenshot";
+  buttonScreenshotLabel.color = "white";
+  buttonScreenshotLabel.fontSize = 14;
+  buttonScreenshotLabel.paddingTop = "5px";
+
+  // Add the label to the button
+  buttonScreenshot.addControl(buttonScreenshotLabel);
+
+  // Add the button to the advanced texture
+  advancedTexture.addControl(buttonScreenshot);
 
   advancedTexture.addControl(outerPanel);
 };
