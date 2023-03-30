@@ -13,14 +13,23 @@ const createLabContent = async (scene)  => {
     const camera = scene.activeCamera;
     MeshBuilder.CreateBox("box", { size: 1 }, scene).position.y = 0.5;  
     
-    // Take a screenshot of the scene when I press the 's' key
-    window.addEventListener("keydown", (event) => {
-        if (event.key === "s") {
-            const screenshot = Tools.CreateScreenshot(engine, camera, 1024);
-            console.log(screenshot);
+    
+    // Take a screenshot of the scene when I press the 's' key 
+    scene.onKeyboardObservable.add((kbInfo) => {
+        if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN && kbInfo.event.key === "s") {
+            const size = {
+                width: engine.getRenderWidth(),
+                height: engine.getRenderHeight()
+            }
+            const screenshot = Tools.CreateScreenshot(engine, camera, size);
+            console.log("screenshot created", screenshot);
         }
     });
-
+    
+    
+    
+    
+    
     
 };
 
