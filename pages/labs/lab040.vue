@@ -68,7 +68,13 @@ const createLabContent = async (scene) => {
 };
 
 const bjsCanvas = ref(null);
-useCanvatoriumScene(bjsCanvas, createLabContent);
+
+// We don't want to use the lab overlay here since we are building one in this file
+const labSceneOptions = {
+    useOverlay: false 
+};
+
+useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 
 </script>
 

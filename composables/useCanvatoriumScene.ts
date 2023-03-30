@@ -7,6 +7,7 @@ interface LabSceneOptions {
   useCamera?: boolean;
   useLights?: boolean;
   useRoom?: boolean;
+  useOverlay?: boolean;
   useWebXRPlayer?: boolean;
 }
 
@@ -43,6 +44,7 @@ const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Sce
     useCamera: true,
     useLights: true,
     useRoom: true,
+    useOverlay: true,
     useWebXRPlayer: true
   };
 
@@ -62,11 +64,13 @@ const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Sce
     labCreateLights(scene);
   }
 
+  if (mergedOptions.useOverlay) {
+    labCreateOverlay(scene);
+  }
+
   if (mergedOptions.useWebXRPlayer && teleportMeshes.length > 0) {
     lapCreateWebXRPlayer(scene, teleportMeshes);
   }
-
-  labCreateOverlay(scene);
 
   createLabContent(scene);
 
@@ -162,14 +166,14 @@ const labCreateOverlay = (scene: Scene) => {
   const descriptionText: string = (route.meta.description ?? "Lab Description").toString();
 
   // Create a BABYLON GUI AdvancedDynamicTexture
-  const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
+  const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("lab-overlay", true, scene);
 
   // Create an outer panel to contain the card and place it at the top left of the screen
-  const outerPanel = new StackPanel();
   // TODO: on small screens, the outer panel should take up the whole screen instead of being pinned to the top left corner.
+  const outerPanel = new StackPanel();
   outerPanel.width = "320px";
-  outerPanel.background = labColors.slate8;
-  outerPanel.alpha = 0.8;
+  outerPanel.background = labColors.slate3;
+  outerPanel.alpha = 0.9;
   outerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   outerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
 
@@ -179,6 +183,7 @@ const labCreateOverlay = (scene: Scene) => {
   innerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   innerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   innerPanel.paddingTop = "10px";
+  innerPanel.paddingBottom = "10px";
   innerPanel.paddingLeft = "10px";
   innerPanel.paddingRight = "10px";
 
@@ -186,7 +191,7 @@ const labCreateOverlay = (scene: Scene) => {
   const title = new TextBlock();
   title.text = titleText;
   title.height = "60px";
-  title.color = "white";
+  title.color = "black";
   title.paddingTop = "10px";
   title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -197,11 +202,11 @@ const labCreateOverlay = (scene: Scene) => {
   const description = new TextBlock();
   description.text = descriptionText;
   description.height = "100px";
-  description.color = "white";
+  description.color = "black";
   description.paddingTop = "10px";
   description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  description.fontSize = "14px";
+  description.fontSize = "18px";
   description.textWrapping = true;
 
   // Add the header and description to the panel
