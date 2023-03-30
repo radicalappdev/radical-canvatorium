@@ -170,30 +170,22 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
 
   const header = new StackPanel();
   header.width = "100%";
-  header.height = "90px";
-  header.background = labColors.slate6;
+  header.height = "70px";
+  header.background = labColors.slate8;
+  header.isVertical = false;
   header.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
   header.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   advancedTexture.addControl(header);
 
   // Create header container
-  const headerRowOne = new StackPanel();
-  headerRowOne.width = "100%";
-  headerRowOne.height = "50px";
-  headerRowOne.isVertical = false;
-  headerRowOne.background = labColors.slate7;
-  headerRowOne.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-  headerRowOne.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-  header.addControl(headerRowOne);
-
-  const headerRowTwo = new StackPanel();
-  headerRowTwo.width = "100%";
-  headerRowTwo.height = "40px";
-  headerRowTwo.isVertical = false;
-  // headerRowTwo.background = labColors.slate8;
-  headerRowTwo.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-  headerRowTwo.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-  header.addControl(headerRowTwo);
+  const headerLeft = new StackPanel();
+  headerLeft.width = "75%";
+  headerLeft.height = "70px";
+  // headerRowOne.isVertical = false;
+  // headerLeft.background = labColors.slate5;
+  headerLeft.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  headerLeft.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  header.addControl(headerLeft);
 
   // Create Canvatorium Text
   const canvatoriumText = new TextBlock();
@@ -203,21 +195,61 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   canvatoriumText.fontWeight = "bold";
   canvatoriumText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   canvatoriumText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-  canvatoriumText.width = "50%"; // Set a fixed width
+  canvatoriumText.height = "40px";
   canvatoriumText.paddingLeft = "10px";
-  headerRowOne.addControl(canvatoriumText);
+  headerLeft.addControl(canvatoriumText);
 
   // Create header text
   const headerText = new TextBlock();
   headerText.text = titleText;
   headerText.color = "white";
   headerText.fontSize = "16px";
-  headerText.fontWeight = "bold";
   headerText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   headerText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-  headerText.width = "50%"; // Set a fixed width
+  headerText.height = "30px";
   headerText.paddingLeft = "10px";
-  headerRowTwo.addControl(headerText);
+  headerLeft.addControl(headerText);
+
+  // Create header right container
+  const headerRight = new StackPanel();
+  headerRight.width = "25%";
+  headerRight.height = "70px";
+  // headerRowOne.isVertical = false;
+  headerRight.background = labColors.slate6;
+  headerRight.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  headerRight.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  header.addControl(headerRight);
+
+  // Create header button: all labs
+  const buttonAllLabs = Button.CreateSimpleButton("button-all-labs", "All Labs");
+  buttonAllLabs.width = "100px";
+  buttonAllLabs.height = "36px";
+  buttonAllLabs.color = "white";
+  buttonAllLabs.fontSize = "14px";
+  buttonAllLabs.fontWeight = "bold";
+  buttonAllLabs.background = labColors.slate8;
+  buttonAllLabs.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  buttonAllLabs.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  buttonAllLabs.onPointerClickObservable.add(() => {
+    console.log("button-all-labs clicked");
+  });
+
+  // Create header button: featured
+  const buttonFeatured = Button.CreateSimpleButton("button-featured", "Featured");
+  buttonFeatured.width = "100px";
+  buttonFeatured.height = "36px";
+  buttonFeatured.color = "white";
+  buttonFeatured.fontSize = "14px";
+  buttonFeatured.fontWeight = "bold";
+  buttonFeatured.background = labColors.slate8;
+  buttonFeatured.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  buttonFeatured.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  buttonFeatured.onPointerClickObservable.add(() => {
+    console.log("button-featured clicked");
+  });
+
+  headerRight.addControl(buttonFeatured);
+  headerRight.addControl(buttonAllLabs);
 
   // Add a description
   // const description = new TextBlock();
