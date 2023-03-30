@@ -168,53 +168,74 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   // Create a BABYLON GUI AdvancedDynamicTexture
   const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("lab-overlay", true, scene);
 
-  // Create an outer panel to contain the card and place it at the top left of the screen
-  // TODO: on small screens, the outer panel should take up the whole screen instead of being pinned to the top left corner.
-  const outerPanel = new StackPanel();
-  outerPanel.width = "320px";
-  outerPanel.background = labColors.slate3;
-  outerPanel.alpha = 0.9;
-  outerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  outerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  const header = new StackPanel();
+  header.width = "100%";
+  header.height = "90px";
+  header.background = labColors.slate6;
+  header.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+  header.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  advancedTexture.addControl(header);
 
-  // Create an inner panel to contain the card content. This has no background and is used to add padding to the card content.
-  const innerPanel = new StackPanel();
-  innerPanel.width = "320px";
-  innerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  innerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  innerPanel.paddingTop = "10px";
-  innerPanel.paddingBottom = "10px";
-  innerPanel.paddingLeft = "10px";
-  innerPanel.paddingRight = "10px";
+  // Create header container
+  const headerRowOne = new StackPanel();
+  headerRowOne.width = "100%";
+  headerRowOne.height = "50px";
+  headerRowOne.isVertical = false;
+  headerRowOne.background = labColors.slate7;
+  headerRowOne.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+  headerRowOne.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  header.addControl(headerRowOne);
 
-  // Add a header
-  const title = new TextBlock();
-  title.text = titleText;
-  title.height = "60px";
-  title.color = "black";
-  title.paddingTop = "10px";
-  title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  title.fontSize = "22px";
-  title.textWrapping = true;
+  const headerRowTwo = new StackPanel();
+  headerRowTwo.width = "100%";
+  headerRowTwo.height = "40px";
+  headerRowTwo.isVertical = false;
+  // headerRowTwo.background = labColors.slate8;
+  headerRowTwo.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+  headerRowTwo.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  header.addControl(headerRowTwo);
+
+  // Create Canvatorium Text
+  const canvatoriumText = new TextBlock();
+  canvatoriumText.text = "Canvatorium (revamped)";
+  canvatoriumText.color = "white";
+  canvatoriumText.fontSize = "18px";
+  canvatoriumText.fontWeight = "bold";
+  canvatoriumText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  canvatoriumText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  canvatoriumText.width = "50%"; // Set a fixed width
+  canvatoriumText.paddingLeft = "10px";
+  headerRowOne.addControl(canvatoriumText);
+
+  // Create header text
+  const headerText = new TextBlock();
+  headerText.text = titleText;
+  headerText.color = "white";
+  headerText.fontSize = "16px";
+  headerText.fontWeight = "bold";
+  headerText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  headerText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  headerText.width = "50%"; // Set a fixed width
+  headerText.paddingLeft = "10px";
+  headerRowTwo.addControl(headerText);
 
   // Add a description
-  const description = new TextBlock();
-  description.text = descriptionText;
-  description.height = "100px";
-  description.color = "black";
-  description.paddingTop = "10px";
-  description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  description.fontSize = "18px";
-  description.textWrapping = true;
+  // const description = new TextBlock();
+  // description.text = descriptionText;
+  // description.height = "100px";
+  // description.color = "black";
+  // description.paddingTop = "10px";
+  // description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  // description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  // description.fontSize = "18px";
+  // description.textWrapping = true;
 
   // Add the header and description to the panel
-  innerPanel.addControl(title);
-  innerPanel.addControl(description);
+  // innerPanel.addControl(title);
+  // innerPanel.addControl(description);
 
   // Add the panel to the outer panel
-  outerPanel.addControl(innerPanel);
+  // outerPanel.addControl(innerPanel);
 
   // Create a small button in the bottom right corner to toggle the overlay
   const buttonScreenshot = new Button();
@@ -260,5 +281,5 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   // Add the button to the advanced texture
   advancedTexture.addControl(buttonScreenshot);
 
-  advancedTexture.addControl(outerPanel);
+  // advancedTexture.addControl(outerPanel);
 };
