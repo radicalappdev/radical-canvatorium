@@ -163,60 +163,29 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   const route = useRoute();
   // Force these to be strings
   const titleText: string = (route.meta.title ?? "Lab Title").toString();
-  const descriptionText: string = (route.meta.description ?? "Lab Description").toString();
 
   // Create a BABYLON GUI AdvancedDynamicTexture
   const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("lab-overlay", true, scene);
 
-  // Create an outer panel to contain the card and place it at the top left of the screen
-  // TODO: on small screens, the outer panel should take up the whole screen instead of being pinned to the top left corner.
-  const outerPanel = new StackPanel();
-  outerPanel.width = "320px";
-  outerPanel.background = labColors.slate3;
-  outerPanel.alpha = 0.9;
-  outerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  outerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-
-  // Create an inner panel to contain the card content. This has no background and is used to add padding to the card content.
-  const innerPanel = new StackPanel();
-  innerPanel.width = "320px";
-  innerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  innerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  innerPanel.paddingTop = "10px";
-  innerPanel.paddingBottom = "10px";
-  innerPanel.paddingLeft = "10px";
-  innerPanel.paddingRight = "10px";
-
-  // Add a header
   const title = new TextBlock();
   title.text = titleText;
-  title.height = "60px";
   title.color = "black";
+  title.fontSize = "18px";
+  title.fontWeight = "bold";
+  title.textWrapping = true;
   title.paddingTop = "10px";
+  title.paddingBottom = "10px";
+  title.paddingLeft = "12px";
+  title.paddingRight = "12px";
   title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  title.fontSize = "22px";
-  title.textWrapping = true;
 
-  // Add a description
-  const description = new TextBlock();
-  description.text = descriptionText;
-  description.height = "100px";
-  description.color = "black";
-  description.paddingTop = "10px";
-  description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  description.fontSize = "18px";
-  description.textWrapping = true;
+  const buttonScreenshotLabel = new TextBlock();
+  buttonScreenshotLabel.text = "Screenshot";
+  buttonScreenshotLabel.color = "white";
+  buttonScreenshotLabel.fontSize = 14;
+  buttonScreenshotLabel.paddingTop = "5px";
 
-  // Add the header and description to the panel
-  innerPanel.addControl(title);
-  innerPanel.addControl(description);
-
-  // Add the panel to the outer panel
-  outerPanel.addControl(innerPanel);
-
-  // Create a small button in the bottom right corner to toggle the overlay
   const buttonScreenshot = new Button();
   buttonScreenshot.width = "120px";
   buttonScreenshot.height = "60px";
@@ -226,10 +195,12 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   buttonScreenshot.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   buttonScreenshot.paddingTop = "10px";
   buttonScreenshot.paddingBottom = "10px";
-  buttonScreenshot.paddingLeft = "10px";
-  buttonScreenshot.paddingRight = "10px";
+  buttonScreenshot.paddingLeft = "12px";
+  buttonScreenshot.paddingRight = "12px";
   buttonScreenshot.cornerRadius = 5;
   buttonScreenshot.thickness = 2;
+  buttonScreenshot.addControl(buttonScreenshotLabel);
+
   buttonScreenshot.onPointerClickObservable.add(() => {
     buttonScreenshot.isVisible = false;
 
@@ -247,18 +218,8 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
       buttonScreenshot.isVisible = true;
     }, 100);
   });
-  // Create a text label for the button
-  const buttonScreenshotLabel = new TextBlock();
-  buttonScreenshotLabel.text = "Screenshot";
-  buttonScreenshotLabel.color = "white";
-  buttonScreenshotLabel.fontSize = 14;
-  buttonScreenshotLabel.paddingTop = "5px";
 
-  // Add the label to the button
-  buttonScreenshot.addControl(buttonScreenshotLabel);
-
-  // Add the button to the advanced texture
+  // Populate the advanced texture
+  advancedTexture.addControl(title);
   advancedTexture.addControl(buttonScreenshot);
-
-  advancedTexture.addControl(outerPanel);
 };

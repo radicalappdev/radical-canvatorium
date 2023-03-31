@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { MeshBuilder, StandardMaterial, Color3 } from "babylonjs";
 
 definePageMeta({
-    featured: true,
+    featured: false,
     title: 'Lab 001 – Picking Colors',
     description: 'This is a recreation of the original Canvatorium Lab 001. I picked out some colors to use throughout the labs in the future.'
 })
