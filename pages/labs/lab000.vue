@@ -5,7 +5,7 @@ import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
 definePageMeta({
     featured: true,
-    title: 'Lab 001 – Hello Canvatorium',
+    title: 'Lab 000 – Hello Canvatorium',
     description: 'This is a recreation of the original Canvatorium Lab 000 where I set up some shared lab resources.'
 })
 
