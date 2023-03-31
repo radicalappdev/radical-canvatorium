@@ -42,11 +42,11 @@
       </div>
 
       <div class="lab-notes" :class="labNotesClasses()">
-        <div class="container mx-auto my-4 p-4 bg-white max-w-screen-md h-[calc(100%_-_2rem)] overflow-y-auto">
+        <div class="container mx-auto my-4 p-4 bg-white shadow-md max-w-screen-md h-[calc(100%_-_2rem)] overflow-y-auto">
           <h3 class="text-xl font-semibold">{{ $route.meta?.title ?? "Unknown Lab" }}</h3>
           <p>{{ $route.meta?.description ?? "No description" }}</p>
-          <h4>Lab Notes:</h4>
-          <pre class="text-sm mt-4 whitespace-pre-wrap">{{ $route.meta?.labNotes ?? "" }}</pre>
+          <h4 class="mt-4 font-bold">Lab Notes</h4>
+          <pre class="bg-slate-100 p-2 shadow-inner text-sm whitespace-pre-wrap">{{ $route.meta?.labNotes ?? "" }}</pre>
         </div>
       </div>
     </main>
@@ -120,5 +120,16 @@ watch(
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+/* Hacking the style of the webxr button */
+/* There has to be a better way to do this */
+.babylonVRicon {
+  background-color: #1e293b !important;
+  height: 36px !important;
+  width: 60px !important;
+  position: fixed;
+  bottom: 44px;
+  right: 12px;
 }
 </style>
