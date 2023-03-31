@@ -1,14 +1,14 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <header class="fixed top-0 w-full h-24 bg-slate-800 text-white px-4">
+    <header class="fixed top-0 w-full h-24 bg-slate-800 text-white px-3">
       <div class="flex flex-col">
         
         <div class="flex flex-row items-center justify-between my-2">
-          <h1 class="text-lg font-bold">Canvatorium <span class="hidden sm:inline">(revamped)</span></h1>
+          <nuxt-link to="/labs/lab000" class="text-lg font-bold ">Canvatorium <span class="hidden sm:inline">(revamped)</span></nuxt-link>
           
           <div class="flex">
-            <nuxt-link to="/" class="mx-2">Featured</nuxt-link>
-            <nuxt-link to="/labs" class="mx-2">All Labs</nuxt-link>
+            <nuxt-link to="/" class="mx-2 underline">Featured</nuxt-link>
+            <nuxt-link to="/labs" class="mx-2 underline">All Labs</nuxt-link>
           </div>
         </div>
         
@@ -67,23 +67,6 @@ const labNotesClasses = () => ({
   'hidden': activeTab.value !== 'lab-notes'
 })
 
-
-
-// const showLab = () => {
-  //   const labContainer = document.querySelector('.lab-container')
-  //   const labNotes = document.querySelector('.lab-notes')
-  
-  //   labContainer.classList.remove('hidden')
-  //   labNotes.classList.add('hidden')
-  // }
-  
-  // const showLabNotes = () => {
-    //   const labContainer = document.querySelector('.lab-container')
-    //   const labNotes = document.querySelector('.lab-notes')
-    
-    //   labContainer.classList.add('hidden')
-    //   labNotes.classList.remove('hidden')
-    // }
   </script>
   
   <style>

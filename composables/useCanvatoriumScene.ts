@@ -175,8 +175,8 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   title.textWrapping = true;
   title.paddingTop = "10px";
   title.paddingBottom = "10px";
-  title.paddingLeft = "10px";
-  title.paddingRight = "10px";
+  title.paddingLeft = "12px";
+  title.paddingRight = "12px";
   title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
 
@@ -195,8 +195,8 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   buttonScreenshot.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   buttonScreenshot.paddingTop = "10px";
   buttonScreenshot.paddingBottom = "10px";
-  buttonScreenshot.paddingLeft = "10px";
-  buttonScreenshot.paddingRight = "10px";
+  buttonScreenshot.paddingLeft = "12px";
+  buttonScreenshot.paddingRight = "12px";
   buttonScreenshot.cornerRadius = 5;
   buttonScreenshot.thickness = 2;
   buttonScreenshot.addControl(buttonScreenshotLabel);
