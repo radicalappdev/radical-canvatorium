@@ -25,7 +25,7 @@
       <div class="lab-container" :class="labClasses()">
         <slot />
       </div>
-
+      
       <div class="lab-notes" :class="labNotesClasses()">
         <div class="container mx-auto my-4 p-4 bg-white max-w-screen-md h-[calc(100%_-_2rem)] overflow-y-auto">
           <h3 class="text-xl font-semibold">{{ $route.meta.title }}</h3>
@@ -67,36 +67,41 @@ const labNotesClasses = () => ({
   'hidden': activeTab.value !== 'lab-notes'
 })
 
-  </script>
-  
-  <style>
-  /* Add styles to the main element to fill the viewport */
-  .lab-container {
-    top: 6rem;
-    bottom: 2rem;
-    height: calc(100vh - 8rem);
-    left: 0;
-    right: 0;
-    position: fixed;   
-    overflow: scroll;
-  }
-  
-  .lab-notes {
-    top: 6rem;
-    bottom: 2rem;
-    height: calc(100vh - 8rem);
-    left: 0;
-    right: 0;
-    position: fixed;   
-    overflow: scroll;
-  }
-  
-  /* Used on the canvas elements in the pages rendered by the slot */
-  #bjsCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
+// Always set activeTab to 'lab' when the route changes
+watch(() => route.path, () => {
+  activeTab.value = 'lab'
+})
+
+</script>
+
+<style>
+/* Add styles to the main element to fill the viewport */
+.lab-container {
+  top: 6rem;
+  bottom: 2rem;
+  height: calc(100vh - 8rem);
+  left: 0;
+  right: 0;
+  position: fixed;   
+  overflow: scroll;
+}
+
+.lab-notes {
+  top: 6rem;
+  bottom: 2rem;
+  height: calc(100vh - 8rem);
+  left: 0;
+  right: 0;
+  position: fixed;   
+  overflow: scroll;
+}
+
+/* Used on the canvas elements in the pages rendered by the slot */
+#bjsCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 </style>
