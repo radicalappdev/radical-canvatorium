@@ -57,68 +57,68 @@
 </template>
 
 <script setup>
-  const year = new Date().getFullYear();
+const year = new Date().getFullYear();
 
-  const route = useRoute();
+const route = useRoute();
 
-  // Create a new reactive variable to store the active tab
-  const activeTab = ref("lab");
+// Create a new reactive variable to store the active tab
+const activeTab = ref("lab");
 
-  // Update the active tab when a button is clicked
-  const showLab = () => {
+// Update the active tab when a button is clicked
+const showLab = () => {
+  activeTab.value = "lab";
+};
+
+const showLabNotes = () => {
+  activeTab.value = "lab-notes";
+};
+
+// Add computed classes to show or hide the lab and lab-notes components based on the active tab
+const labClasses = () => ({
+  hidden: activeTab.value !== "lab"
+});
+
+const labNotesClasses = () => ({
+  hidden: activeTab.value !== "lab-notes"
+});
+
+// Always set activeTab to 'lab' when the route changes
+watch(
+  () => route.path,
+  () => {
     activeTab.value = "lab";
-  };
-
-  const showLabNotes = () => {
-    activeTab.value = "lab-notes";
-  };
-
-  // Add computed classes to show or hide the lab and lab-notes components based on the active tab
-  const labClasses = () => ({
-    hidden: activeTab.value !== "lab"
-  });
-
-  const labNotesClasses = () => ({
-    hidden: activeTab.value !== "lab-notes"
-  });
-
-  // Always set activeTab to 'lab' when the route changes
-  watch(
-    () => route.path,
-    () => {
-      activeTab.value = "lab";
-    }
-  );
+  }
+);
 </script>
 
 <style>
-  /* Add styles to the main element to fill the viewport */
-  .lab-container {
-    top: 6rem;
-    bottom: 2rem;
-    height: calc(100vh - 8rem);
-    left: 0;
-    right: 0;
-    position: fixed;
-    overflow: scroll;
-  }
+/* Add styles to the main element to fill the viewport */
+.lab-container {
+  top: 6rem;
+  bottom: 2rem;
+  height: calc(100vh - 8rem);
+  left: 0;
+  right: 0;
+  position: fixed;
+  overflow: scroll;
+}
 
-  .lab-notes {
-    top: 6rem;
-    bottom: 2rem;
-    height: calc(100vh - 8rem);
-    left: 0;
-    right: 0;
-    position: fixed;
-    overflow: scroll;
-  }
+.lab-notes {
+  top: 6rem;
+  bottom: 2rem;
+  height: calc(100vh - 8rem);
+  left: 0;
+  right: 0;
+  position: fixed;
+  overflow: scroll;
+}
 
-  /* Used on the canvas elements in the pages rendered by the slot */
-  #bjsCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
+/* Used on the canvas elements in the pages rendered by the slot */
+#bjsCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 </style>
