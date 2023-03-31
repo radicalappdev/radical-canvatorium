@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, Ref } from "vue";
 import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera } from "babylonjs";
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button } from "babylonjs-gui";
+import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button, Rectangle } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
 
 interface LabSceneOptions {
@@ -168,99 +168,108 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   // Create a BABYLON GUI AdvancedDynamicTexture
   const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("lab-overlay", true, scene);
 
+  const headerBackground = new Rectangle();
+  headerBackground.width = "100%";
+  headerBackground.height = "70px";
+  headerBackground.background = labColors.slate2;
+  headerBackground.alpha = 0.5;
+  headerBackground.zIndex = -10;
+  headerBackground.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+  headerBackground.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  advancedTexture.addControl(headerBackground);
+
   const header = new StackPanel();
   header.width = "100%";
   header.height = "70px";
-  header.background = labColors.slate8;
   header.isVertical = false;
   header.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
   header.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  advancedTexture.addControl(header);
 
   // Create header container
   const headerLeft = new StackPanel();
-  headerLeft.width = "75%";
+  headerLeft.width = "80%";
   headerLeft.height = "70px";
-  // headerRowOne.isVertical = false;
-  // headerLeft.background = labColors.slate5;
   headerLeft.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   headerLeft.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-  header.addControl(headerLeft);
+
+  // Create header right container
+  const headerRight = new StackPanel();
+  headerRight.width = "20%";
+  headerRight.height = "70px";
+  // headerRight.background = labColors.slate6;
+  headerRight.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  headerRight.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
 
   // Create Canvatorium Text
   const canvatoriumText = new TextBlock();
   canvatoriumText.text = "Canvatorium (revamped)";
-  canvatoriumText.color = "white";
+  canvatoriumText.color = labColors.slate8;
   canvatoriumText.fontSize = "18px";
   canvatoriumText.fontWeight = "bold";
   canvatoriumText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   canvatoriumText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
   canvatoriumText.height = "40px";
   canvatoriumText.paddingLeft = "10px";
-  headerLeft.addControl(canvatoriumText);
 
   // Create header text
   const headerText = new TextBlock();
   headerText.text = titleText;
-  headerText.color = "white";
+  headerText.color = labColors.slate8;
   headerText.fontSize = "16px";
   headerText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   headerText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
   headerText.height = "30px";
   headerText.paddingLeft = "10px";
-  headerLeft.addControl(headerText);
+  headerText.paddingRight = "10px";
 
-  // Create header right container
-  const headerRight = new StackPanel();
-  headerRight.width = "25%";
-  headerRight.height = "70px";
-  // headerRowOne.isVertical = false;
-  headerRight.background = labColors.slate6;
-  headerRight.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-  headerRight.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  // Create a button for About
+  const buttonAbout = Button.CreateSimpleButton("button-about", " ? ");
+  buttonAbout.width = "50px";
+  buttonAbout.height = "50px";
+  buttonAbout.color = "white";
+  buttonAbout.fontSize = "16px";
+  buttonAbout.background = labColors.slate8;
+  buttonAbout.cornerRadius = 5;
+  buttonAbout.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  buttonAbout.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+  buttonAbout.paddingRight = "10px";
+  buttonAbout.paddingTop = "10px";
+  buttonAbout.onPointerClickObservable.add(() => {
+    console.log("About button clicked");
+  });
+
+  advancedTexture.addControl(header);
+  header.addControl(headerLeft);
   header.addControl(headerRight);
+  headerLeft.addControl(canvatoriumText);
+  headerLeft.addControl(headerText);
+  headerRight.addControl(buttonAbout);
 
-  // Create header button: all labs
-  const buttonAllLabs = Button.CreateSimpleButton("button-all-labs", "All Labs");
-  buttonAllLabs.width = "100px";
-  buttonAllLabs.height = "36px";
-  buttonAllLabs.color = "white";
-  buttonAllLabs.fontSize = "14px";
-  buttonAllLabs.fontWeight = "bold";
-  buttonAllLabs.background = labColors.slate8;
-  buttonAllLabs.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-  buttonAllLabs.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-  buttonAllLabs.onPointerClickObservable.add(() => {
-    console.log("button-all-labs clicked");
-  });
+  // Create a panel for the main content
+  const infoPanel = new StackPanel();
+  infoPanel.width = "80%";
+  infoPanel.height = "80%";
+  infoPanel.isVertical = true;
+  infoPanel.background = labColors.slate1;
+  // infoPanel.alpha = 0.5;
 
-  // Create header button: featured
-  const buttonFeatured = Button.CreateSimpleButton("button-featured", "Featured");
-  buttonFeatured.width = "100px";
-  buttonFeatured.height = "36px";
-  buttonFeatured.color = "white";
-  buttonFeatured.fontSize = "14px";
-  buttonFeatured.fontWeight = "bold";
-  buttonFeatured.background = labColors.slate8;
-  buttonFeatured.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-  buttonFeatured.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-  buttonFeatured.onPointerClickObservable.add(() => {
-    console.log("button-featured clicked");
-  });
-
-  headerRight.addControl(buttonFeatured);
-  headerRight.addControl(buttonAllLabs);
+  advancedTexture.addControl(infoPanel);
 
   // Add a description
-  // const description = new TextBlock();
-  // description.text = descriptionText;
-  // description.height = "100px";
-  // description.color = "black";
-  // description.paddingTop = "10px";
-  // description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  // description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  // description.fontSize = "18px";
-  // description.textWrapping = true;
+  const description = new TextBlock();
+  description.text = descriptionText;
+  description.height = "100px";
+  description.color = "black";
+  description.paddingTop = "10px";
+  description.paddingLeft = "10px";
+  description.paddingRight = "10px";
+  description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  description.fontSize = "14px";
+  description.textWrapping = true;
+
+  infoPanel.addControl(headerText.clone());
+  infoPanel.addControl(description);
 
   // Add the header and description to the panel
   // innerPanel.addControl(title);
@@ -269,23 +278,54 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   // Add the panel to the outer panel
   // outerPanel.addControl(innerPanel);
 
-  // Create a small button in the bottom right corner to toggle the overlay
-  const buttonScreenshot = new Button();
-  buttonScreenshot.width = "120px";
-  buttonScreenshot.height = "60px";
+  // Create a footer stack panel
+  const footer = new StackPanel();
+  footer.width = "100%";
+  footer.height = "50px";
+  footer.isVertical = false;
+  footer.background = labColors.slate2;
+  footer.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+  footer.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+
+  const buttonAllLabs = Button.CreateSimpleButton("button-all-labs", "All Labs");
+  buttonAllLabs.width = "100px";
+  buttonAllLabs.height = "40px";
+  buttonAllLabs.color = "white";
+  buttonAllLabs.background = labColors.slate8;
+  buttonAllLabs.fontSize = "14px";
+  buttonAllLabs.cornerRadius = 5;
+  buttonAllLabs.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  buttonAllLabs.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  buttonAllLabs.onPointerClickObservable.add(() => {
+    console.log("button-all-labs clicked");
+  });
+
+  const buttonFeatured = Button.CreateSimpleButton("button-featured", "Featured");
+  buttonFeatured.width = "100px";
+  buttonFeatured.height = "40px";
+  buttonFeatured.color = "white";
+  buttonFeatured.background = labColors.slate8;
+  buttonFeatured.fontSize = "14px";
+  buttonFeatured.cornerRadius = 5;
+  buttonFeatured.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  buttonFeatured.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  buttonFeatured.onPointerClickObservable.add(() => {
+    console.log("button-featured clicked");
+  });
+
+  const buttonScreenshot = Button.CreateSimpleButton("button-screenshot", "Screenshot");
+  buttonScreenshot.width = "100px";
+  buttonScreenshot.height = "40px";
   buttonScreenshot.color = "white";
   buttonScreenshot.background = labColors.slate8;
-  buttonScreenshot.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-  buttonScreenshot.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  buttonScreenshot.paddingTop = "10px";
-  buttonScreenshot.paddingBottom = "10px";
-  buttonScreenshot.paddingLeft = "10px";
-  buttonScreenshot.paddingRight = "10px";
+  buttonScreenshot.fontSize = "14px";
   buttonScreenshot.cornerRadius = 5;
-  buttonScreenshot.thickness = 2;
+  buttonScreenshot.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  buttonScreenshot.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+
   buttonScreenshot.onPointerClickObservable.add(() => {
     buttonScreenshot.isVisible = false;
-
+    footer.addControl(buttonScreenshot);
     const size = {
       width: engine.getRenderWidth(),
       height: engine.getRenderHeight()
@@ -300,18 +340,9 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
       buttonScreenshot.isVisible = true;
     }, 100);
   });
-  // Create a text label for the button
-  const buttonScreenshotLabel = new TextBlock();
-  buttonScreenshotLabel.text = "Screenshot";
-  buttonScreenshotLabel.color = "white";
-  buttonScreenshotLabel.fontSize = 14;
-  buttonScreenshotLabel.paddingTop = "5px";
 
-  // Add the label to the button
-  buttonScreenshot.addControl(buttonScreenshotLabel);
-
-  // Add the button to the advanced texture
-  advancedTexture.addControl(buttonScreenshot);
-
-  // advancedTexture.addControl(outerPanel);
+  advancedTexture.addControl(footer);
+  footer.addControl(buttonFeatured);
+  footer.addControl(buttonAllLabs);
+  footer.addControl(buttonScreenshot);
 };

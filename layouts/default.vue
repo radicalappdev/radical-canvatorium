@@ -20,6 +20,7 @@
 
 <script setup>
 const year = new Date().getFullYear()
+const route = useRoute()
 </script>
 
 <style>
