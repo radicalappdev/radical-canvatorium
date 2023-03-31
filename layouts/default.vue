@@ -30,8 +30,9 @@
         <div class="container mx-auto my-4 p-4 bg-white max-w-screen-md h-[calc(100%_-_2rem)] overflow-y-auto">
           <h3 class="text-xl font-semibold">{{ $route.meta.title }}</h3>
           <p>{{ $route.meta.description }}</p>
+         <pre class=" mt-4 whitespace-pre-wrap">{{ $route.meta?.labNotes ?? "" }}</pre>
+
         </div>
-        
       </div>
       
     </main>

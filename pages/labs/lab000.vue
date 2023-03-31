@@ -3,10 +3,13 @@ import { ref } from "vue";
 import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial } from "babylonjs";
 import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
+
 definePageMeta({
     featured: true,
     title: 'Lab 000 – Hello Canvatorium',
-    description: 'This is a recreation of the original Canvatorium Lab 000 where I set up some shared lab resources.'
+    description: 'This is a recreation of the original Canvatorium Lab 000 where I set up some shared lab resources.',
+    labNotes: `Welcome to Canvatorium Lab 000.
+    This is a recreation of the original Canvatorium Lab 000 where I set up some shared lab resources.`
 })
 
 // Add lab-specific content here using the provided 'scene' instance
@@ -25,7 +28,7 @@ const createLabContent = async (scene)  => {
     background.enableEdgesRendering();
     background.edgesWidth = 1.5;
     background.edgesColor = new Color4.FromHexString(labColors.slate7);
-
+    
     const guiPlane = MeshBuilder.CreatePlane("gui-plane")
     guiPlane.parent = background;
     guiPlane.position.y = 0.14;
@@ -48,7 +51,7 @@ const createLabContent = async (scene)  => {
     advancedTexture.addControl(cardText);
     advancedTexture.addControl(subtitleText);
     guiPlane.scaling = new Vector3(5, 5, 5);
-
+    
 };
 
 // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
