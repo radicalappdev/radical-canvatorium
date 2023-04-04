@@ -69,7 +69,7 @@ const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Sce
   }
 
   if (mergedOptions.useWebXRPlayer && teleportMeshes.length > 0) {
-    lapCreateWebXRPlayer(scene, teleportMeshes);
+    labCreateWebXRPlayer(scene, teleportMeshes);
   }
 
   createLabContent(scene);
@@ -151,7 +151,7 @@ const labCreateLights = (scene: Scene) => {
   scene.clearColor = Color4.FromHexString(labColors.slate1);
 };
 
-const lapCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) => {
+const labCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) => {
   const xr = await scene.createDefaultXRExperienceAsync({
     floorMeshes: teleportMeshes
   });
