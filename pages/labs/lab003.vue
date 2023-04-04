@@ -3,8 +3,11 @@ import { Color3, StandardMaterial, MeshBuilder, Vector3 } from "babylonjs";
 
 definePageMeta({
   featured: true,
-  title: "Lab 003",
-  description: "Default XR Experience"
+  title: "Lab 003 - Default XR Experience",
+  description: "Using the Default XR Experience from Babylon JS",
+  labNotes: `Using the default XR experience from from Babylon JS.
+- Move the player when they enter immersive mode
+- Controller input example: scale boxes with triggers on the controllers`
 });
 
 const createLabContent = async (scene) => {
