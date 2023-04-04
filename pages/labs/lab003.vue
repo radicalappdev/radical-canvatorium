@@ -11,26 +11,6 @@ definePageMeta({
 });
 
 const createLabContent = async (scene) => {
-  const purple = new StandardMaterial("purple", scene);
-  purple.diffuseColor = new Color3.FromHexString(labColors.purple);
-
-  const cyan = new StandardMaterial("cyan", scene);
-  cyan.diffuseColor = new Color3.FromHexString(labColors.cyan);
-
-  // Create a cylinder
-  const landing = MeshBuilder.CreateCylinder("cylinder", { diameter: 1, height: 0.2 }, scene);
-  landing.position = new Vector3(2, 0.1, 3);
-  landing.material = purple;
-
-  // Create boxes
-  const box1 = MeshBuilder.CreateBox("box", { size: 0.8 }, scene);
-  box1.position = new Vector3(1.5, 1, 5);
-  box1.material = cyan;
-
-  const box2 = MeshBuilder.CreateBox("box", { size: 0.8 }, scene);
-  box2.position = new Vector3(2.5, 1, 5);
-  box2.material = cyan;
-
   // get mesh by name 'ground' to use for teleportation - this is created by the labCreateRoom function in useCanvatoriumScene
   const ground = scene.getMeshByName("ground");
   console.log("ground", ground);
@@ -39,7 +19,14 @@ const createLabContent = async (scene) => {
     floorMeshes: ground
   });
 
-  // Move the player when thet enter immersive mode
+  // Demo 2: Move the player to the purple landing pad when they enter immersive mode
+  const purple = new StandardMaterial("purple", scene);
+  purple.diffuseColor = new Color3.FromHexString(labColors.purple);
+
+  const landing = MeshBuilder.CreateCylinder("cylinder", { diameter: 1, height: 0.2 }, scene);
+  landing.position = new Vector3(2, 0.1, 3);
+  landing.material = purple;
+
   xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
     console.log("Entering Immersive Mode with camera", xrCamera);
     xrCamera.position.z = landing.position.z;
@@ -47,6 +34,17 @@ const createLabContent = async (scene) => {
   });
 
   console.log("xr player created", xr);
+
+  // Demo 2: Controller input. Scale these boxes with the triggers on the controllers
+  const cyan = new StandardMaterial("cyan", scene);
+  cyan.diffuseColor = new Color3.FromHexString(labColors.cyan);
+  const box1 = MeshBuilder.CreateBox("box", { size: 0.8 }, scene);
+  box1.position = new Vector3(1.5, 1, 5);
+  box1.material = cyan;
+
+  const box2 = MeshBuilder.CreateBox("box", { size: 0.8 }, scene);
+  box2.position = new Vector3(2.5, 1, 5);
+  box2.material = cyan;
 
   //controller input
   xr.input.onControllerAddedObservable.add((controller) => {
