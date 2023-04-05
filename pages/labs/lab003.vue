@@ -19,7 +19,7 @@ const createLabContent = async (scene) => {
     floorMeshes: ground
   });
 
-  // Demo 2: Move the player to the purple landing pad when they enter immersive mode
+  // Demo 1: Move the player to the purple landing pad when they enter immersive mode
   const purple = new StandardMaterial("purple", scene);
   purple.diffuseColor = new Color3.FromHexString(labColors.purple);
 
