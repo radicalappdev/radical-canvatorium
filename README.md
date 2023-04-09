@@ -43,4 +43,9 @@ export default defineNuxtConfig({
 
 Update the dev script in `package.json` to `"dev": "nuxt dev --https --ssl-cert cert.pem --ssl-key key.pem",`
 
+### Troubleshooting an issue with Vite / Nuxt
+
+When setting up a new Windows machine I was unable to get the project to run. I came to the mac to document the node and npm versions.
 macOS is using node v19.8.1 and npm v 9.5.1
+
+I tried to server the mac version and it generated the same error. I looked at the recent commits and the only major change was the inclusion of the babylon-loaders. I commented out the loaders and launched a new terminal window. The project launched successfully.
