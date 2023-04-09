@@ -42,3 +42,5 @@ export default defineNuxtConfig({
 ```
 
 Update the dev script in `package.json` to `"dev": "nuxt dev --https --ssl-cert cert.pem --ssl-key key.pem",`
+
+macOS is using node v19.8.1 and npm v 9.5.1
