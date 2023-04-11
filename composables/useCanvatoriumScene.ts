@@ -2,7 +2,6 @@ import { onMounted, onUnmounted, Ref } from "vue";
 import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera } from "babylonjs";
 import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
-// import "babylonjs-loaders";
 
 interface LabSceneOptions {
   useCamera?: boolean;
@@ -40,6 +39,7 @@ export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, cr
 const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
   const engine = new Engine(canvas);
   const scene = new Scene(engine);
+
 
   const defaultOptions: LabSceneOptions = {
     useCamera: true,
