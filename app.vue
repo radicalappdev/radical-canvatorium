@@ -1,6 +1,7 @@
 <script setup>
-import "babylonjs-loaders";
+import "babylonjs-loaders/babylon.glTFFileLoader.js";
 </script>
+
 <template>
   <div class="bg-slate-300">
     <NuxtLayout>

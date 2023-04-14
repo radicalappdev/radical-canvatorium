@@ -3,6 +3,7 @@ import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, H
 import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
 
+
 interface LabSceneOptions {
   useCamera?: boolean;
   useLights?: boolean;
