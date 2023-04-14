@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, Ref } from "vue";
-import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera } from "babylonjs";
+import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera, WebXRDefaultExperience } from "babylonjs";
 import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
 
@@ -11,6 +11,9 @@ interface LabSceneOptions {
   useOverlay?: boolean;
   useWebXRPlayer?: boolean;
 }
+
+// create a type that can be WebXRDefaultExperience or null
+type WebXRDefaultExperienceOrNull = Promise<WebXRDefaultExperience>  | null;
 
 export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
   let engine: Engine | null = null;
@@ -37,7 +40,7 @@ export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, cr
   });
 };
 
-const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
+const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene, xr: WebXRDefaultExperienceOrNull ) => void, options?: LabSceneOptions) => {
   const engine = new Engine(canvas);
   const scene = new Scene(engine);
 
@@ -70,11 +73,12 @@ const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Sce
     labCreateOverlay(scene, engine);
   }
 
+  let xr: WebXRDefaultExperienceOrNull = null;
   if (mergedOptions.useWebXRPlayer && teleportMeshes.length > 0) {
-    labCreateWebXRPlayer(scene, teleportMeshes);
+    xr = labCreateWebXRPlayer(scene, teleportMeshes);
   }
 
-  createLabContent(scene);
+  createLabContent(scene, xr);
 
   engine.runRenderLoop(() => {
     scene.render();
@@ -159,6 +163,8 @@ const labCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) 
   });
 
   console.log("xr player created", xr);
+
+  return xr;
 };
 
 const labCreateOverlay = (scene: Scene, engine: Engine) => {
