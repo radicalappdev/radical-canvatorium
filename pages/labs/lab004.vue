@@ -3,24 +3,15 @@ import { Color3, StandardMaterial, MeshBuilder, Vector3 } from "babylonjs";
 
 definePageMeta({
   featured: true,
-  title: "Lab 004 - Getting the XR Experience from the useCanvatoriumScene composable",
-  description: "Using the Default XR Experience from Babylon JS",
-  labNotes: `Using the default XR experience from from Babylon JS.
+  title: "Lab 004 - Passing the XR Experience from useCanvatoriumScene to the Lab",
+  description: "createLabContent now receives the XR experience as a promise.",
+  labNotes: `Resolve the promise to get the XR experience and use it in the lab.
+- This lab uses the same content as Lab 003, but the XR experience is passed to the lab as a promise from useCanvatoriumScene.
 - Move the player when they enter immersive mode
 - Controller input example: scale boxes with triggers on the controllers`
 });
 
 const createLabContent = async (scene, xrPromise) => {
-  //   console.log("received xr", xr);
-
-  // get mesh by name 'ground' to use for teleportation - this is created by the labCreateRoom function in useCanvatoriumScene
-  //   const ground = scene.getMeshByName("ground");
-  //   console.log("ground", ground);
-
-  //   const xr = await scene.createDefaultXRExperienceAsync({
-  //     floorMeshes: ground
-  //   });
-
   // Demo 1: Move the player to the purple landing pad when they enter immersive mode
   const purple = new StandardMaterial("purple", scene);
   purple.diffuseColor = new Color3.FromHexString(labColors.purple);
@@ -40,12 +31,9 @@ const createLabContent = async (scene, xrPromise) => {
   box2.position = new Vector3(2.5, 1, 5);
   box2.material = cyan;
 
-  // resolve the promise to get the xr object
-  console.log(xrPromise);
-
-  async function start() {
+  async function customizeXRForLab() {
     const xr = await xrPromise;
-    console.log("xr", xr);
+    console.log("xr received by lab", xr);
 
     xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
       console.log("Entering Immersive Mode with camera", xrCamera);
@@ -80,7 +68,7 @@ const createLabContent = async (scene, xrPromise) => {
       });
     });
   }
-  start();
+  customizeXRForLab();
 };
 
 // Omit the scene options to use the default XR experience from useCanvatoriumScene

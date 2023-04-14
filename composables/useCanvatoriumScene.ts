@@ -15,7 +15,7 @@ interface LabSceneOptions {
 // create a type that can be WebXRDefaultExperience or null
 type WebXRDefaultExperienceOrNull = Promise<WebXRDefaultExperience>  | null;
 
-export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, createLabContent: (scene: Scene) => void, options?: LabSceneOptions) => {
+export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, createLabContent: (scene: Scene, xr: WebXRDefaultExperienceOrNull ) => void, options?: LabSceneOptions) => {
   let engine: Engine | null = null;
 
   const handleResize = () => {
