@@ -3,11 +3,14 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev --https --ssl-cert cert.pem --ssl-key key.pem",
+    "dev": "nuxt dev",
+    "dev-windows": "SET NODE_ENV=development&& nuxt dev --ssl-cert cert.pem --ssl-key key.pem",
+    "dev-mac": "NODE_ENV=development nuxt dev --https --ssl-cert cert.pem --ssl-key key.pem",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
+
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.6.4",
     "babylonjs-inspector": "^5.52.0",
