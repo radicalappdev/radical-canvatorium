@@ -13,6 +13,7 @@ const createLabContent = async (scene) => {
     layout.position.y = 0.5;
 
     // Add the boxes as children of the layout with unique names and space them out evenly on the x-axis
+    const boxes = [];
     for (let i = 0; i < numBoxes; i++) {
       const box = MeshBuilder.CreateBox("box" + i, { size: 0.2 }, scene);
       box.name = "box" + i;
@@ -24,10 +25,25 @@ const createLabContent = async (scene) => {
       grabber.onDragObservable.add((eventData) => {
         box.position.x += eventData.delta.x;
         box.position.y += eventData.delta.y;
+
+        // Reorder boxes when boxes intersect
+        for (let j = 0; j < boxes.length; j++) {
+          const otherBox = boxes[j];
+          if (box !== otherBox && box.intersectsMesh(otherBox)) {
+            // Determine the direction to move the boxes
+            const direction = box.position.x < otherBox.position.x ? -1 : 1;
+            // Determine the index of the other box in the boxes array
+            const index = boxes.indexOf(otherBox);
+            // Move the other box over by one position in the boxes array and update its position
+            boxes.splice(index + direction, 0, boxes.splice(index, 1)[0]);
+            otherBox.position.x = (index + direction - (numBoxes - 1) / 2) * 0.25;
+          }
+        }
       });
 
       box.addBehavior(grabber);
       box.parent = layout;
+      boxes.push(box);
     }
   };
 
