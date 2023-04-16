@@ -1,5 +1,5 @@
 <script setup>
-import { MeshBuilder, PointerDragBehavior } from "babylonjs";
+import { MeshBuilder, PointerDragBehavior, Color3, StandardMaterial } from "babylonjs";
 
 definePageMeta({
   featured: true,
@@ -12,13 +12,25 @@ const createLabContent = async (scene) => {
     // Add the layout box
     layout.position.y = 0.5;
 
-    // Add the boxes as children of the layout with unique names and space them out evenly on the x-axis
+    // Define an array of colors to use for the boxes
+    const colors = [
+      new Color3(1, 0, 0), // Red
+      new Color3(0, 1, 0), // Green
+      new Color3(0, 0, 1), // Blue
+      new Color3(1, 1, 0), // Yellow
+      new Color3(1, 0, 1), // Magenta
+      new Color3(0, 1, 1) // Cyan
+    ];
+
+    // Add the boxes as children of the layout with unique names, colors, and evenly spaced on the x-axis
     const boxes = [];
     for (let i = 0; i < numBoxes; i++) {
       const box = MeshBuilder.CreateBox("box" + i, { size: 0.2 }, scene);
       box.name = "box" + i;
       box.position.x = (i - (numBoxes - 1) / 2) * 0.25;
       box.position.y = 0.5;
+      box.material = new StandardMaterial(`boxMaterial${i}`, scene);
+      box.material.diffuseColor = colors[i % colors.length];
 
       const grabber = new PointerDragBehavior();
       grabber.moveAttached = false; // Disable moving the grabber itself
@@ -64,6 +76,7 @@ const createLabContent = async (scene) => {
           box.position.copyFrom(originalPosition);
         }
       });
+
       grabber.onDragObservable.add((eventData) => {
         // Move the dragged box
         box.position.x += eventData.delta.x;
