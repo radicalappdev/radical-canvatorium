@@ -22,23 +22,52 @@ const createLabContent = async (scene) => {
 
       const grabber = new PointerDragBehavior();
       grabber.moveAttached = false; // Disable moving the grabber itself
-      grabber.onDragObservable.add((eventData) => {
-        box.position.x += eventData.delta.x;
-        box.position.y += eventData.delta.y;
+      let originalPosition = null;
+      grabber.onDragStartObservable.add(() => {
+        originalPosition = box.position.clone();
+      });
+      grabber.onDragEndObservable.add(() => {
+        let closestPair = null;
+        let closestDistance = Infinity;
 
-        // Reorder boxes when boxes intersect
+        // Find the closest pair of boxes that intersect
         for (let j = 0; j < boxes.length; j++) {
           const otherBox = boxes[j];
           if (box !== otherBox && box.intersectsMesh(otherBox)) {
-            // Determine the direction to move the boxes
-            const direction = box.position.x < otherBox.position.x ? -1 : 1;
-            // Determine the index of the other box in the boxes array
-            const index = boxes.indexOf(otherBox);
-            // Move the other box over by one position in the boxes array and update its position
-            boxes.splice(index + direction, 0, boxes.splice(index, 1)[0]);
-            otherBox.position.x = (index + direction - (numBoxes - 1) / 2) * 0.25;
+            const distance = box.position.subtract(otherBox.position).length();
+            if (distance < closestDistance) {
+              closestPair = [box, otherBox];
+              closestDistance = distance;
+            }
           }
         }
+
+        // If there is a closest pair of boxes, insert the dragged box between them and update the layout
+        if (closestPair) {
+          const [boxA, boxB] = closestPair;
+          const indexA = boxes.indexOf(boxA);
+          const indexB = boxes.indexOf(boxB);
+          const insertIndex = Math.min(indexA, indexB) + 1;
+          boxes.splice(boxes.indexOf(box), 1);
+          boxes.splice(insertIndex, 0, box);
+          const layoutChildren = layout.getChildMeshes();
+          for (let i = layoutChildren.length - 1; i >= 0; i--) {
+            layout.removeChild(layoutChildren[i]);
+          }
+          boxes.forEach((box, i) => {
+            box.position.x = (i - (numBoxes - 1) / 2) * 0.25;
+            box.position.y = 0.5;
+            box.parent = layout;
+          });
+        } else {
+          // If the dragged box doesn't intersect any other boxes, move it back to its original position
+          box.position.copyFrom(originalPosition);
+        }
+      });
+      grabber.onDragObservable.add((eventData) => {
+        // Move the dragged box
+        box.position.x += eventData.delta.x;
+        box.position.y += eventData.delta.y;
       });
 
       box.addBehavior(grabber);
