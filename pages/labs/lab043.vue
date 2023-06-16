@@ -1,20 +1,16 @@
 <script setup>
   import { MeshBuilder } from "babylonjs";
-  import { AdvancedDynamicTexture, Button, TextBlock } from "babylonjs-gui";
+  import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
   definePageMeta({
-    featured: false,
+    featured: true,
     title: "Lab 043",
-    description: "Lots of UI, too much UI?"
+    description: "Lots of UI, too much UI?",
+    labNotes: `How many AdvancedDynamicTextures can I load in a WebXR scene on an Meta Quest 2? It seems like 30 to 50 is a safe bet for now. These cards only have a single text block and a SixDofDragBehavior. When I make more advanced cards with more controls, I may have to reduce the number of cards in a scene.`
   });
 
   const createLabContent = async (scene) => {
-    const sparticus = generateCard(scene);
-    sparticus.position.x = Math.random() * 10 - 5;
-    sparticus.position.z = Math.random() * 10 - 5;
-    sparticus.position.y = Math.random() + 1.5;
-
-    for (let i = 0; i < 49; i++) {
+    for (let i = 0; i < 50; i++) {
       const card = generateCard(scene);
       card.position.x = Math.random() * 10 - 5;
       card.position.z = Math.random() * 10 - 5;
@@ -37,7 +33,6 @@
 
     advancedTexture.addControl(titleText);
 
-    // Make the plane grabbable
     const sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
     sixDofDragBehavior.allowMultiPointers = true;
     plane.addBehavior(sixDofDragBehavior);
