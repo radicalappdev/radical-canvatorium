@@ -14,16 +14,16 @@
     sparticus.position.z = Math.random() * 10 - 5;
     sparticus.position.y = Math.random() + 1.5;
 
-    for (let i = 0; i < 99; i++) {
+    for (let i = 0; i < 49; i++) {
       const card = generateCard(scene);
       card.position.x = Math.random() * 10 - 5;
       card.position.z = Math.random() * 10 - 5;
-      card.position.y = Math.random() + 1.5;
+      card.position.y = Math.random() + 0.5;
     }
   };
 
   const generateCard = (scene) => {
-    const plane = MeshBuilder.CreatePlane("plane", { width: 0.5, height: 0.5 }, scene);
+    const plane = MeshBuilder.CreatePlane("plane", { width: 0.3, height: 0.3 }, scene);
 
     const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
     advancedTexture.name = "card-texture";
@@ -36,6 +36,11 @@
     titleText.fontSize = 96;
 
     advancedTexture.addControl(titleText);
+
+    // Make the plane grabbable
+    const sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
+    sixDofDragBehavior.allowMultiPointers = true;
+    plane.addBehavior(sixDofDragBehavior);
 
     return plane;
   };
