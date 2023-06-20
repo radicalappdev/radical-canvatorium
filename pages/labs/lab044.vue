@@ -9,19 +9,29 @@
     labNotes: `Expanding on the previous lab, I want to see if I coucanld make each AdvancedDynamicTexture an independent reactive element.`
   });
 
+  const numberOfCards = 50;
+  // Create a reactive array of titles
+  const titles = ref([]);
+  for (let i = 0; i < numberOfCards; i++) {
+    titles.value.push(ref(`I'm Sparticus! (${i})`));
+  }
+
   const createLabContent = async (scene) => {
-    for (let i = 0; i < 50; i++) {
-      const card = generateCard(scene);
+    for (let i = 0; i < numberOfCards; i++) {
+      const card = generateCard(scene, i);
       card.position.x = Math.random() * 10 - 5;
       card.position.z = Math.random() * 10 - 5;
       card.position.y = Math.random() + 0.5;
     }
   };
 
-  const generateCard = (scene) => {
+  const generateCard = (scene, index) => {
+    // use the index to get the title from the reactive array
+    const title = titles.value[index];
+
     // An internal reactive value for the title
     // In a future lab, I'll make this a reactive object with more properties and move outside the generateCard function
-    const title = ref("I'm Sparticus!");
+    // const title = ref("I'm Sparticus!");
 
     const plane = MeshBuilder.CreatePlane("plane", { width: 0.3, height: 0.3 }, scene);
 
@@ -49,7 +59,8 @@
     button.top = 100;
 
     button.onPointerUpObservable.add(() => {
-      title.value = title.value === "I'm Sparticus!" ? "No, I'm Sparticus!" : "I'm Sparticus!";
+      // toggle the title value and include the index in the new title
+      title.value = title.value === `I'm Sparticus! (${index})` ? `I'm not Sparticus! (${index})` : `I'm Sparticus! (${index})`;
     });
     advancedTexture.addControl(button);
 
