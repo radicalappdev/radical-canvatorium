@@ -4,8 +4,8 @@
 
   definePageMeta({
     featured: true,
-    title: "Lab 043",
-    description: "Lots of UI, too much UI?",
+    title: "Lab 043 - Lots of UI, too much UI?",
+    description: "How many AdvancedDynamicTextures can I load in a WebXR scene on an Meta Quest 2?",
     labNotes: `How many AdvancedDynamicTextures can I load in a WebXR scene on an Meta Quest 2? It seems like 30 to 50 is a safe bet for now. These cards only have a single text block and a SixDofDragBehavior. When I make more advanced cards with more controls, I may have to reduce the number of cards in a scene.`
   });
 
