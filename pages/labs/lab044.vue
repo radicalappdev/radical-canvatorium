@@ -4,9 +4,9 @@
 
   definePageMeta({
     featured: true,
-    title: "Lab 044 - Independent reactive AdvancedDynamicTextures",
+    title: "Lab 044 - Independent Reactive Texture Cards",
     description: "Expanding on the previous lab, I want to see if I coucanld make each AdvancedDynamicTexture an independent reactive element.",
-    labNotes: `Expanding on the previous lab, I want to see if I coucanld make each AdvancedDynamicTexture an independent reactive element.`
+    labNotes: `Expanding on the previous lab, I want to see if I coucanld make each AdvancedDynamicTexture an independent reactive element. I expored several ways of doing this incuding a simple local ref(), a reactive array of titles, and a reactive array of objects.`
   });
 
   const createLabContent = async (scene) => {
