@@ -9,39 +9,38 @@
     labNotes: `Expanding on the previous lab, I want to see if I coucanld make each AdvancedDynamicTexture an independent reactive element.`
   });
 
-  const numberOfCards = 50;
-  // Create a reactive array of titles
-  const titles = ref([]);
-  for (let i = 0; i < numberOfCards; i++) {
-    titles.value.push(ref(`I'm Sparticus! (${i})`));
-  }
-
   const createLabContent = async (scene) => {
+    const numberOfCards = 50;
+    // Create a reactive array of objects: title and index
+    const titles = ref([]);
     for (let i = 0; i < numberOfCards; i++) {
-      const card = generateCard(scene, i);
+      titles.value.push(ref({ title: "I'm Sparticus!", index: i }));
+    }
+
+    for (let i = 0; i < numberOfCards; i++) {
+      const titleObject = titles.value[i];
+      const card = generateCard(scene, titleObject);
       card.position.x = Math.random() * 10 - 5;
       card.position.z = Math.random() * 10 - 5;
       card.position.y = Math.random() + 0.5;
     }
   };
 
-  const generateCard = (scene, index) => {
+  const generateCard = (scene, titleObject) => {
     // use the index to get the title from the reactive array
-    const title = titles.value[index];
-
-    // An internal reactive value for the title
-    // In a future lab, I'll make this a reactive object with more properties and move outside the generateCard function
-    // const title = ref("I'm Sparticus!");
+    const title = titleObject.value.title;
+    const index = titleObject.value.index;
 
     const plane = MeshBuilder.CreatePlane("plane", { width: 0.3, height: 0.3 }, scene);
+    plane.name = `card-${index}`;
 
     const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
-    advancedTexture.name = "card-texture";
+    advancedTexture.name = `card-texture-${index}`;
     advancedTexture.background = labColors.slate8;
 
     const titleText = new TextBlock("title-text");
-
-    titleText.text = title.value;
+    titleText.name = `title-text-${index}`;
+    titleText.text = title;
     titleText.color = "white";
     titleText.fontSize = 96;
     titleText.top = -100;
@@ -60,7 +59,8 @@
 
     button.onPointerUpObservable.add(() => {
       // toggle the title value and include the index in the new title
-      title.value = title.value === `I'm Sparticus! (${index})` ? `I'm not Sparticus! (${index})` : `I'm Sparticus! (${index})`;
+      titleObject.value.title = titleObject.value.title === `I'm Sparticus!` ? `I'm not Sparticus!` : `I'm Sparticus!`;
+      console.log(`Title changed to ${titleObject.value.title}`);
     });
     advancedTexture.addControl(button);
 
@@ -69,9 +69,9 @@
     plane.addBehavior(sixDofDragBehavior);
 
     // Watch the title value for changes and update the text block
-    watch(title, (newValue, oldValue) => {
-      console.log(`Title changed from ${oldValue} to ${newValue}`);
-      titleText.text = newValue;
+    watch(titleObject.value, (newValue, oldValue) => {
+      console.log(`Title changed from ${oldValue.title} to ${newValue.title}`);
+      titleText.text = newValue.title;
     });
 
     return plane;
