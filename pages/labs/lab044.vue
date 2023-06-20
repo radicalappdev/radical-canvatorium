@@ -17,19 +17,20 @@
       titles.value.push(ref({ title: "I'm Sparticus!", index: i }));
     }
 
+    // Create a card for each title object
     for (let i = 0; i < numberOfCards; i++) {
       const titleObject = titles.value[i];
       const card = generateCard(scene, titleObject);
       card.position.x = Math.random() * 10 - 5;
       card.position.z = Math.random() * 10 - 5;
-      card.position.y = Math.random() + 0.5;
+      card.position.y = Math.random() + 1;
     }
   };
 
   const generateCard = (scene, titleObject) => {
     // use the index to get the title from the reactive array
-    const title = titleObject.value.title;
-    const index = titleObject.value.index;
+    const index = titleObject.value.index; // just used for naming for now
+    const title = titleObject.value.title; // used for the text block
 
     const plane = MeshBuilder.CreatePlane("plane", { width: 0.3, height: 0.3 }, scene);
     plane.name = `card-${index}`;
@@ -49,18 +50,14 @@
 
     // Add a button to change the title value
     const button = Button.CreateSimpleButton("button", "Change Title");
-    button.width = "250px";
     button.height = "150px";
     button.color = "white";
-    button.background = "purple";
-    button.fontSize = 48;
-    button.cornerRadius = 20;
+    button.background = labColors.slate6;
+    button.fontSize = 64;
     button.top = 100;
 
     button.onPointerUpObservable.add(() => {
-      // toggle the title value and include the index in the new title
       titleObject.value.title = titleObject.value.title === `I'm Sparticus!` ? `I'm not Sparticus!` : `I'm Sparticus!`;
-      console.log(`Title changed to ${titleObject.value.title}`);
     });
     advancedTexture.addControl(button);
 
@@ -70,7 +67,6 @@
 
     // Watch the title value for changes and update the text block
     watch(titleObject.value, (newValue, oldValue) => {
-      console.log(`Title changed from ${oldValue.title} to ${newValue.title}`);
       titleText.text = newValue.title;
     });
 
