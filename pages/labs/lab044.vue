@@ -12,25 +12,25 @@
   const createLabContent = async (scene) => {
     const numberOfCards = 50;
 
-    const titles = reactive([]);
+    const data = reactive([]);
     for (let i = 0; i < numberOfCards; i++) {
-      titles.push({ title: "I'm Sparticus!", index: i });
+      data.push({ title: "I'm Sparticus!", index: i });
     }
 
     // Create a card for each title object
     for (let i = 0; i < numberOfCards; i++) {
-      const titleObject = titles[i];
-      const card = generateCard(scene, titleObject);
+      const item = data[i];
+      const card = generateCard(scene, item);
       card.position.x = Math.random() * 10 - 5;
       card.position.z = Math.random() * 10 - 5;
       card.position.y = Math.random() + 1;
     }
   };
 
-  const generateCard = (scene, titleObject) => {
+  const generateCard = (scene, item) => {
     // use the index to get the title from the reactive array
-    const index = titleObject.index; // just used for naming for now
-    const title = titleObject.title; // used for the text block
+    const index = item.index; // just used for naming for now
+    const title = item.title; // used for the text block
 
     const cardWidth = 0.3;
     const cardHeight = 0.15;
@@ -64,7 +64,7 @@
     button.top = 50;
 
     button.onPointerUpObservable.add(() => {
-      titleObject.title = titleObject.title === `I'm Sparticus!` ? `I'm not Sparticus!` : `I'm Sparticus!`;
+      item.title = item.title === `I'm Sparticus!` ? `I'm not Sparticus!` : `I'm Sparticus!`;
     });
     advancedTexture.addControl(button);
 
@@ -73,7 +73,8 @@
     plane.addBehavior(sixDofDragBehavior);
 
     // Watch the title value for changes and update the text block
-    watch(titleObject, (newValue, oldValue) => {
+    watch(item, (newValue, oldValue) => {
+      console.log(`item ${index} changed from ${oldValue.title} to ${newValue.title}`);
       titleText.text = newValue.title;
     });
 
