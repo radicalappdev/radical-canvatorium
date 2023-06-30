@@ -11,31 +11,36 @@
 
   const createLabContent = async (scene) => {
     const numberOfCards = 50;
-    // Create a reactive array of objects: title and index
-    const titles = ref([]);
+
+    const data = reactive([]);
     for (let i = 0; i < numberOfCards; i++) {
-      titles.value.push(ref({ title: "I'm Sparticus!", index: i }));
+      data.push({ title: "I'm Sparticus!", index: i });
     }
 
     // Create a card for each title object
     for (let i = 0; i < numberOfCards; i++) {
-      const titleObject = titles.value[i];
-      const card = generateCard(scene, titleObject);
+      const item = data[i];
+      const card = generateCard(scene, item);
       card.position.x = Math.random() * 10 - 5;
       card.position.z = Math.random() * 10 - 5;
       card.position.y = Math.random() + 1;
     }
   };
 
-  const generateCard = (scene, titleObject) => {
+  const generateCard = (scene, item) => {
     // use the index to get the title from the reactive array
-    const index = titleObject.value.index; // just used for naming for now
-    const title = titleObject.value.title; // used for the text block
+    const index = item.index; // just used for naming for now
+    const title = item.title; // used for the text block
 
-    const plane = MeshBuilder.CreatePlane("plane", { width: 0.3, height: 0.3 }, scene);
+    const cardWidth = 0.3;
+    const cardHeight = 0.15;
+    const cardResolution = 1024;
+
+    const plane = MeshBuilder.CreatePlane("plane", { width: cardWidth, height: cardHeight }, scene);
     plane.name = `card-${index}`;
 
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
+    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, cardResolution * cardWidth, cardResolution * cardHeight);
+
     advancedTexture.name = `card-texture-${index}`;
     advancedTexture.background = labColors.slate8;
 
@@ -43,21 +48,23 @@
     titleText.name = `title-text-${index}`;
     titleText.text = title;
     titleText.color = "white";
-    titleText.fontSize = 96;
-    titleText.top = -100;
+    titleText.fontSize = 36;
+    titleText.top = -30;
 
     advancedTexture.addControl(titleText);
 
     // Add a button to change the title value
     const button = Button.CreateSimpleButton("button", "Change Title");
-    button.height = "150px";
+    button.height = "40px";
     button.color = "white";
     button.background = labColors.slate6;
-    button.fontSize = 64;
-    button.top = 100;
+    button.fontSize = 32;
+    button.paddingLeft = "10px";
+    button.paddingRight = "10px";
+    button.top = 50;
 
     button.onPointerUpObservable.add(() => {
-      titleObject.value.title = titleObject.value.title === `I'm Sparticus!` ? `I'm not Sparticus!` : `I'm Sparticus!`;
+      item.title = item.title === `I'm Sparticus!` ? `I'm not Sparticus!` : `I'm Sparticus!`;
     });
     advancedTexture.addControl(button);
 
@@ -66,7 +73,8 @@
     plane.addBehavior(sixDofDragBehavior);
 
     // Watch the title value for changes and update the text block
-    watch(titleObject.value, (newValue, oldValue) => {
+    watch(item, (newValue, oldValue) => {
+      console.log(`item ${index} changed from ${oldValue.title} to ${newValue.title}`);
       titleText.text = newValue.title;
     });
 
