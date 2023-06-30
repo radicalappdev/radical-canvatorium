@@ -32,10 +32,15 @@
     const index = titleObject.value.index; // just used for naming for now
     const title = titleObject.value.title; // used for the text block
 
-    const plane = MeshBuilder.CreatePlane("plane", { width: 0.3, height: 0.3 }, scene);
+    const cardWidth = 0.3;
+    const cardHeight = 0.15;
+    const cardResolution = 1024;
+
+    const plane = MeshBuilder.CreatePlane("plane", { width: cardWidth, height: cardHeight }, scene);
     plane.name = `card-${index}`;
 
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
+    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, cardResolution * cardWidth, cardResolution * cardHeight);
+
     advancedTexture.name = `card-texture-${index}`;
     advancedTexture.background = labColors.slate8;
 
@@ -43,18 +48,20 @@
     titleText.name = `title-text-${index}`;
     titleText.text = title;
     titleText.color = "white";
-    titleText.fontSize = 96;
-    titleText.top = -100;
+    titleText.fontSize = 36;
+    titleText.top = -30;
 
     advancedTexture.addControl(titleText);
 
     // Add a button to change the title value
     const button = Button.CreateSimpleButton("button", "Change Title");
-    button.height = "150px";
+    button.height = "40px";
     button.color = "white";
     button.background = labColors.slate6;
-    button.fontSize = 64;
-    button.top = 100;
+    button.fontSize = 32;
+    button.paddingLeft = "10px";
+    button.paddingRight = "10px";
+    button.top = 50;
 
     button.onPointerUpObservable.add(() => {
       titleObject.value.title = titleObject.value.title === `I'm Sparticus!` ? `I'm not Sparticus!` : `I'm Sparticus!`;
