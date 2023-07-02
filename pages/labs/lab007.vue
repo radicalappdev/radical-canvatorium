@@ -12,14 +12,63 @@
 - watch the variable and display the message in VR by updating the text in a scroll view`
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene, xrPromise) => {
     scene.getCameraByName("camera").position = new BABYLON.Vector3(0, 1, -2);
 
     console.log("Only logs after this point will be displayed in VR. This one won't.");
 
     createLabConsoleCard(scene);
 
-    console.log("WebXR Console Logging in Babylon JS");
+    async function customizeXRForLab() {
+      const xr = await xrPromise;
+
+      console.log("Lab 007 applying customizations to the XR experience.");
+      console.log("");
+      console.log("Enter immersive mode and press any of these buttons to see the console log in VR");
+      console.log(" • X and Y buttons on the left controller");
+      console.log(" • A and B buttons on the right controller");
+      console.log("");
+
+      xr.input.onControllerAddedObservable.add((controller) => {
+        controller.onMotionControllerInitObservable.add((motionController) => {
+          if (motionController.handness === "left") {
+            const xr_ids = motionController.getComponentIds();
+
+            let xButton = motionController.getComponent(xr_ids[3]);
+            xButton.onButtonStateChangedObservable.add(() => {
+              if (xButton.pressed) {
+                console.log("X button pressed");
+              }
+            });
+
+            let yButton = motionController.getComponent(xr_ids[4]);
+            yButton.onButtonStateChangedObservable.add(() => {
+              if (yButton.pressed) {
+                console.log("Y button pressed");
+              }
+            });
+          }
+          if (motionController.handness === "right") {
+            const xr_ids = motionController.getComponentIds();
+
+            let aButton = motionController.getComponent(xr_ids[3]);
+            aButton.onButtonStateChangedObservable.add(() => {
+              if (aButton.pressed) {
+                console.log("A button pressed");
+              }
+            });
+
+            let bButton = motionController.getComponent(xr_ids[4]);
+            bButton.onButtonStateChangedObservable.add(() => {
+              if (bButton.pressed) {
+                console.log("B button pressed");
+              }
+            });
+          }
+        });
+      });
+    }
+    customizeXRForLab();
   };
 
   const createLabConsoleCard = (scene) => {
@@ -36,6 +85,9 @@
       };
     };
     overrideConsole();
+
+    console.log("WebXR Console Logging in Babylon JS");
+    console.log("");
 
     const card = MeshBuilder.CreateBox("console-card", {
       height: 2.1,
@@ -87,8 +139,6 @@
     loggerText.fontSize = "96px";
 
     scrollViewer.addControl(loggerText);
-
-    console.log("• Console card created, watching for logs •");
 
     watch(conLogData, (newValue) => {
       const logData = [...newValue];
