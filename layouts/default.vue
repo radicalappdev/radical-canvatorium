@@ -1,60 +1,10 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <header class="fixed top-0 w-full h-24 bg-slate-800 text-white px-3">
-      <div class="flex flex-col">
-        <div class="flex flex-row items-center justify-between my-2">
-          <nuxt-link to="/" class="text-lg font-bold">Canvatorium <span class="hidden sm:inline">(revamped)</span></nuxt-link>
-
-          <div class="flex">
-            <nuxt-link to="/" class="mx-2 underline">Featured</nuxt-link>
-            <nuxt-link to="/labs" class="mx-2 underline">All Labs</nuxt-link>
-          </div>
-        </div>
-
-        <template v-if="$route.path !== '/'">
-          <div class="flex flex-row w-full mt-1">
-            <button
-              @click="showLab"
-              :class="{
-                'border border-slate-500 rounded-l-md bg-slate-900 text-white font-semibold focus:outline-none': activeTab === 'lab',
-                'bg-slate-700 rounded-l-md': activeTab !== 'lab'
-              }"
-              class="flex-1 py-1 focus:outline-none"
-            >
-              Lab Scene
-            </button>
-            <button
-              @click="showLabNotes"
-              :class="{
-                'border border-slate-500 rounded-r-md bg-slate-900 text-white font-semibold focus:outline-none': activeTab === 'lab-notes',
-                'bg-slate-700 rounded-r-md': activeTab !== 'lab-notes'
-              }"
-              class="flex-1 py-1 focus:outline-none"
-            >
-              Lab Notes
-            </button>
-          </div>
-        </template>
-      </div>
-    </header>
-
     <main>
       <div class="lab-container" :class="labClasses()">
         <slot />
       </div>
-
-      <div class="lab-notes" :class="labNotesClasses()">
-        <div class="container mx-auto my-4 p-4 bg-white shadow-md max-w-screen-md h-[calc(100%_-_2rem)] overflow-y-auto">
-          <h3 class="text-xl font-semibold">{{ $route.meta?.title ?? "Unknown Lab" }}</h3>
-          <p>{{ $route.meta?.description ?? "No description" }}</p>
-          <h4 class="mt-4 font-bold">Lab Notes</h4>
-          <pre class="bg-slate-100 p-2 shadow-inner text-sm whitespace-pre-wrap">{{ $route.meta?.labNotes ?? "" }}</pre>
-        </div>
-      </div>
     </main>
-    <footer class="fixed bottom-0 w-full h-8 bg-slate-800 text-sm text-white flex items-center justify-center">
-      <p>Canvatorium © Radical Application Development {{ year }}</p>
-    </footer>
   </div>
 </template>
 
@@ -95,7 +45,7 @@
 
 <style>
   /* Add styles to the main element to fill the viewport */
-  .lab-container {
+  /* .lab-container {
     top: 6rem;
     bottom: 2rem;
     height: calc(100vh - 8rem);
@@ -113,7 +63,7 @@
     right: 0;
     position: fixed;
     overflow: scroll;
-  }
+  } */
 
   /* Used on the canvas elements in the pages rendered by the slot */
   #bjsCanvas {
