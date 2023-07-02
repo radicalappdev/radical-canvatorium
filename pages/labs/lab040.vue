@@ -1,16 +1,16 @@
 <script setup>
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control } from "babylonjs-gui";
+  import { AdvancedDynamicTexture, TextBlock, StackPanel, Control } from "babylonjs-gui";
 
-const route = useRoute()
+  const route = useRoute();
 
-definePageMeta({
-    featured: true,
-    title: 'Lab 040 – Lab Data Overlay with Babylon.js GUI',
-    description: 'Using Babylon.js GUI to overlay lab data on the scene instead of using the DOM.'
-})
+  definePageMeta({
+    featured: false,
+    title: "Lab 040 – Lab Data Overlay with Babylon.js GUI",
+    description: "Using Babylon.js GUI to overlay lab data on the scene instead of using the DOM."
+  });
 
-// Add lab-specific content here using the provided 'scene' instance
-const createLabContent = async (scene) => {
+  // Add lab-specific content here using the provided 'scene' instance
+  const createLabContent = async (scene) => {
     // Create a BABYLON GUI AdvancedDynamicTexture
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
@@ -22,8 +22,7 @@ const createLabContent = async (scene) => {
     outerPanel.alpha = 0.8;
     outerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     outerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  
-  
+
     // Create an inner panel to contain the card content. This has no background and is used to add padding to the card content.
     const innerPanel = new StackPanel();
     innerPanel.width = "320px";
@@ -32,7 +31,7 @@ const createLabContent = async (scene) => {
     innerPanel.paddingTop = "10px";
     innerPanel.paddingLeft = "10px";
     innerPanel.paddingRight = "10px";
-    
+
     // Add a header
     const title = new TextBlock();
     title.text = route.meta.title;
@@ -43,7 +42,7 @@ const createLabContent = async (scene) => {
     title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     title.fontSize = "22px";
     title.textWrapping = true;
-    
+
     // Add a description
     const description = new TextBlock();
     description.text = route.meta.description;
@@ -54,31 +53,27 @@ const createLabContent = async (scene) => {
     description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     description.fontSize = "14px";
     description.textWrapping = true;
-    
+
     // Add the header and description to the panel
     innerPanel.addControl(title);
     innerPanel.addControl(description);
-    
+
     // Add the panel to the outer panel
     outerPanel.addControl(innerPanel);
-    
+
     advancedTexture.addControl(outerPanel);
-    
-    
-};
+  };
 
-const bjsCanvas = ref(null);
+  const bjsCanvas = ref(null);
 
-// We don't want to use the lab overlay here since we are building one in this file
-const labSceneOptions = {
-    useOverlay: false 
-};
+  // We don't want to use the lab overlay here since we are building one in this file
+  const labSceneOptions = {
+    useOverlay: false
+  };
 
-useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
-
+  useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 </script>
 
 <template>
-    <canvas id="bjsCanvas" ref="bjsCanvas" ></canvas>
+  <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
 </template>
-

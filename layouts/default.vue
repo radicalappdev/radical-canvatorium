@@ -3,7 +3,7 @@
     <header class="fixed top-0 w-full h-24 bg-slate-800 text-white px-3">
       <div class="flex flex-col">
         <div class="flex flex-row items-center justify-between my-2">
-          <nuxt-link to="/labs/lab000" class="text-lg font-bold">Canvatorium <span class="hidden sm:inline">(revamped)</span></nuxt-link>
+          <nuxt-link to="/" class="text-lg font-bold">Canvatorium <span class="hidden sm:inline">(revamped)</span></nuxt-link>
 
           <div class="flex">
             <nuxt-link to="/" class="mx-2 underline">Featured</nuxt-link>
@@ -11,28 +11,30 @@
           </div>
         </div>
 
-        <div class="flex flex-row w-full mt-1">
-          <button
-            @click="showLab"
-            :class="{
-              'border border-slate-500 rounded-l-md bg-slate-900 text-white font-semibold focus:outline-none': activeTab === 'lab',
-              'bg-slate-700 rounded-l-md': activeTab !== 'lab'
-            }"
-            class="flex-1 py-1 focus:outline-none"
-          >
-            Lab Scene
-          </button>
-          <button
-            @click="showLabNotes"
-            :class="{
-              'border border-slate-500 rounded-r-md bg-slate-900 text-white font-semibold focus:outline-none': activeTab === 'lab-notes',
-              'bg-slate-700 rounded-r-md': activeTab !== 'lab-notes'
-            }"
-            class="flex-1 py-1 focus:outline-none"
-          >
-            Lab Notes
-          </button>
-        </div>
+        <template v-if="$route.path !== '/'">
+          <div class="flex flex-row w-full mt-1">
+            <button
+              @click="showLab"
+              :class="{
+                'border border-slate-500 rounded-l-md bg-slate-900 text-white font-semibold focus:outline-none': activeTab === 'lab',
+                'bg-slate-700 rounded-l-md': activeTab !== 'lab'
+              }"
+              class="flex-1 py-1 focus:outline-none"
+            >
+              Lab Scene
+            </button>
+            <button
+              @click="showLabNotes"
+              :class="{
+                'border border-slate-500 rounded-r-md bg-slate-900 text-white font-semibold focus:outline-none': activeTab === 'lab-notes',
+                'bg-slate-700 rounded-r-md': activeTab !== 'lab-notes'
+              }"
+              class="flex-1 py-1 focus:outline-none"
+            >
+              Lab Notes
+            </button>
+          </div>
+        </template>
       </div>
     </header>
 
@@ -57,79 +59,79 @@
 </template>
 
 <script setup>
-const year = new Date().getFullYear();
+  const year = new Date().getFullYear();
 
-const route = useRoute();
+  const route = useRoute();
 
-// Create a new reactive variable to store the active tab
-const activeTab = ref("lab");
+  // Create a new reactive variable to store the active tab
+  const activeTab = ref("lab");
 
-// Update the active tab when a button is clicked
-const showLab = () => {
-  activeTab.value = "lab";
-};
-
-const showLabNotes = () => {
-  activeTab.value = "lab-notes";
-};
-
-// Add computed classes to show or hide the lab and lab-notes components based on the active tab
-const labClasses = () => ({
-  hidden: activeTab.value !== "lab"
-});
-
-const labNotesClasses = () => ({
-  hidden: activeTab.value !== "lab-notes"
-});
-
-// Always set activeTab to 'lab' when the route changes
-watch(
-  () => route.path,
-  () => {
+  // Update the active tab when a button is clicked
+  const showLab = () => {
     activeTab.value = "lab";
-  }
-);
+  };
+
+  const showLabNotes = () => {
+    activeTab.value = "lab-notes";
+  };
+
+  // Add computed classes to show or hide the lab and lab-notes components based on the active tab
+  const labClasses = () => ({
+    hidden: activeTab.value !== "lab"
+  });
+
+  const labNotesClasses = () => ({
+    hidden: activeTab.value !== "lab-notes"
+  });
+
+  // Always set activeTab to 'lab' when the route changes
+  watch(
+    () => route.path,
+    () => {
+      activeTab.value = "lab";
+    }
+  );
 </script>
 
 <style>
-/* Add styles to the main element to fill the viewport */
-.lab-container {
-  top: 6rem;
-  bottom: 2rem;
-  height: calc(100vh - 8rem);
-  left: 0;
-  right: 0;
-  position: fixed;
-  overflow: scroll;
-}
+  /* Add styles to the main element to fill the viewport */
+  .lab-container {
+    top: 6rem;
+    bottom: 2rem;
+    height: calc(100vh - 8rem);
+    left: 0;
+    right: 0;
+    position: fixed;
+    overflow: scroll;
+  }
 
-.lab-notes {
-  top: 6rem;
-  bottom: 2rem;
-  height: calc(100vh - 8rem);
-  left: 0;
-  right: 0;
-  position: fixed;
-  overflow: scroll;
-}
+  .lab-notes {
+    top: 6rem;
+    bottom: 2rem;
+    height: calc(100vh - 8rem);
+    left: 0;
+    right: 0;
+    position: fixed;
+    overflow: scroll;
+  }
 
-/* Used on the canvas elements in the pages rendered by the slot */
-#bjsCanvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
+  /* Used on the canvas elements in the pages rendered by the slot */
+  #bjsCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 
-/* Hacking the style of the webxr button */
-/* There has to be a better way to do this */
-.babylonVRicon {
-  background-color: #1e293b !important;
-  height: 36px !important;
-  width: 60px !important;
-  position: fixed;
-  bottom: 44px;
-  right: 12px;
-}
+  /* Hacking the style of the webxr button */
+  /* There has to be a better way to do this */
+  .babylonVRicon {
+    background-color: #1e293b !important;
+    height: 36px !important;
+    width: 60px !important;
+    position: fixed;
+    bottom: 44px;
+    right: 12px;
+  }
 </style>
