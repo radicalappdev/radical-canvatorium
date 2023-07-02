@@ -3,7 +3,6 @@ import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, H
 import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
 
-
 interface LabSceneOptions {
   useCamera?: boolean;
   useLights?: boolean;
@@ -13,9 +12,13 @@ interface LabSceneOptions {
 }
 
 // create a type that can be WebXRDefaultExperience or null
-type WebXRDefaultExperienceOrNull = Promise<WebXRDefaultExperience>  | null;
+type WebXRDefaultExperienceOrNull = Promise<WebXRDefaultExperience> | null;
 
-export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, createLabContent: (scene: Scene, xr: WebXRDefaultExperienceOrNull ) => void, options?: LabSceneOptions) => {
+export const useCanvatoriumScene = (
+  bjsCanvas: Ref<HTMLCanvasElement | null>,
+  createLabContent: (scene: Scene, xr: WebXRDefaultExperienceOrNull) => void,
+  options?: LabSceneOptions
+) => {
   let engine: Engine | null = null;
 
   const handleResize = () => {
@@ -40,10 +43,9 @@ export const useCanvatoriumScene = (bjsCanvas: Ref<HTMLCanvasElement | null>, cr
   });
 };
 
-const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene, xr: WebXRDefaultExperienceOrNull ) => void, options?: LabSceneOptions) => {
+const createLabScene = (canvas: HTMLCanvasElement, createLabContent: (scene: Scene, xr: WebXRDefaultExperienceOrNull) => void, options?: LabSceneOptions) => {
   const engine = new Engine(canvas);
   const scene = new Scene(engine);
-
 
   const defaultOptions: LabSceneOptions = {
     useCamera: true,
@@ -162,7 +164,7 @@ const labCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) 
     floorMeshes: teleportMeshes
   });
 
-  console.log("xr player created", xr);
+  console.log("xr player created by useCanvatoriumScene composable", xr);
 
   return xr;
 };
