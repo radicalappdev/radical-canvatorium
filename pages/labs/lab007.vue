@@ -13,17 +13,17 @@
   });
 
   const createLabContent = async (scene) => {
-    // MeshBuilder.CreateBox("box", { size: 1 }, scene).position.y = 0.5;
-
     scene.getCameraByName("camera").position = new BABYLON.Vector3(0, 1, -2);
 
+    console.log("Only logs after this point will be displayed in VR. This one won't.");
+
+    createLabConsoleCard(scene);
+
+    console.log("WebXR Console Logging in Babylon JS");
+  };
+
+  const createLabConsoleCard = (scene) => {
     let conLogData = reactive([]);
-
-    // A reference to the BJS GUI Scroll Viewer, too lazy to query this in the graph...
-    let scrollViewer;
-
-    // A reference to the BJS GUI TextBlock, too lazy to query this in the graph...
-    let loggerText;
 
     // Adapted from https://ourcodeworld.com/articles/read/104/how-to-override-the-console-methods-in-javascript
     const overrideConsole = () => {
@@ -42,11 +42,10 @@
       width: 3.1,
       depth: 0.2
     });
-    // card.position = new BABYLON.Vector3(-1, 1, 1);
     card.position = new Vector3(0, 1, 0);
     card.scaling = new Vector3(0.5, 0.5, 0.5);
+
     const cardMaterial = new StandardMaterial("card-material", scene);
-    // cardMaterial.diffuseColor = labColors.labBlue;
     cardMaterial.specularColor = new Color3(0.2, 0.2, 0.2);
     card.material = cardMaterial;
 
@@ -57,45 +56,39 @@
     const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, 3 * 1024, 2 * 1024);
     advancedTexture.name = "logger-texture";
 
-    var panel = new StackPanel();
+    const panel = new StackPanel();
     advancedTexture.addControl(panel);
 
-    var sv = new ScrollViewer("logger-scroll");
-    scrollViewer = sv;
-    sv.thickness = 48;
-    sv.color = "#3e4a5d";
-    sv.background = "#3e4a5d";
-    sv.opacity = 1;
-    sv.width = `${3 * 1024}px`;
-    sv.height = `${2 * 1024 - 128}px`;
-    sv.barSize = 60;
-    sv.barColor = "#53637b";
-    sv.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    const scrollViewer = new ScrollViewer("logger-scroll");
+    scrollViewer.thickness = 48;
+    scrollViewer.color = "#3e4a5d";
+    scrollViewer.background = "#3e4a5d";
+    scrollViewer.opacity = 1;
+    scrollViewer.width = `${3 * 1024}px`;
+    scrollViewer.height = `${2 * 1024 - 128}px`;
+    scrollViewer.barSize = 60;
+    scrollViewer.barColor = "#53637b";
+    scrollViewer.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    panel.addControl(scrollViewer);
 
-    panel.addControl(sv);
+    const loggerText = new TextBlock("logger-text");
+    loggerText.textWrapping = true;
+    loggerText.width = 1;
+    loggerText.height = 3;
+    loggerText.paddingTop = "1%";
+    loggerText.paddingLeft = "30px";
+    loggerText.paddingRight = "20px";
+    loggerText.paddingBottom = "1%";
+    loggerText.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    loggerText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    loggerText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    loggerText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    loggerText.color = "#d3d9e1";
+    loggerText.fontSize = "96px";
 
-    var tb = new TextBlock("logger-text");
-    loggerText = tb;
-    tb.textWrapping = true;
+    scrollViewer.addControl(loggerText);
 
-    tb.width = 1;
-    tb.height = 3;
-    tb.paddingTop = "1%";
-    tb.paddingLeft = "30px";
-    tb.paddingRight = "20px";
-    tb.paddingBottom = "1%";
-    tb.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    tb.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    tb.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    tb.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    tb.color = "#d3d9e1";
-    tb.fontSize = "96px";
-
-    sv.addControl(tb);
-
-    console.log("WebXR Console Logging in Babylon JS");
-    console.log("Wow");
-    console.log("I know, right?");
+    console.log("• Console card created, watching for logs •");
 
     watch(conLogData, (newValue) => {
       const logData = [...newValue];
@@ -105,6 +98,8 @@
         scrollViewer.verticalBar.value = 1;
       }
     });
+
+    return card;
   };
 
   const bjsCanvas = ref(null);
