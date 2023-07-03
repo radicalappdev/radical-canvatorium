@@ -1,22 +1,20 @@
 <script setup>
-import { MeshBuilder } from "babylonjs";
+  import { MeshBuilder } from "babylonjs";
 
-definePageMeta({
+  definePageMeta({
     featured: false,
-    title: 'Lab Template',
-    description: 'Copy this template to create a new lab'
-})
+    title: "Lab Template",
+    description: "Copy this template to create a new lab"
+  });
 
-const createLabContent = async (scene)  => {
-    
-    MeshBuilder.CreateBox("box", { size: 1 }, scene).position.y = 0.5;  
-    
-};
+  const createLabContent = async (scene) => {
+    MeshBuilder.CreateBox("box", { size: 1 }, scene).position.y = 0.5;
+  };
 
-const bjsCanvas = ref(null);
-useCanvatoriumScene(bjsCanvas, createLabContent);
+  const bjsCanvas = ref(null);
+  useCanvatoriumScene(bjsCanvas, createLabContent);
 </script>
 
 <template>
-    <canvas id="bjsCanvas" ref="bjsCanvas" ></canvas>
+  <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
 </template>
