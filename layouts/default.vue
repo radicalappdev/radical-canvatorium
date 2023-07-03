@@ -72,7 +72,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border: #1e293b 1px solid;
+    border: #64748b 1px solid;
   }
 
   /* Hacking the style of the webxr button */
