@@ -157,8 +157,16 @@
     });
   }
 
+  const labSceneOptions = {
+    useCamera: true,
+    useLight: true,
+    useRoom: true,
+    useOverlay: true
+  };
+
   const bjsCanvas = ref(null);
-  useCanvatoriumScene(bjsCanvas, createLabContent);
+  // With scene options
+  useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 </script>
 
 <template>

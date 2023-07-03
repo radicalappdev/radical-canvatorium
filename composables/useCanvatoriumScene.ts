@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, Ref } from "vue";
 import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera, WebXRDefaultExperience } from "babylonjs";
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button } from "babylonjs-gui";
+import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button, Rectangle } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
 
 interface LabSceneOptions {
@@ -179,8 +179,9 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
 
   const title = new TextBlock();
   title.text = titleText;
-  title.color = "black";
-  title.fontSize = "18px";
+  title.color = "white";
+
+  title.fontSize = "16px";
   title.fontWeight = "bold";
   title.textWrapping = true;
   title.paddingTop = "10px";
@@ -189,6 +190,13 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   title.paddingRight = "12px";
   title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
   title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+  // add a background to the title
+  const titleBackground = new Rectangle();
+  titleBackground.width = "100%";
+  titleBackground.height = "40px";
+  titleBackground.background = labColors.slate8;
+  titleBackground.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
 
   const buttonScreenshotLabel = new TextBlock();
   buttonScreenshotLabel.text = "Screenshot";
@@ -230,6 +238,7 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   });
 
   // Populate the advanced texture
+  advancedTexture.addControl(titleBackground);
   advancedTexture.addControl(title);
   advancedTexture.addControl(buttonScreenshot);
 };
