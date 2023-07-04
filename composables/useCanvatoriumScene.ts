@@ -221,10 +221,12 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
 
   buttonScreenshot.onPointerClickObservable.add(() => {
     buttonScreenshot.isVisible = false;
+    titleBackground.isVisible = false;
+    title.isVisible = false;
 
     const size = {
-      width: engine.getRenderWidth(),
-      height: engine.getRenderHeight()
+      width: engine.getRenderWidth() * 2,
+      height: engine.getRenderHeight() * 2
     };
     const currentCamera = scene.activeCamera;
     if (currentCamera) {
@@ -234,6 +236,8 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
     // wait a few frames for the screenshot to be created before showing the button again
     setTimeout(() => {
       buttonScreenshot.isVisible = true;
+      titleBackground.isVisible = true;
+      title.isVisible = true;
     }, 100);
   });
 
