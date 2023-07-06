@@ -1,0 +1,85 @@
+<script setup>
+  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial, ExecuteCodeAction, ActionManager } from "babylonjs";
+  import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
+
+  definePageMeta({
+    featured: true,
+    title: "Lab 006 - Nav Test B",
+    description: "Just a navigation test in Nuxt and WebXR"
+  });
+
+  const createLabContent = async (scene) => {
+    const material = new StandardMaterial("background-material", scene);
+    material.diffuseColor = new Color3.FromHexString(labColors.slate2);
+    material.alpha = 0.8;
+
+    const background = MeshBuilder.CreateBox("background", { width: 3, height: 1, depth: 0.1 });
+    background.material = material;
+    background.position.y = 1.1;
+    background.enableEdgesRendering();
+    background.edgesWidth = 1.5;
+    background.edgesColor = new Color4.FromHexString(labColors.slate7);
+    background.position = new Vector3(0, 2, 9.8);
+
+    const guiPlane = MeshBuilder.CreatePlane("gui-plane");
+    guiPlane.parent = background;
+    guiPlane.position.y = 0.14;
+    guiPlane.position.z = -0.08;
+
+    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(guiPlane);
+    advancedTexture.name = "card-texture";
+
+    const cardText = new TextBlock("card-text");
+    cardText.text = "Lab 006";
+    cardText.color = labColors.slate8;
+    cardText.fontSize = 64;
+
+    const subtitleText = new TextBlock("subtitle-text");
+    subtitleText.text = "Nav Test B";
+    subtitleText.color = labColors.slate7;
+    subtitleText.fontSize = 48;
+    subtitleText.top = 70;
+
+    advancedTexture.addControl(cardText);
+    advancedTexture.addControl(subtitleText);
+    guiPlane.scaling = new Vector3(5, 5, 5);
+
+    const mat = new StandardMaterial("mat", scene);
+    mat.diffuseColor = new Color3.FromHexString(labColors.slate7);
+
+    const pyramid = MeshBuilder.CreatePolyhedron("pyramid", { type: 0, size: 0.25 }, scene);
+    pyramid.position.y = 0.5;
+    pyramid.rotation.x = Math.PI / 2;
+    pyramid.material = mat;
+
+    pyramid.actionManager = new ActionManager(scene);
+    pyramid.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPointerOverTrigger, () => {
+        pyramid.scaling = new Vector3(1.1, 1.1, 1.1);
+      })
+    );
+    pyramid.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPointerOutTrigger, () => {
+        pyramid.scaling = new Vector3(1, 1, 1);
+      })
+    );
+
+    // when clicked, go to lab 005
+    pyramid.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPickTrigger, () => {
+        // navigate to lab 005 using Nuxt 3 router
+        // navigateTo("/labs/lab005");
+
+        // use window location to navigate to lab 005
+        window.location.href = "/labs/lab005";
+      })
+    );
+  };
+
+  const bjsCanvas = ref(null);
+  useCanvatoriumScene(bjsCanvas, createLabContent);
+</script>
+
+<template>
+  <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
+</template>
