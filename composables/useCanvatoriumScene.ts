@@ -104,7 +104,7 @@ const labCreateCamera = (canvas: HTMLCanvasElement, scene: Scene) => {
   camera.upperBetaLimit = Math.PI / 1.5;
   camera.lowerRadiusLimit = 2;
   camera.upperRadiusLimit = 128;
-  camera.setPosition(new Vector3(0, 3.5, -6));
+  camera.setPosition(new Vector3(0, 1.5, -6));
   camera.setTarget(new Vector3(0, 1, 0));
   camera.attachControl(canvas, true);
 };

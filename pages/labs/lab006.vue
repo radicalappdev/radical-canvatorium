@@ -1,5 +1,6 @@
 <script setup>
-  import { MeshBuilder, StandardMaterial, Color3, Vector3 } from "babylonjs";
+  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial } from "babylonjs";
+  import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
@@ -8,6 +9,41 @@
   });
 
   const createLabContent = async (scene) => {
+    const material = new StandardMaterial("background-material", scene);
+    material.diffuseColor = new Color3.FromHexString(labColors.slate2);
+    material.alpha = 0.8;
+
+    const background = MeshBuilder.CreateBox("background", { width: 3, height: 1, depth: 0.1 });
+    background.material = material;
+    background.position.y = 1.1;
+    background.enableEdgesRendering();
+    background.edgesWidth = 1.5;
+    background.edgesColor = new Color4.FromHexString(labColors.slate7);
+    background.position = new Vector3(0, 2, 9.8);
+
+    const guiPlane = MeshBuilder.CreatePlane("gui-plane");
+    guiPlane.parent = background;
+    guiPlane.position.y = 0.14;
+    guiPlane.position.z = -0.08;
+
+    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(guiPlane);
+    advancedTexture.name = "card-texture";
+
+    const cardText = new TextBlock("card-text");
+    cardText.text = "Lab 006";
+    cardText.color = labColors.slate8;
+    cardText.fontSize = 64;
+
+    const subtitleText = new TextBlock("subtitle-text");
+    subtitleText.text = "Nav Test B";
+    subtitleText.color = labColors.slate7;
+    subtitleText.fontSize = 48;
+    subtitleText.top = 70;
+
+    advancedTexture.addControl(cardText);
+    advancedTexture.addControl(subtitleText);
+    guiPlane.scaling = new Vector3(5, 5, 5);
+
     const sphere = MeshBuilder.CreateSphere("sphere", { size: 1 }, scene);
     sphere.position.y = 0.5;
 
