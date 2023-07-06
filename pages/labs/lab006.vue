@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial } from "babylonjs";
+  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial, ExecuteCodeAction, ActionManager } from "babylonjs";
   import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
   definePageMeta({
@@ -44,13 +44,29 @@
     advancedTexture.addControl(subtitleText);
     guiPlane.scaling = new Vector3(5, 5, 5);
 
-    const sphere = MeshBuilder.CreateSphere("sphere", { size: 1 }, scene);
-    sphere.position.y = 0.5;
+    const mat = new StandardMaterial("mat", scene);
+    mat.diffuseColor = new Color3.FromHexString(labColors.slate7);
+
+    const pyramid = MeshBuilder.CreatePolyhedron("pyramid", { type: 0, size: 0.25 }, scene);
+    pyramid.position.y = 0.5;
+    pyramid.rotation.x = Math.PI / 2;
+    pyramid.material = mat;
+
+    pyramid.actionManager = new ActionManager(scene);
+    pyramid.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPointerOverTrigger, () => {
+        pyramid.scaling = new Vector3(1.1, 1.1, 1.1);
+      })
+    );
+    pyramid.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPointerOutTrigger, () => {
+        pyramid.scaling = new Vector3(1, 1, 1);
+      })
+    );
 
     // when clicked, go to lab 005
-    sphere.actionManager = new BABYLON.ActionManager(scene);
-    sphere.actionManager.registerAction(
-      new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, () => {
+    pyramid.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPickTrigger, () => {
         // navigate to lab 005 using Nuxt 3 router
         // navigateTo("/labs/lab005");
 

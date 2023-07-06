@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial } from "babylonjs";
+  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial, ActionManager, ExecuteCodeAction } from "babylonjs";
   import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
   definePageMeta({
@@ -44,13 +44,27 @@
     advancedTexture.addControl(subtitleText);
     guiPlane.scaling = new Vector3(5, 5, 5);
 
-    const box = MeshBuilder.CreateBox("box", { size: 1 }, scene);
+    const mat = new StandardMaterial("mat", scene);
+    mat.diffuseColor = new Color3.FromHexString(labColors.slate7);
+
+    const box = MeshBuilder.CreateBox("box", { size: 0.5 }, scene);
     box.position.y = 0.5;
+    box.material = mat;
 
     // when clicked, go to lab 006
-    box.actionManager = new BABYLON.ActionManager(scene);
+    box.actionManager = new ActionManager(scene);
     box.actionManager.registerAction(
-      new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, () => {
+      new ExecuteCodeAction(ActionManager.OnPointerOverTrigger, () => {
+        box.scaling = new Vector3(1.1, 1.1, 1.1);
+      })
+    );
+    box.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPointerOutTrigger, () => {
+        box.scaling = new Vector3(1, 1, 1);
+      })
+    );
+    box.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPickTrigger, () => {
         // navigate to lab 006 using Nuxt 3 router - failed in WebXR
         // navigateTo("/labs/lab006");
 
