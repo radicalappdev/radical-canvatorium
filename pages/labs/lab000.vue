@@ -1,6 +1,6 @@
 <script setup>
   import { ref } from "vue";
-  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial } from "babylonjs";
+  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial, SceneLoader } from "babylonjs";
   import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
   definePageMeta({
@@ -8,21 +8,21 @@
     title: "Lab 000 – Hello Canvatorium",
     description: "This is a recreation of the original Canvatorium Lab 000 where I set up some shared lab resources.",
     labNotes: `Welcome to Canvatorium Lab 000.
-This is a recreation of the original Canvatorium Lab 000 where I can set up and test some shared lab resources.
+  This is a recreation of the original Canvatorium Lab 000 where I can set up and test some shared lab resources.
 
-### Done
-- Camera
-- Lights
-- Room and teleport mesh
-- WebXR helper
+  ### Done
+  - Camera
+  - Lights
+  - Room and teleport mesh
+  - WebXR helper
 
-### To do
-- VR Controlelr input
-- VR Navigation system
-- VR Menu
-    - Lab info page
-    - Console log
-`
+  ### To do
+  - VR Controlelr input
+  - VR Navigation system
+  - VR Menu
+      - Lab info page
+      - Console log
+  `
   });
 
   // Add lab-specific content here using the provided 'scene' instance
@@ -36,65 +36,80 @@ This is a recreation of the original Canvatorium Lab 000 where I can set up and 
       cam.alpha += 0.005;
     });
 
-    const material = new StandardMaterial("background-material", scene);
-    material.diffuseColor = new Color3.FromHexString(labColors.slate2);
-    material.alpha = 1;
+    // Load some assets
+    SceneLoader.LoadAssetContainer("/assets/", "glass_card_rect.glb", scene, function (container) {
+      const meshes = container.meshes;
+      const card = meshes[0];
+      card.name = "card";
+      card.position = new BABYLON.Vector3(0, 1, 0);
+      card.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
 
-    const background = MeshBuilder.CreateBox("background", { width: 3, height: 1, depth: 0.1 });
-    background.material = material;
-    background.position.y = 1.1;
-    background.enableEdgesRendering();
-    background.edgesWidth = 1.5;
-    background.edgesColor = new Color4.FromHexString(labColors.slate7);
+      const magerials = container.materials;
+      const material = magerials[0];
 
-    const guiPlane = MeshBuilder.CreatePlane("gui-plane");
-    guiPlane.parent = background;
-    guiPlane.position.y = 0.14;
-    guiPlane.position.z = -0.08;
+      // material.alpha = 0.9; // Adjust the transparency level as needed
+      // material.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
+      // material.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND;
 
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(guiPlane);
-    advancedTexture.name = "card-texture";
+      card.material = material;
 
-    const cardText = new TextBlock("card-text");
-    cardText.text = "Canvatorium";
-    cardText.color = labColors.slate8;
-    cardText.fontSize = 64;
+      createGUI(card);
 
-    const subtitleText = new TextBlock("subtitle-text");
-    subtitleText.text = "(revamped)";
-    subtitleText.color = labColors.slate7;
-    subtitleText.fontSize = 32;
-    subtitleText.top = 60;
+      // Adds all elements to the scene
+      container.addAllToScene();
+    });
 
-    advancedTexture.addControl(cardText);
-    advancedTexture.addControl(subtitleText);
-    guiPlane.scaling = new Vector3(5, 5, 5);
+    const createGUI = (background) => {
+      const guiPlane = MeshBuilder.CreatePlane("gui-plane");
+      guiPlane.parent = background;
+      guiPlane.position.z = 0.05;
+      guiPlane.position.y = 0.3;
 
-    // Create a second plane with a different texture to show on the back of the card
-    const guiPlane2 = MeshBuilder.CreatePlane("gui-plane2");
-    guiPlane2.parent = background;
-    guiPlane2.position.y = 0.14;
-    guiPlane2.position.z = 0.08;
-    guiPlane2.rotation.y = Math.PI;
-    guiPlane2.scaling = new Vector3(5, 5, 5);
+      guiPlane.rotation.y = Math.PI;
+      guiPlane.scaling = new Vector3(10, 10, 10);
 
-    const advancedTexture2 = AdvancedDynamicTexture.CreateForMesh(guiPlane2);
-    advancedTexture2.name = "card-texture2";
+      const advancedTexture = AdvancedDynamicTexture.CreateForMesh(guiPlane);
+      advancedTexture.name = "card-texture";
 
-    const cardText2 = new TextBlock("card-text2");
-    cardText2.text = "An experimental design lab for";
-    cardText2.color = labColors.slate8;
-    cardText2.fontSize = 32;
+      const cardText = new TextBlock("card-text");
+      cardText.text = "Canvatorium";
+      cardText.color = labColors.slate8;
+      cardText.fontSize = 64;
 
-    const subtitleText2 = new TextBlock("subtitle-text2");
+      const subtitleText = new TextBlock("subtitle-text");
+      subtitleText.text = "(revamped)";
+      subtitleText.color = labColors.slate7;
+      subtitleText.fontSize = 32;
+      subtitleText.top = 60;
 
-    subtitleText2.text = "Spatial Computing";
-    subtitleText2.color = labColors.slate8;
-    subtitleText2.fontSize = 32;
-    subtitleText2.top = 60;
+      advancedTexture.addControl(cardText);
+      advancedTexture.addControl(subtitleText);
 
-    advancedTexture2.addControl(cardText2);
-    advancedTexture2.addControl(subtitleText2);
+      // Create a second plane with a different texture to show on the back of the card
+      const guiPlane2 = MeshBuilder.CreatePlane("gui-plane2");
+      guiPlane2.parent = background;
+      guiPlane2.position.z = -0.2;
+      guiPlane2.position.y = 0.3;
+      guiPlane2.scaling = new Vector3(10, 10, 10);
+
+      const advancedTexture2 = AdvancedDynamicTexture.CreateForMesh(guiPlane2);
+      advancedTexture2.name = "card-texture2";
+
+      const cardText2 = new TextBlock("card-text2");
+      cardText2.text = "An experimental design lab for";
+      cardText2.color = labColors.slate8;
+      cardText2.fontSize = 32;
+
+      const subtitleText2 = new TextBlock("subtitle-text2");
+
+      subtitleText2.text = "Spatial Computing";
+      subtitleText2.color = labColors.slate8;
+      subtitleText2.fontSize = 32;
+      subtitleText2.top = 60;
+
+      advancedTexture2.addControl(cardText2);
+      advancedTexture2.addControl(subtitleText2);
+    };
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
