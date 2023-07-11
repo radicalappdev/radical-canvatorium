@@ -1,6 +1,6 @@
 <script setup>
   import { ref } from "vue";
-  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial, SceneLoader } from "babylonjs";
+  import { Vector3, Color3, Material, MeshBuilder, SceneLoader } from "babylonjs";
   import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
   definePageMeta({
@@ -32,24 +32,26 @@
     cam.position = new Vector3(0, 1.4, -4);
 
     // make the camera move back and forth along it's orbit path, but stay in front of the lab content
-    scene.registerBeforeRender(() => {
-      cam.alpha += 0.005;
-    });
+    // scene.registerBeforeRender(() => {
+    //   cam.alpha += 0.005;
+    // });
 
     // Load some assets
     SceneLoader.LoadAssetContainer("/assets/", "glass_card_rect.glb", scene, function (container) {
       const meshes = container.meshes;
       const card = meshes[0];
-      card.name = "card";
-      card.position = new BABYLON.Vector3(0, 1, 0);
-      card.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
+      card.name = "card-rect";
+      card.position = new Vector3(0, 1, 0);
+      card.scaling = new Vector3(0.4, 0.4, 0.4);
 
-      const magerials = container.materials;
-      const material = magerials[0];
+      const materials = container.materials;
+      const material = materials[0];
+      material.name = "card-rect-material";
 
-      // material.alpha = 0.9; // Adjust the transparency level as needed
-      // material.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
-      // material.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND;
+      material.albedoColor = new Color3.FromHexString(labColors.slate4);
+      material.alpha = 0.9;
+      material.alphaMode = Material.ALPHA_COMBINE;
+      material.transparencyMode = Material.MATERIAL_ALPHABLEND;
 
       card.material = material;
 
@@ -86,29 +88,29 @@
       advancedTexture.addControl(subtitleText);
 
       // Create a second plane with a different texture to show on the back of the card
-      const guiPlane2 = MeshBuilder.CreatePlane("gui-plane2");
-      guiPlane2.parent = background;
-      guiPlane2.position.z = -0.2;
-      guiPlane2.position.y = 0.3;
-      guiPlane2.scaling = new Vector3(10, 10, 10);
+      // const guiPlane2 = MeshBuilder.CreatePlane("gui-plane2");
+      // guiPlane2.parent = background;
+      // guiPlane2.position.z = -0.2;
+      // guiPlane2.position.y = 0.3;
+      // guiPlane2.scaling = new Vector3(10, 10, 10);
 
-      const advancedTexture2 = AdvancedDynamicTexture.CreateForMesh(guiPlane2);
-      advancedTexture2.name = "card-texture2";
+      // const advancedTexture2 = AdvancedDynamicTexture.CreateForMesh(guiPlane2);
+      // advancedTexture2.name = "card-texture2";
 
-      const cardText2 = new TextBlock("card-text2");
-      cardText2.text = "An experimental design lab for";
-      cardText2.color = labColors.slate8;
-      cardText2.fontSize = 32;
+      // const cardText2 = new TextBlock("card-text2");
+      // cardText2.text = "An experimental design lab for";
+      // cardText2.color = labColors.slate8;
+      // cardText2.fontSize = 32;
 
-      const subtitleText2 = new TextBlock("subtitle-text2");
+      // const subtitleText2 = new TextBlock("subtitle-text2");
 
-      subtitleText2.text = "Spatial Computing";
-      subtitleText2.color = labColors.slate8;
-      subtitleText2.fontSize = 32;
-      subtitleText2.top = 60;
+      // subtitleText2.text = "Spatial Computing";
+      // subtitleText2.color = labColors.slate8;
+      // subtitleText2.fontSize = 32;
+      // subtitleText2.top = 60;
 
-      advancedTexture2.addControl(cardText2);
-      advancedTexture2.addControl(subtitleText2);
+      // advancedTexture2.addControl(cardText2);
+      // advancedTexture2.addControl(subtitleText2);
     };
   };
 
