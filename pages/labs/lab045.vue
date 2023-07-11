@@ -10,7 +10,6 @@
 
   const createLabContent = async (scene) => {
     lab045_example_1(scene);
-    // lab045_example_2(scene);
   };
 
   // This will be a reusable asset that I can use in other labs
@@ -85,7 +84,7 @@
     paragraph.top = 150;
 
     // Add a row of 3 Babylon JS GUI buttons to the bottom of the card
-    const button1 = Button.CreateSimpleButton("but1", "Threads");
+    const button1 = Button.CreateSimpleButton("but1", "Modal");
     button1.width = 0.2;
     button1.height = "40px";
     button1.color = labColors.slate8;
@@ -119,7 +118,11 @@
     button2.top = "-40px";
     button2.zIndex = 1;
     button2.onPointerUpObservable.add(() => {
+      // hide the current card
+      plane.visibility = 0;
+      plane.position.z = 0.1;
       console.log("Button 2 pressed");
+      lab045_example_3(scene);
     });
     advancedTexture.addControl(button2);
 
@@ -187,6 +190,56 @@
       // get the parent plance and push it back to the original position
       const parentPlane = scene.getMeshByName("parent-plane");
       parentPlane.position.z = 0;
+    });
+    advancedTexture.addControl(button1);
+  };
+
+  //   lab045_example_3 is another example of a card with a paragraph of text and a button
+  // this time it will hide the card and show a new card in its place
+
+  const lab045_example_3 = (scene) => {
+    // a simple card with a paragraph of text and a button
+
+    const { plane, advancedTexture } = createLabCardRect(10, 4.2, scene);
+
+    plane.position = new Vector3(0, 1.2, 0);
+    plane.scaling = new Vector3(0.2, 0.2, 0.2);
+
+    const paragraph = new TextBlock();
+    paragraph.text = "Developer General working with a variety of technology to solve real problems. I focus on UI/UX, Workflow, and Spatial Computing.";
+    paragraph.color = labColors.slate8;
+    paragraph.fontSize = 28;
+    paragraph.textWrapping = true;
+    paragraph.width = 0.9;
+    paragraph.height = 0.9;
+    paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    paragraph.top = 30;
+
+    advancedTexture.addControl(paragraph);
+
+    // Add a Close button to the bottom of the card
+    const button1 = Button.CreateSimpleButton("but1", "Close");
+    button1.width = 0.2;
+    button1.height = "40px";
+    button1.color = labColors.slate8;
+    button1.cornerRadius = 20;
+    button1.background = labColors.slate2;
+    button1.thickness = 2;
+    button1.borderColor = labColors.slate8;
+    button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    button1.top = "-40px";
+    button1.zIndex = 1;
+    button1.onPointerUpObservable.add(() => {
+      console.log("Button 1 pressed");
+      // get the parent plance and push it back to the original position
+      const parentPlane = scene.getMeshByName("parent-plane");
+      parentPlane.visibility = 1;
+      parentPlane.position.z = 0;
+
+      //dispose of the card
+      plane.dispose();
     });
     advancedTexture.addControl(button1);
   };
