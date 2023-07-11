@@ -1,6 +1,6 @@
 <script setup>
   import { Vector3, MeshBuilder } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock, Image, Ellipse, Control, Rectangle, Button, Container } from "babylonjs-gui";
+  import { AdvancedDynamicTexture, TextBlock, Image, Ellipse, Control, Rectangle, Button } from "babylonjs-gui";
 
   definePageMeta({
     featured: false,
@@ -10,6 +10,7 @@
 
   const createLabContent = async (scene) => {
     lab045_example_1(scene);
+    // lab045_example_2(scene);
   };
 
   // This will be a reusable asset that I can use in other labs
@@ -30,7 +31,6 @@
     rect.alpha = 0.9;
     rect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
     rect.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-    // rect.zIndex = -10; // always behind other controls
     advancedTexture.addControl(rect);
 
     return {
@@ -43,6 +43,7 @@
   const lab045_example_1 = (scene) => {
     const { plane, advancedTexture } = createLabCardRect(8, 4.2, scene);
 
+    plane.name = "parent-plane";
     plane.position = new Vector3(0, 1.2, 0);
     plane.scaling = new Vector3(0.2, 0.2, 0.2);
 
@@ -73,7 +74,7 @@
     cardText.fontSize = 64;
 
     const paragraph = new TextBlock();
-    paragraph.text = "Developer General working with a variety of technology to solve real problems. I focus on UI/UX, Workflow, and Spatial Computing.";
+    paragraph.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.";
     paragraph.color = labColors.slate8;
     paragraph.fontSize = 28;
     paragraph.textWrapping = true;
@@ -99,6 +100,9 @@
     button1.zIndex = 1;
     button1.onPointerUpObservable.add(() => {
       console.log("Button 1 pressed");
+      // push the current card back just a bit
+      plane.position.z = 0.1;
+      lab045_example_2(scene);
     });
     advancedTexture.addControl(button1);
 
@@ -140,6 +144,51 @@
     advancedTexture.addControl(paragraph);
 
     advancedTexture.addControl(cardText);
+  };
+
+  const lab045_example_2 = (scene) => {
+    // a simple card with a paragraph of text and a button
+
+    const { plane, advancedTexture } = createLabCardRect(6, 3.2, scene);
+
+    plane.position = new Vector3(0, 1.2, 0);
+    plane.scaling = new Vector3(0.2, 0.2, 0.2);
+
+    const paragraph = new TextBlock();
+    paragraph.text = "Developer General working with a variety of technology to solve real problems. I focus on UI/UX, Workflow, and Spatial Computing.";
+    paragraph.color = labColors.slate8;
+    paragraph.fontSize = 28;
+    paragraph.textWrapping = true;
+    paragraph.width = 0.9;
+    paragraph.height = 0.9;
+    paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    paragraph.top = 30;
+
+    advancedTexture.addControl(paragraph);
+
+    // Add a Close button to the bottom of the card
+    const button1 = Button.CreateSimpleButton("but1", "Close");
+    button1.width = 0.2;
+    button1.height = "40px";
+    button1.color = labColors.slate8;
+    button1.cornerRadius = 20;
+    button1.background = labColors.slate2;
+    button1.thickness = 2;
+    button1.borderColor = labColors.slate8;
+    button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    button1.top = "-40px";
+    button1.zIndex = 1;
+    button1.onPointerUpObservable.add(() => {
+      console.log("Button 1 pressed");
+      //dispose of the card
+      plane.dispose();
+      // get the parent plance and push it back to the original position
+      const parentPlane = scene.getMeshByName("parent-plane");
+      parentPlane.position.z = 0;
+    });
+    advancedTexture.addControl(button1);
   };
 
   const bjsCanvas = ref(null);
