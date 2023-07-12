@@ -10,14 +10,16 @@
 
   const createLabContent = async (scene) => {
     const showModal = ref(false);
+    const showReplace = ref(false);
+    const shpwDetail = ref(false);
 
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -2);
 
-    // Examples of using the canLabCardSimple
+    // Examples of using the canLabCardSimple, defined in lab-cards.ts
+    // Build a main / parent card
     const lab045_example_1 = (scene) => {
-      // canLabCardSimple is defined in lab-cards.ts
       const { plane, advancedTexture } = canLabCardSimple(8, 4.2, scene);
       plane.name = "parent-plane";
       plane.position = new Vector3(0, 1.2, 0);
@@ -78,10 +80,11 @@
       button2.zIndex = 1;
       button2.onPointerUpObservable.add(() => {
         // hide the current card
-        plane.visibility = 0;
-        plane.position.z = 0.1;
-        console.log("Button 2 pressed");
-        lab045_example_3(scene);
+        // plane.visibility = 0;
+        // plane.position.z = 0.1;
+        console.log("Replace Open");
+        showReplace.value = true;
+        // lab045_example_3(scene);
       });
       advancedTexture.addControl(button2);
 
@@ -101,9 +104,22 @@
       watch(showModal, (newValue) => {
         if (newValue) {
           plane.position.z = 0.1;
+          plane.visibility = 0.5;
           lab045_example_2(scene);
         } else {
           plane.position.z = 0;
+          plane.visibility = 1;
+        }
+      });
+
+      watch(showReplace, (newValue) => {
+        if (newValue) {
+          plane.position.z = 0.1;
+          plane.visibility = 0.0;
+          lab045_example_3(scene);
+        } else {
+          plane.position.z = 0;
+          plane.visibility = 1;
         }
       });
     };
@@ -174,14 +190,9 @@
       button1.top = "-40px";
       button1.zIndex = 1;
       button1.onPointerUpObservable.add(() => {
-        console.log("Button 1 pressed");
-        // get the parent plance and push it back to the original position
-        const parentPlane = scene.getMeshByName("parent-plane");
-        parentPlane.visibility = 1;
-        parentPlane.position.z = 0;
-
-        //dispose of the card
+        console.log("Replace Close");
         plane.dispose();
+        showReplace.value = false;
       });
       advancedTexture.addControl(button1);
     };
