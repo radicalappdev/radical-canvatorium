@@ -1,82 +1,70 @@
 <script setup>
-import { MeshBuilder } from "babylonjs";
-import { AdvancedDynamicTexture, Button, TextBlock } from "babylonjs-gui";
+  import { MeshBuilder, Vector3 } from "babylonjs";
+  import { AdvancedDynamicTexture, Button, TextBlock } from "babylonjs-gui";
 
-definePageMeta({
+  definePageMeta({
     featured: true,
-    title: 'Lab 002 – Reactivity with Babylon.js GUI',
-    description: 'Using Vue Watch to increment a count with Babylon.js GUI.'
-})
+    title: "Lab 002 – Reactivity with Babylon.js GUI",
+    description: "Using Vue Watch to increment a count with Babylon.js GUI."
+  });
 
-const createLabContent = async (scene)  => {
-    
+  const createLabContent = async (scene) => {
     // Set count as a reactive value
     const count = ref(0);
-    
-    const plane = MeshBuilder.CreatePlane("plane", { size: 2}, scene);
-    plane.position.y = 1.8;
-    
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
-    advancedTexture.name = "card-texture";
-    advancedTexture.background = labColors.slate3;
+
+    const { plane, advancedTexture } = canLabCardSimple(6, 4.4, scene);
+    plane.position.y = 1.3;
+    plane.scaling = new Vector3(0.3, 0.3, 0.3);
+
+    console.log("advancedTexture", advancedTexture.getSize());
 
     // Add a title text block
     const titleText = new TextBlock("title-text");
     titleText.text = "Modify a count with Vue watch()";
     titleText.color = "black";
-    titleText.fontSize = 64;
-    titleText.top = -200;
+    titleText.fontSize = 36;
+    titleText.width = 0.9;
+    titleText.top = -80;
     advancedTexture.addControl(titleText);
-    
+
     const counterText = new TextBlock("couter-text");
     counterText.text = "0";
     counterText.color = "black";
-    counterText.fontSize = 64;
+    counterText.fontSize = 72;
     advancedTexture.addControl(counterText);
 
     // Create a 2d button to increment the count
-    const buttonIncrement = Button.CreateSimpleButton("button", "+");
-    buttonIncrement.top = 250;
-    buttonIncrement.left = "105px";
-    buttonIncrement.width = 0.2;
-    buttonIncrement.height = "200px";
-    buttonIncrement.color = "white";
-    buttonIncrement.fontSize = 64;
-    buttonIncrement.cornerRadius = 20;
-    buttonIncrement.background = labColors.slate4;
+    // const buttonIncrement = Button.CreateSimpleButton("button", "+");
+    const buttonIncrement = canLabButtonSimple("button-Increment", "+");
+    buttonIncrement.top = 80;
+    buttonIncrement.left = "80px";
+    buttonIncrement.fontSize = 48;
     buttonIncrement.onPointerUpObservable.add(() => {
-        // We can modify the count directly instead of editing the value of the counterText control.
-        count.value++;
+      // We can modify the count directly instead of editing the value of the counterText control.
+      count.value++;
     });
     advancedTexture.addControl(buttonIncrement);
 
     // Create a 2d button to decrement the count
-    const buttonDecrement = Button.CreateSimpleButton("button", "–");
-    buttonDecrement.top = 250;
-    buttonDecrement.left = "-105px";
-    buttonDecrement.width = 0.2;
-    buttonDecrement.height = "200px";
-    buttonDecrement.color = "white";
-    buttonDecrement.fontSize = 64;
-    buttonDecrement.cornerRadius = 20;
-    buttonDecrement.background = labColors.slate4;
+    const buttonDecrement = canLabButtonSimple("button-decrement", "-");
+    buttonDecrement.top = 80;
+    buttonDecrement.left = "-80px";
+    buttonDecrement.fontSize = 48;
     buttonDecrement.onPointerUpObservable.add(() => {
-        // We can modify the count directly instead of editing the value of the counterText control.
-        count.value--;
+      // We can modify the count directly instead of editing the value of the counterText control.
+      count.value--;
     });
     advancedTexture.addControl(buttonDecrement);
-    
-    // watch() the count value and update the counterText control 
+
+    // watch() the count value and update the counterText control
     watch(count, (newValue) => {
-        scene.getTextureByName("card-texture").getControlByName("couter-text").text = newValue;
+      scene.getTextureByName("lab-card-rect-texture").getControlByName("couter-text").text = newValue;
     });
-    
-};
+  };
 
-const bjsCanvas = ref(null);
-useCanvatoriumScene(bjsCanvas, createLabContent);
-
+  const bjsCanvas = ref(null);
+  useCanvatoriumScene(bjsCanvas, createLabContent);
 </script>
 <template>
-    <canvas id="bjsCanvas" ref="bjsCanvas" ></canvas>
+  <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
 </template>
