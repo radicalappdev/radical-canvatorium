@@ -1,7 +1,7 @@
 import { Scene, MeshBuilder } from "babylonjs";
-import { AdvancedDynamicTexture, Rectangle } from "babylonjs-gui";
+import { AdvancedDynamicTexture, Rectangle, Button } from "babylonjs-gui";
 
-// This will be a reusable asset that I can use in other labs
+// A styled 2D GUI card with a plane and ADT
 export const canLabCardSimple = (width: number, height: number, scene: Scene) => {
   const plane = MeshBuilder.CreatePlane("lab-card-rect-mesh", { width: width, height: height }, scene);
 
@@ -21,4 +21,18 @@ export const canLabCardSimple = (width: number, height: number, scene: Scene) =>
     plane,
     advancedTexture
   };
+};
+
+// A styped button for 2D GUI
+export const canLabButtonSimple = (name: string, label: string) => {
+  const button = Button.CreateSimpleButton(name, label);
+  button.width = 0.2;
+  button.height = "50px";
+  button.fontSize = "24px";
+  button.color = labColors.slate8;
+  button.cornerRadius = 20;
+  button.background = labColors.slate2;
+  button.thickness = 2;
+
+  return button;
 };

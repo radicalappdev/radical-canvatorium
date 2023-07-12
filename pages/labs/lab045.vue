@@ -62,35 +62,20 @@
     advancedTexture.addControl(paragraph);
 
     // Add a row of 3 Babylon JS GUI buttons to the bottom of the card
-    const button1 = Button.CreateSimpleButton("but1", "Modal");
-    button1.width = 0.2;
-    button1.height = "40px";
-    button1.color = labColors.slate8;
-    button1.cornerRadius = 20;
-    button1.background = labColors.slate2;
-    button1.thickness = 2;
-    button1.borderColor = labColors.slate8;
+    const button1 = canLabButtonSimple("modal-open", "Modal");
     button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
     button1.left = "50px";
     button1.top = "-40px";
-    // button1.zIndex = 1;
     button1.onPointerUpObservable.add(() => {
       console.log("Button 1 pressed");
-      // push the current card back just a bit
+      // TODO: animate this: push the current card back just a bit
       plane.position.z = 0.1;
       lab045_example_2(scene);
     });
     advancedTexture.addControl(button1);
 
-    const button2 = Button.CreateSimpleButton("but2", "Replace");
-    button2.width = 0.2;
-    button2.height = "40px";
-    button2.color = labColors.slate8;
-    button2.cornerRadius = 20;
-    button2.background = labColors.slate2;
-    button2.thickness = 2;
-    button2.borderColor = labColors.slate8;
+    const button2 = canLabButtonSimple("replace-open", "Replace");
     button2.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
     button2.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
     button2.top = "-40px";
@@ -104,14 +89,7 @@
     });
     advancedTexture.addControl(button2);
 
-    const button3 = Button.CreateSimpleButton("but3", "Details");
-    button3.width = 0.2;
-    button3.height = "40px";
-    button3.color = labColors.slate8;
-    button3.cornerRadius = 20;
-    button3.background = labColors.slate2;
-    button3.thickness = 2;
-    button3.borderColor = labColors.slate8;
+    const button3 = canLabButtonSimple("detail-open", "Details");
     button3.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
     button3.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
     button3.left = "-50px";
@@ -146,14 +124,7 @@
     advancedTexture.addControl(paragraph);
 
     // Add a Close button to the bottom of the card
-    const button1 = Button.CreateSimpleButton("but1", "Close");
-    button1.width = 0.2;
-    button1.height = "40px";
-    button1.color = labColors.slate8;
-    button1.cornerRadius = 20;
-    button1.background = labColors.slate2;
-    button1.thickness = 2;
-    button1.borderColor = labColors.slate8;
+    const button1 = canLabButtonSimple("modal-close", "Close");
     button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
     button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
     button1.top = "-40px";
@@ -194,14 +165,7 @@
     advancedTexture.addControl(paragraph);
 
     // Add a Close button to the bottom of the card
-    const button1 = Button.CreateSimpleButton("but1", "Close");
-    button1.width = 0.2;
-    button1.height = "40px";
-    button1.color = labColors.slate8;
-    button1.cornerRadius = 20;
-    button1.background = labColors.slate2;
-    button1.thickness = 2;
-    button1.borderColor = labColors.slate8;
+    const button1 = canLabButtonSimple("replace-close", "Close");
     button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
     button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
     button1.top = "-40px";
@@ -241,22 +205,15 @@
     paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     paragraph.top = 30;
-
     advancedTexture.addControl(paragraph);
 
     // Add a Close button to the bottom of the card
-    const button1 = Button.CreateSimpleButton("but1", "Close");
-    button1.width = 0.2;
-    button1.height = "40px";
-    button1.color = labColors.slate8;
-    button1.cornerRadius = 20;
-    button1.background = labColors.slate2;
-    button1.thickness = 2;
-    button1.borderColor = labColors.slate8;
+    const button1 = canLabButtonSimple("detail-close", "Close");
     button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
     button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
     button1.top = "-40px";
     button1.zIndex = 1;
+    button1.width = 0.5;
     button1.onPointerUpObservable.add(() => {
       console.log("Button 1 pressed");
       //dispose of the card
