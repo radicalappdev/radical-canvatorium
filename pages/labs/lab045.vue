@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3, MeshBuilder } from "babylonjs";
+  import { Vector3, MeshBuilder, Color3 } from "babylonjs";
   import { AdvancedDynamicTexture, TextBlock, Image, Ellipse, Control, Rectangle, Button } from "babylonjs-gui";
 
   definePageMeta({
@@ -9,39 +9,18 @@
   });
 
   const createLabContent = async (scene) => {
+    // Position the non-VR camera to better see the card
+    const cam = scene.getCameraByName("camera");
+    cam.position = new Vector3(0, 1.4, -2);
+
+    // Call the first example, a parent window
     lab045_example_1(scene);
   };
 
-  // This will be a reusable asset that I can use in other labs
-  const createLabCardRect = (width, height, scene) => {
-    const plane = MeshBuilder.CreatePlane("lab-card-rect-mesh", { width: width, height: height }, scene);
-
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, 1024 * (width / 10), 1024 * (height / 10));
-    advancedTexture.name = "lab-card-rect-texture";
-
-    const rect = new Rectangle("rect");
-    rect.width = 1;
-    rect.height = 1;
-    rect.cornerRadius = 50;
-    rect.color = labColors.slate8;
-    rect.background = labColors.slate2;
-    rect.thickness = 2;
-    rect.borderColor = labColors.slate8;
-    rect.alpha = 0.9;
-    rect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-    rect.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-    advancedTexture.addControl(rect);
-
-    return {
-      plane,
-      advancedTexture
-    };
-  };
-
-  // Examples of using the createLabCardRect
+  // Examples of using the canLabCardSimple
   const lab045_example_1 = (scene) => {
-    const { plane, advancedTexture } = createLabCardRect(8, 4.2, scene);
-
+    // canLabCardSimple is defined in lab-cards.ts
+    const { plane, advancedTexture } = canLabCardSimple(8, 4.2, scene);
     plane.name = "parent-plane";
     plane.position = new Vector3(0, 1.2, 0);
     plane.scaling = new Vector3(0.2, 0.2, 0.2);
@@ -49,14 +28,11 @@
     const ellipseContainer = new Ellipse("masker");
     ellipseContainer.width = "100px";
     ellipseContainer.height = "100px";
-
-    // position the ellipse ellipseContainer in the top left corner
     ellipseContainer.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     ellipseContainer.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     ellipseContainer.left = "30px";
     ellipseContainer.top = "30px";
     ellipseContainer.thickness = 0;
-
     advancedTexture.addControl(ellipseContainer);
 
     // load an image on the GUI
@@ -71,17 +47,19 @@
     cardText.top = 40;
     cardText.left = 150;
     cardText.fontSize = 64;
+    advancedTexture.addControl(cardText);
 
     const paragraph = new TextBlock();
-    paragraph.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.";
+    paragraph.text = "Developer General working with a variety of technology to solve real problems. I focus on UI/UX, Workflow, and Spatial Computing.";
     paragraph.color = labColors.slate8;
+    paragraph.background = "white";
     paragraph.fontSize = 28;
     paragraph.textWrapping = true;
     paragraph.width = 0.9;
-    paragraph.height = 0.9;
+    paragraph.height = 0.3;
     paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    paragraph.top = 150;
+    paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+    advancedTexture.addControl(paragraph);
 
     // Add a row of 3 Babylon JS GUI buttons to the bottom of the card
     const button1 = Button.CreateSimpleButton("but1", "Modal");
@@ -96,7 +74,7 @@
     button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
     button1.left = "50px";
     button1.top = "-40px";
-    button1.zIndex = 1;
+    // button1.zIndex = 1;
     button1.onPointerUpObservable.add(() => {
       console.log("Button 1 pressed");
       // push the current card back just a bit
@@ -105,7 +83,7 @@
     });
     advancedTexture.addControl(button1);
 
-    const button2 = Button.CreateSimpleButton("but2", "Instagram");
+    const button2 = Button.CreateSimpleButton("but2", "Replace");
     button2.width = 0.2;
     button2.height = "40px";
     button2.color = labColors.slate8;
@@ -126,7 +104,7 @@
     });
     advancedTexture.addControl(button2);
 
-    const button3 = Button.CreateSimpleButton("but3", "Oculus");
+    const button3 = Button.CreateSimpleButton("but3", "Details");
     button3.width = 0.2;
     button3.height = "40px";
     button3.color = labColors.slate8;
@@ -141,24 +119,21 @@
     button3.zIndex = 1;
     button3.onPointerUpObservable.add(() => {
       console.log("Button 3 pressed");
+      lab045_example_4(scene);
     });
     advancedTexture.addControl(button3);
-
-    advancedTexture.addControl(paragraph);
-
-    advancedTexture.addControl(cardText);
   };
 
   const lab045_example_2 = (scene) => {
     // a simple card with a paragraph of text and a button
 
-    const { plane, advancedTexture } = createLabCardRect(6, 3.2, scene);
+    const { plane, advancedTexture } = canLabCardSimple(6, 3.2, scene);
 
     plane.position = new Vector3(0, 1.2, 0);
     plane.scaling = new Vector3(0.2, 0.2, 0.2);
 
     const paragraph = new TextBlock();
-    paragraph.text = "Developer General working with a variety of technology to solve real problems. I focus on UI/UX, Workflow, and Spatial Computing.";
+    paragraph.text = "A modal that appears in front of the parent card. I could fade the parent card to de-emphasize it.";
     paragraph.color = labColors.slate8;
     paragraph.fontSize = 28;
     paragraph.textWrapping = true;
@@ -200,13 +175,13 @@
   const lab045_example_3 = (scene) => {
     // a simple card with a paragraph of text and a button
 
-    const { plane, advancedTexture } = createLabCardRect(10, 4.2, scene);
+    const { plane, advancedTexture } = canLabCardSimple(10, 4.2, scene);
 
     plane.position = new Vector3(0, 1.2, 0);
     plane.scaling = new Vector3(0.2, 0.2, 0.2);
 
     const paragraph = new TextBlock();
-    paragraph.text = "Developer General working with a variety of technology to solve real problems. I focus on UI/UX, Workflow, and Spatial Computing.";
+    paragraph.text = "Replace the parent card with another card. This could be used for navigation or simple value pickers.";
     paragraph.color = labColors.slate8;
     paragraph.fontSize = 28;
     paragraph.textWrapping = true;
@@ -238,6 +213,52 @@
       parentPlane.visibility = 1;
       parentPlane.position.z = 0;
 
+      //dispose of the card
+      plane.dispose();
+    });
+    advancedTexture.addControl(button1);
+  };
+
+  // lab045_example_4 should show a card next to the parent card
+  // place it to the right and angle it slightly to face the camera
+
+  const lab045_example_4 = (scene) => {
+    // a simple card with a paragraph of text and a button
+
+    const { plane, advancedTexture } = canLabCardSimple(3.4, 6, scene);
+
+    plane.position = new Vector3(1.2, 1.2, -0.2);
+    plane.scaling = new Vector3(0.2, 0.2, 0.2);
+    plane.rotation.y = Math.PI / 6;
+
+    const paragraph = new TextBlock();
+    paragraph.text = "A detail card that appears next to the parent card. Useful for showing more information.";
+    paragraph.color = labColors.slate8;
+    paragraph.fontSize = 28;
+    paragraph.textWrapping = true;
+    paragraph.width = 0.9;
+    paragraph.height = 0.9;
+    paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    paragraph.top = 30;
+
+    advancedTexture.addControl(paragraph);
+
+    // Add a Close button to the bottom of the card
+    const button1 = Button.CreateSimpleButton("but1", "Close");
+    button1.width = 0.2;
+    button1.height = "40px";
+    button1.color = labColors.slate8;
+    button1.cornerRadius = 20;
+    button1.background = labColors.slate2;
+    button1.thickness = 2;
+    button1.borderColor = labColors.slate8;
+    button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    button1.top = "-40px";
+    button1.zIndex = 1;
+    button1.onPointerUpObservable.add(() => {
+      console.log("Button 1 pressed");
       //dispose of the card
       plane.dispose();
     });
