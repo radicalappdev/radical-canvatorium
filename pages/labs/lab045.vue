@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3 } from "babylonjs";
+  import { Vector3, Animation } from "babylonjs";
   import { TextBlock, Image, Ellipse, Control } from "babylonjs-gui";
 
   definePageMeta({
@@ -79,12 +79,8 @@
       button2.top = "-40px";
       button2.zIndex = 1;
       button2.onPointerUpObservable.add(() => {
-        // hide the current card
-        // plane.visibility = 0;
-        // plane.position.z = 0.1;
         console.log("Replace Open");
         showReplace.value = true;
-        // lab045_example_3(scene);
       });
       advancedTexture.addControl(button2);
 
@@ -96,19 +92,18 @@
       button3.zIndex = 1;
       button3.onPointerUpObservable.add(() => {
         showDetail.value = showDetail.value ? false : true;
-
-        // lab045_example_4(scene);
       });
       advancedTexture.addControl(button3);
 
       watch(showModal, (newValue) => {
         if (newValue) {
-          plane.position.z = 0.1;
-          plane.visibility = 0.5;
+          Animation.CreateAndStartAnimation("open-modal", plane, "position.z", 60, 6, plane.position.z, 0.1, 0);
+          Animation.CreateAndStartAnimation("open-modal", plane, "visibility", 60, 6, 1, 0.5, 0);
+
           lab045_example_2(scene);
         } else {
-          plane.position.z = 0;
-          plane.visibility = 1;
+          Animation.CreateAndStartAnimation("open-modal", plane, "position.z", 60, 6, 0.1, 0, 0);
+          Animation.CreateAndStartAnimation("open-modal", plane, "visibility", 60, 6, 0.5, 1, 0);
         }
       });
 
