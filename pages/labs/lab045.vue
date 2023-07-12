@@ -11,7 +11,7 @@
   const createLabContent = async (scene) => {
     const showModal = ref(false);
     const showReplace = ref(false);
-    const shpwDetail = ref(false);
+    const showDetail = ref(false);
 
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
@@ -95,9 +95,9 @@
       button3.top = "-40px";
       button3.zIndex = 1;
       button3.onPointerUpObservable.add(() => {
-        console.log("Button 3 pressed");
+        showDetail.value = showDetail.value ? false : true;
 
-        lab045_example_4(scene);
+        // lab045_example_4(scene);
       });
       advancedTexture.addControl(button3);
 
@@ -120,6 +120,18 @@
         } else {
           plane.position.z = 0;
           plane.visibility = 1;
+        }
+      });
+
+      watch(showDetail, (newValue) => {
+        if (newValue) {
+          console.log("Detail Open");
+          button3.color = labColors.slate2;
+          button3.background = labColors.slate8;
+        } else {
+          console.log("Detail Close from Main");
+          button3.color = labColors.slate8;
+          button3.background = labColors.slate2;
         }
       });
     };
@@ -229,15 +241,26 @@
       button1.zIndex = 1;
       button1.width = 0.5;
       button1.onPointerUpObservable.add(() => {
-        console.log("Button 1 pressed");
-        //dispose of the card
-        plane.dispose();
+        console.log("Detail Close from Detail");
+        showDetail.value = false;
       });
       advancedTexture.addControl(button1);
+
+      plane.visibility = 0;
+
+      watch(showDetail, (newValue) => {
+        if (newValue) {
+          plane.visibility = 1;
+        } else {
+          plane.visibility = 0;
+        }
+      });
     };
 
     // Call the first example, a parent window
     lab045_example_1(scene);
+    // Call example 4, a hidden detail card we can toggle open
+    lab045_example_4(scene);
   };
 
   const bjsCanvas = ref(null);
