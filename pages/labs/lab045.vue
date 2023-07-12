@@ -4,8 +4,8 @@
 
   definePageMeta({
     featured: false,
-    title: "Lab 045",
-    description: "Prototype UI Cards"
+    title: "Lab 045 - Prototype UI Cards",
+    description: "In this lab I created a reusable card made from a plane and an AdvancedDynamicTexture."
   });
 
   const createLabContent = async (scene) => {
@@ -111,6 +111,7 @@
         if (newValue) {
           plane.position.z = 0.1;
           plane.visibility = 0.0;
+
           lab045_example_3(scene);
         } else {
           plane.position.z = 0;
@@ -172,7 +173,7 @@
     const lab045_example_3 = (scene) => {
       // a simple card with a paragraph of text and a button
 
-      const { plane, advancedTexture } = canLabCardSimple(10, 4.2, scene);
+      const { plane, advancedTexture } = canLabCardSimple(8, 5.2, scene);
 
       plane.position = new Vector3(0, 1.2, 0);
       plane.scaling = new Vector3(0.2, 0.2, 0.2);
