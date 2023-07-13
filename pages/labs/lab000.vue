@@ -1,7 +1,6 @@
 <script setup>
-  import { ref } from "vue";
-  import { Vector3, Color3, Material, MeshBuilder, SceneLoader } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
+  import { Vector3 } from "babylonjs";
+  import { TextBlock } from "babylonjs-gui";
 
   definePageMeta({
     featured: false,
@@ -36,82 +35,45 @@
     //   cam.alpha += 0.005;
     // });
 
-    // Load some assets
-    SceneLoader.LoadAssetContainer("/assets/", "glass_card_rect.glb", scene, function (container) {
-      const meshes = container.meshes;
-      const card = meshes[0];
-      card.name = "card-rect";
-      card.position = new Vector3(0, 1, 0);
-      card.scaling = new Vector3(0.4, 0.4, 0.4);
+    const { plane, advancedTexture } = canLabCardSimple(6, 3.6, scene);
 
-      const materials = container.materials;
-      const material = materials[0];
-      material.name = "card-rect-material";
+    plane.name = "can-plane";
+    plane.position = new Vector3(0, 1.2, 0);
+    plane.scaling = new Vector3(0.3, 0.3, 0.3);
+    advancedTexture.name = "can-texture";
 
-      material.albedoColor = new Color3.FromHexString(labColors.slate4);
-      material.alpha = 0.9;
-      material.alphaMode = Material.ALPHA_COMBINE;
-      material.transparencyMode = Material.MATERIAL_ALPHABLEND;
+    const cardText = new TextBlock("card-text");
+    cardText.text = "Canvatorium";
+    // font sometimg modern and clean and sans
+    cardText.fontFamily = "Verdana";
+    cardText.color = labColors.slate8;
+    cardText.fontSize = 70;
+    cardText.top = -40;
+    advancedTexture.addControl(cardText);
 
-      card.material = material;
+    const subtitleText = new TextBlock("subtitle-text");
+    subtitleText.text = "(revamped)";
+    subtitleText.color = labColors.slate7;
+    subtitleText.fontSize = 28;
+    subtitleText.top = -90;
+    subtitleText.left = 190;
+    advancedTexture.addControl(subtitleText);
 
-      createGUI(card);
+    const cardText2 = new TextBlock("card-text2");
+    cardText2.text = "An experimental design lab for";
+    cardText2.color = labColors.slate8;
+    cardText2.fontSize = 28;
+    cardText2.fontFamily = "Verdana";
+    cardText2.top = 60;
+    advancedTexture.addControl(cardText2);
 
-      // Adds all elements to the scene
-      container.addAllToScene();
-    });
-
-    const createGUI = (background) => {
-      const guiPlane = MeshBuilder.CreatePlane("gui-plane");
-      guiPlane.parent = background;
-      guiPlane.position.z = 0.05;
-      guiPlane.position.y = 0.3;
-
-      guiPlane.rotation.y = Math.PI;
-      guiPlane.scaling = new Vector3(10, 10, 10);
-
-      const advancedTexture = AdvancedDynamicTexture.CreateForMesh(guiPlane);
-      advancedTexture.name = "card-texture";
-
-      const cardText = new TextBlock("card-text");
-      cardText.text = "Canvatorium";
-      cardText.color = labColors.slate8;
-      cardText.fontSize = 64;
-
-      const subtitleText = new TextBlock("subtitle-text");
-      subtitleText.text = "(revamped)";
-      subtitleText.color = labColors.slate7;
-      subtitleText.fontSize = 32;
-      subtitleText.top = 60;
-
-      advancedTexture.addControl(cardText);
-      advancedTexture.addControl(subtitleText);
-
-      // Create a second plane with a different texture to show on the back of the card
-      // const guiPlane2 = MeshBuilder.CreatePlane("gui-plane2");
-      // guiPlane2.parent = background;
-      // guiPlane2.position.z = -0.2;
-      // guiPlane2.position.y = 0.3;
-      // guiPlane2.scaling = new Vector3(10, 10, 10);
-
-      // const advancedTexture2 = AdvancedDynamicTexture.CreateForMesh(guiPlane2);
-      // advancedTexture2.name = "card-texture2";
-
-      // const cardText2 = new TextBlock("card-text2");
-      // cardText2.text = "An experimental design lab for";
-      // cardText2.color = labColors.slate8;
-      // cardText2.fontSize = 32;
-
-      // const subtitleText2 = new TextBlock("subtitle-text2");
-
-      // subtitleText2.text = "Spatial Computing";
-      // subtitleText2.color = labColors.slate8;
-      // subtitleText2.fontSize = 32;
-      // subtitleText2.top = 60;
-
-      // advancedTexture2.addControl(cardText2);
-      // advancedTexture2.addControl(subtitleText2);
-    };
+    const subtitleText2 = new TextBlock("subtitle-text2");
+    subtitleText2.text = "Spatial Computing";
+    subtitleText2.color = labColors.slate8;
+    subtitleText2.fontSize = 28;
+    subtitleText2.fontFamily = "Verdana";
+    subtitleText2.top = 100;
+    advancedTexture.addControl(subtitleText2);
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
