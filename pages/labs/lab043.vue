@@ -1,6 +1,6 @@
 <script setup>
-  import { MeshBuilder } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
+  import { Vector3 } from "babylonjs";
+  import { TextBlock } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
@@ -14,23 +14,21 @@
       const card = generateCard(scene);
       card.position.x = Math.random() * 10 - 5;
       card.position.z = Math.random() * 10 - 5;
-      card.position.y = Math.random() + 0.5;
+      card.position.y = Math.random() * 2 - 2 + 2.5; // ¯\_(ツ)_/¯
     }
   };
 
   const generateCard = (scene) => {
-    const plane = MeshBuilder.CreatePlane("plane", { width: 0.3, height: 0.3 }, scene);
-
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
+    const { plane, advancedTexture } = canLabCardSimple(7.4, 3, scene);
+    plane.name = "plane";
+    plane.position = new Vector3(0, 1.2, 0);
+    plane.scaling = new Vector3(0.15, 0.15, 0.15);
     advancedTexture.name = "card-texture";
-    advancedTexture.background = labColors.slate8;
 
     const titleText = new TextBlock("title-text");
-
     titleText.text = "I'm Sparticus!";
-    titleText.color = "white";
-    titleText.fontSize = 96;
-
+    titleText.color = "black";
+    titleText.fontSize = 84;
     advancedTexture.addControl(titleText);
 
     const sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
