@@ -9,61 +9,53 @@
   });
 
   const createLabContent = async (scene) => {
-    const material = new StandardMaterial("background-material", scene);
-    material.diffuseColor = new Color3.FromHexString(labColors.slate2);
-    material.alpha = 0.8;
+    const cam = scene.getCameraByName("camera");
+    cam.position = new Vector3(0, 2.6, -8);
 
-    const background = MeshBuilder.CreateBox("background", { width: 3, height: 1, depth: 0.1 });
-    background.material = material;
-    background.position.y = 1.1;
-    background.enableEdgesRendering();
-    background.edgesWidth = 1.5;
-    background.edgesColor = new Color4.FromHexString(labColors.slate7);
-    background.position = new Vector3(0, 2, 9.8);
-
-    const guiPlane = MeshBuilder.CreatePlane("gui-plane");
-    guiPlane.parent = background;
-    guiPlane.position.y = 0.14;
-    guiPlane.position.z = -0.08;
-
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(guiPlane);
-    advancedTexture.name = "card-texture";
+    const { plane, advancedTexture } = canLabCardSimple(9, 4, scene);
+    plane.position = new Vector3(0, 2.4, 0);
+    plane.scaling = new Vector3(0.4, 0.4, 0.4);
 
     const cardText = new TextBlock("card-text");
     cardText.text = "Lab 005";
+    cardText.fontFamily = "Verdana";
     cardText.color = labColors.slate8;
-    cardText.fontSize = 64;
+    cardText.fontSize = 120;
+    cardText.top = -50;
+    advancedTexture.addControl(cardText);
 
     const subtitleText = new TextBlock("subtitle-text");
     subtitleText.text = "Nav Test A";
+    subtitleText.fontFamily = "Verdana";
     subtitleText.color = labColors.slate7;
-    subtitleText.fontSize = 48;
-    subtitleText.top = 70;
-
-    advancedTexture.addControl(cardText);
+    subtitleText.fontSize = 84;
+    subtitleText.top = 80;
     advancedTexture.addControl(subtitleText);
-    guiPlane.scaling = new Vector3(5, 5, 5);
 
-    const mat = new StandardMaterial("mat", scene);
-    mat.diffuseColor = new Color3.FromHexString(labColors.slate7);
+    const { plane: planeNav, advancedTexture: advancedTextureNav } = canLabCardSimple(9, 4, scene);
+    planeNav.position = new Vector3(0, 1, 0);
+    planeNav.scaling = new Vector3(0.2, 0.2, 0.2);
 
-    const box = MeshBuilder.CreateBox("box", { size: 0.5 }, scene);
-    box.position.y = 0.5;
-    box.material = mat;
+    const cardTextNav = new TextBlock("card-text");
+    cardTextNav.text = "Go to Lab 006";
+    cardTextNav.fontFamily = "Verdana";
+    cardTextNav.color = labColors.slate8;
+    cardTextNav.fontSize = 96;
+    advancedTextureNav.addControl(cardTextNav);
 
     // when clicked, go to lab 006
-    box.actionManager = new ActionManager(scene);
-    box.actionManager.registerAction(
+    planeNav.actionManager = new ActionManager(scene);
+    planeNav.actionManager.registerAction(
       new ExecuteCodeAction(ActionManager.OnPointerOverTrigger, () => {
-        box.scaling = new Vector3(1.1, 1.1, 1.1);
+        planeNav.scaling = new Vector3(0.22, 0.22, 0.22);
       })
     );
-    box.actionManager.registerAction(
+    planeNav.actionManager.registerAction(
       new ExecuteCodeAction(ActionManager.OnPointerOutTrigger, () => {
-        box.scaling = new Vector3(1, 1, 1);
+        planeNav.scaling = new Vector3(0.2, 0.2, 0.2);
       })
     );
-    box.actionManager.registerAction(
+    planeNav.actionManager.registerAction(
       new ExecuteCodeAction(ActionManager.OnPickTrigger, () => {
         // navigate to lab 006 using Nuxt 3 router - failed in WebXR
         // navigateTo("/labs/lab006");
