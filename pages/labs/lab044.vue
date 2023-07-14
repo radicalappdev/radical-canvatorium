@@ -1,6 +1,6 @@
 <script setup>
-  import { MeshBuilder } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock, Button } from "babylonjs-gui";
+  import { Vector3 } from "babylonjs";
+  import { TextBlock, Button } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
@@ -14,7 +14,7 @@
 
     const data = reactive([]);
     for (let i = 0; i < numberOfCards; i++) {
-      data.push({ title: "I'm Sparticus!", index: i });
+      data.push({ title: `I'm Sparticus! (${i})`, index: i });
     }
 
     // Create a card for each title object
@@ -30,41 +30,35 @@
   const generateCard = (scene, item) => {
     // use the index to get the title from the reactive array
     const index = item.index; // just used for naming for now
-    const title = item.title; // used for the text block
 
-    const cardWidth = 0.3;
-    const cardHeight = 0.15;
-    const cardResolution = 1024;
-
-    const plane = MeshBuilder.CreatePlane("plane", { width: cardWidth, height: cardHeight }, scene);
-    plane.name = `card-${index}`;
-
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, cardResolution * cardWidth, cardResolution * cardHeight);
-
+    const { plane, advancedTexture } = canLabCardSimple(7.4, 3, scene);
+    plane.name = "plane";
+    plane.position = new Vector3(0, 1.2, 0);
+    plane.scaling = new Vector3(0.15, 0.15, 0.15);
     advancedTexture.name = `card-texture-${index}`;
-    advancedTexture.background = labColors.slate8;
 
+    // advancedTexture.addControl(titleText);
     const titleText = new TextBlock("title-text");
-    titleText.name = `title-text-${index}`;
-    titleText.text = title;
-    titleText.color = "white";
-    titleText.fontSize = 36;
-    titleText.top = -30;
-
+    titleText.text = `I'm Sparticus! (${index})`;
+    titleText.color = "black";
+    titleText.fontSize = 72;
+    titleText.top = -50;
     advancedTexture.addControl(titleText);
 
     // Add a button to change the title value
-    const button = Button.CreateSimpleButton("button", "Change Title");
-    button.height = "40px";
-    button.color = "white";
-    button.background = labColors.slate6;
-    button.fontSize = 32;
-    button.paddingLeft = "10px";
-    button.paddingRight = "10px";
-    button.top = 50;
+    const button = Button.CreateSimpleButton("button", "Acuse me?");
+    button.width = 0.35;
+    button.height = "90px";
+    button.fontSize = "36px";
+    button.color = labColors.slate8;
+    button.background = labColors.slate8;
+    button.textBlock.color = labColors.slate1;
+    button.cornerRadius = 20;
+    button.thickness = 2;
+    button.top = 70;
 
     button.onPointerUpObservable.add(() => {
-      item.title = item.title === `I'm Sparticus!` ? `I'm not Sparticus!` : `I'm Sparticus!`;
+      item.title = item.title === `I'm Sparticus! (${index})` ? `I'm not Sparticus! (${index})` : `I'm Sparticus! (${index})`;
     });
     advancedTexture.addControl(button);
 
