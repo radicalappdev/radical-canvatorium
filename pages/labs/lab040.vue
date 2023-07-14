@@ -1,5 +1,5 @@
 <script setup>
-  import { AdvancedDynamicTexture, TextBlock, StackPanel, Control } from "babylonjs-gui";
+  import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Rectangle } from "babylonjs-gui";
 
   const route = useRoute();
 
@@ -14,61 +14,67 @@
     // Create a BABYLON GUI AdvancedDynamicTexture
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-    // Create an outer panel to contain the card and place it at the top left of the screen
-    const outerPanel = new StackPanel();
-    // TODO: on small screens, the outer panel should take up the whole screen instead of being pinned to the top left corner.
-    outerPanel.width = "320px";
-    outerPanel.background = labColors.slate8;
-    outerPanel.alpha = 0.8;
-    outerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    outerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    const rect = new Rectangle("rect");
+    rect.background = labColors.slate2;
+    rect.alpha = 0.9;
+    rect.color = labColors.slate8;
+    rect.thickness = 2;
+    rect.zIndex = -10;
+    rect.width = "320px";
+    rect.height = "180px";
+    rect.top = "50px";
+    rect.left = "10px";
+    rect.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    rect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    advancedTexture.addControl(rect);
 
     // Create an inner panel to contain the card content. This has no background and is used to add padding to the card content.
     const innerPanel = new StackPanel();
     innerPanel.width = "320px";
     innerPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     innerPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    innerPanel.paddingTop = "10px";
-    innerPanel.paddingLeft = "10px";
-    innerPanel.paddingRight = "10px";
+    innerPanel.paddingTop = "50px";
+    innerPanel.paddingLeft = "20px";
+    innerPanel.paddingRight = "20px";
+    advancedTexture.addControl(innerPanel);
 
     // Add a header
     const title = new TextBlock();
     title.text = route.meta.title;
+    title.fontFamily = "Verdana";
     title.height = "60px";
-    title.color = "white";
+    title.color = "black";
     title.paddingTop = "10px";
     title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    title.fontSize = "22px";
+    title.fontSize = "20px";
     title.textWrapping = true;
+    innerPanel.addControl(title);
 
     // Add a description
     const description = new TextBlock();
     description.text = route.meta.description;
+    description.fontFamily = "Verdana";
     description.height = "100px";
-    description.color = "white";
+    description.color = "black";
     description.paddingTop = "10px";
     description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     description.fontSize = "14px";
     description.textWrapping = true;
-
-    // Add the header and description to the panel
-    innerPanel.addControl(title);
     innerPanel.addControl(description);
 
     // Add the panel to the outer panel
-    outerPanel.addControl(innerPanel);
+    // outerPanel.addControl(innerPanel);
 
-    advancedTexture.addControl(outerPanel);
+    // advancedTexture.addControl(outerPanel);
   };
 
   const bjsCanvas = ref(null);
 
   // We don't want to use the lab overlay here since we are building one in this file
   const labSceneOptions = {
-    useOverlay: false
+    useOverlay: true
   };
 
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
