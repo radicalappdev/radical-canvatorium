@@ -43,54 +43,41 @@
     console.log("Lab 007 - Console logging in VR with Babylon JS");
     console.log("");
 
-    const card = MeshBuilder.CreateBox("console-card", {
-      height: 2.1,
-      width: 3.1,
-      depth: 0.2
-    });
-    card.position = new Vector3(0, 1, 0);
-    card.scaling = new Vector3(0.5, 0.5, 0.5);
-
-    const cardMaterial = new StandardMaterial("card-material", scene);
-    cardMaterial.diffuseColor = new Color3.FromHexString(labColors.slate5);
-    card.material = cardMaterial;
-
-    const plane = MeshBuilder.CreatePlane("console-plane", { height: 2, width: 3 }, scene);
-    plane.position.z = -0.11;
-    plane.parent = card;
-
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, 3 * 1024, 2 * 1024);
+    const width = 6;
+    const height = 3.6;
+    const { plane, advancedTexture } = canLabCardSimple(width, height, scene);
+    plane.name = "can-plane";
+    plane.position = new Vector3(0, 1, 0);
+    plane.scaling = new Vector3(0.3, 0.3, 0.3);
     advancedTexture.name = "logger-texture";
 
-    const panel = new StackPanel();
-    advancedTexture.addControl(panel);
-
     const scrollViewer = new ScrollViewer("logger-scroll");
-    scrollViewer.thickness = 48;
-    scrollViewer.color = labColors.slate3;
-    scrollViewer.background = labColors.slate3;
-    scrollViewer.opacity = 1;
-    scrollViewer.width = `${3 * 1024}px`;
-    scrollViewer.height = `${2 * 1024 - 32}px`;
-    scrollViewer.barSize = 60;
+    scrollViewer.thickness = 0;
+    scrollViewer.width = `${1024 * (width / 10) - 30}px`;
+    scrollViewer.height = `${1024 * (height / 10) - 60}px`;
+    scrollViewer.barSize = 10;
+    scrollViewer.top = 30;
     scrollViewer.barColor = labColors.slate7;
     scrollViewer.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    panel.addControl(scrollViewer);
+    advancedTexture.addControl(scrollViewer);
+
+    console.log("scrollViewer", scrollViewer.width, scrollViewer.height);
 
     const loggerText = new TextBlock("logger-text");
     loggerText.textWrapping = true;
+    loggerText.fontFamily = "Verdana";
     loggerText.width = 1;
     loggerText.height = 3;
-    loggerText.paddingTop = "1%";
-    loggerText.paddingLeft = "30px";
+    loggerText.paddingTop = "5%";
+    loggerText.paddingLeft = "20px";
     loggerText.paddingRight = "20px";
-    loggerText.paddingBottom = "1%";
+    loggerText.paddingBottom = "5%";
     loggerText.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     loggerText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     loggerText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     loggerText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     loggerText.color = labColors.slate8;
-    loggerText.fontSize = "96px";
+    loggerText.fontSize = "14px";
 
     scrollViewer.addControl(loggerText);
 
@@ -104,7 +91,7 @@
       }
     });
 
-    return card;
+    return plane;
   };
 
   async function customizeXRForLab(xrPromise) {

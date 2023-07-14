@@ -26,14 +26,15 @@
 
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
+    // scene.debugLayer.show();
     // Lab 001 only. Move the camera to a better position for the initial scene.
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -4);
 
     // make the camera move back and forth along it's orbit path, but stay in front of the lab content
-    // scene.registerBeforeRender(() => {
-    //   cam.alpha += 0.005;
-    // });
+    scene.registerBeforeRender(() => {
+      cam.alpha += 0.005;
+    });
 
     const { plane, advancedTexture } = canLabCardSimple(6, 3.6, scene);
 
