@@ -1,6 +1,6 @@
 <script setup>
   import { Vector3 } from "babylonjs";
-  import { TextBlock, Image, Control, Rectangle } from "babylonjs-gui";
+  import { TextBlock, Image, Control, Rectangle, Button } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -58,16 +58,39 @@
     knownFor.fontSize = 18;
     advancedTexture.addControl(knownFor);
 
-    const shortDescription = new TextBlock("shortDescription");
-    shortDescription.text = activeRecord.shortDescription;
+    const shortDescription = Button.CreateSimpleButton("shortDescription", activeRecord.shortDescription);
     shortDescription.color = labColors.slate8;
-    shortDescription.background = "white";
-    shortDescription.fontSize = 24;
+    shortDescription.background = labColors.slate3 + "80";
     shortDescription.textWrapping = true;
-    shortDescription.width = 0.9;
-    shortDescription.height = 0.3;
+    shortDescription.paddingLeft = "30px";
+    shortDescription.paddingRight = "30px";
+    shortDescription.paddingTop = "10px";
+    shortDescription.paddingBottom = "10px";
+    shortDescription.heightInPixels = 146;
     shortDescription.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     shortDescription.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    shortDescription.cornerRadius = 20;
+    shortDescription.thickness = 0;
+
+    shortDescription.textBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    shortDescription.textBlock.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    shortDescription.textBlock.fontSize = 22;
+    shortDescription.textBlock.paddingLeft = "10px";
+    shortDescription.textBlock.paddingRight = "10px";
+    shortDescription.textBlock.paddingTop = "10px";
+    shortDescription.textBlock.paddingBottom = "10px";
+
+    // shortDescription.pointerEnterAnimation = () => {};
+    shortDescription.pointerDownAnimation = () => {};
+    shortDescription.pointerUpAnimation = () => {};
+
+    // add a hover effect to the text
+    shortDescription.onPointerEnterObservable.add(() => {
+      shortDescription.background = labColors.slate3 + "ff";
+    });
+    shortDescription.onPointerOutObservable.add(() => {
+      shortDescription.background = labColors.slate3 + "80";
+    });
     advancedTexture.addControl(shortDescription);
 
     window.addEventListener("keydown", (e) => {
@@ -83,8 +106,6 @@
       if (activeIndex.value > computingData.length - 1) {
         activeIndex.value = 0;
       }
-      //   activeRecord.value = computingData[activeIndex.value];
-      console.log(activeIndex.value);
     });
 
     watch(activeIndex, (newValue) => {
@@ -93,7 +114,7 @@
       texture.getControlByName("name").text = activeRecord.name;
       texture.getControlByName("image").source = activeRecord.imageUrl;
       texture.getControlByName("knownFor").text = `Known for: ${activeRecord.knownFor}`;
-      texture.getControlByName("shortDescription").text = activeRecord.shortDescription;
+      texture.getControlByName("shortDescription").textBlock.text = activeRecord.shortDescription;
     });
   };
 
