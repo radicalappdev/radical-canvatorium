@@ -18,7 +18,7 @@
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -2);
 
-    const { plane, advancedTexture } = canLabCardSimple(8, 4.2, scene);
+    const { plane, advancedTexture } = canLabCardSimple(8, 4.6, scene);
     plane.name = "parent-plane";
     plane.position = new Vector3(0, 1.2, 0);
     plane.scaling = new Vector3(0.2, 0.2, 0.2);
@@ -59,7 +59,6 @@
     advancedTexture.addControl(knownFor);
 
     const shortDescription = Button.CreateSimpleButton("shortDescription", activeRecord.shortDescription);
-    shortDescription.color = labColors.slate8;
     shortDescription.background = labColors.slate3 + "80";
     shortDescription.textWrapping = true;
     shortDescription.paddingLeft = "30px";
@@ -70,11 +69,14 @@
     shortDescription.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     shortDescription.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     shortDescription.cornerRadius = 20;
-    shortDescription.thickness = 0;
+    shortDescription.thickness = 1;
+    shortDescription.color = labColors.slate2;
+    shortDescription.top = -20;
 
     shortDescription.textBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     shortDescription.textBlock.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     shortDescription.textBlock.fontSize = 22;
+    shortDescription.textBlock.color = labColors.slate8;
     shortDescription.textBlock.paddingLeft = "10px";
     shortDescription.textBlock.paddingRight = "10px";
     shortDescription.textBlock.paddingTop = "10px";
@@ -87,11 +89,56 @@
     // add a hover effect to the text
     shortDescription.onPointerEnterObservable.add(() => {
       shortDescription.background = labColors.slate3 + "ff";
+      shortDescription.color = labColors.slate4 + "80";
     });
     shortDescription.onPointerOutObservable.add(() => {
       shortDescription.background = labColors.slate3 + "80";
+      shortDescription.color = labColors.slate2;
     });
     advancedTexture.addControl(shortDescription);
+
+    // add a new rectangle to the advancedTexture
+    const containerLeft = new Rectangle("lab-card-rect");
+    containerLeft.color = labColors.slate2;
+    containerLeft.thickness = 1;
+    containerLeft.background = labColors.slate3 + "80";
+    containerLeft.cornerRadius = 20;
+    containerLeft.widthInPixels = 300;
+    containerLeft.heightInPixels = 140;
+    containerLeft.top = 130;
+    containerLeft.left = -230;
+    // add hover effect
+    containerLeft.onPointerEnterObservable.add(() => {
+      containerLeft.background = labColors.slate3 + "ff";
+      containerLeft.color = labColors.slate4 + "80";
+    });
+    containerLeft.onPointerOutObservable.add(() => {
+      containerLeft.background = labColors.slate3 + "80";
+      containerLeft.color = labColors.slate2;
+    });
+    advancedTexture.addControl(containerLeft);
+
+    const containerRight = new Rectangle("lab-card-rect");
+    containerRight.color = labColors.slate2;
+    containerRight.thickness = 1;
+    containerRight.background = labColors.slate3 + "80";
+    containerRight.cornerRadius = 20;
+    containerRight.widthInPixels = 440;
+    containerRight.heightInPixels = 140;
+    containerRight.top = 130;
+    containerRight.left = 160;
+    // add hover effect
+    containerRight.onPointerEnterObservable.add(() => {
+      containerRight.background = labColors.slate3 + "ff";
+      containerRight.color = labColors.slate4 + "80";
+    });
+    containerRight.onPointerOutObservable.add(() => {
+      containerRight.background = labColors.slate3 + "80";
+      containerRight.color = labColors.slate2;
+    });
+    advancedTexture.addControl(containerRight);
+
+    // add a text block to the rectangle
 
     window.addEventListener("keydown", (e) => {
       if (e.key === "=") {
