@@ -235,6 +235,88 @@
     });
     advancedTexture.addControl(containerRight);
 
+    // Add a 2x3 grid to the right container
+    // knownFor, occupation, education and their labels
+    const gridRight = new Grid();
+    gridRight.addColumnDefinition(0.2);
+    gridRight.addColumnDefinition(0.8);
+    gridRight.addRowDefinition(0.33);
+    gridRight.addRowDefinition(0.33);
+    gridRight.addRowDefinition(0.33);
+    containerRight.addControl(gridRight);
+
+    // Row one: knownFor label and value
+    const knownForLabel = new TextBlock("knownForLabel");
+    knownForLabel.text = "Known For";
+    knownForLabel.color = labColors.slate6;
+    knownForLabel.fontSize = 18;
+    knownForLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    knownForLabel.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    knownForLabel.paddingLeft = "10px";
+    knownForLabel.paddingTop = "14px";
+    knownForLabel.paddingBottom = "10px";
+    gridRight.addControl(knownForLabel, 0, 0);
+
+    const knownForValue = new TextBlock("knownForValue");
+    knownForValue.text = activeRecord.knownFor.length > 40 ? activeRecord.knownFor.substring(0, 40) + "..." : activeRecord.knownFor;
+    knownForValue.color = labColors.slate8;
+    knownForValue.fontSize = 18;
+    knownForValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    knownForValue.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    knownForValue.paddingLeft = "10px";
+    knownForValue.paddingRight = "10px";
+    knownForValue.paddingTop = "14px";
+    knownForValue.paddingBottom = "10px";
+    gridRight.addControl(knownForValue, 0, 1);
+
+    // Row two: occupation label and value
+    const occupationLabel = new TextBlock("occupationLabel");
+    occupationLabel.text = "Occupation";
+    occupationLabel.color = labColors.slate6;
+    occupationLabel.fontSize = 18;
+    occupationLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    occupationLabel.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    occupationLabel.paddingLeft = "10px";
+    occupationLabel.paddingTop = "10px";
+    occupationLabel.paddingBottom = "10px";
+    gridRight.addControl(occupationLabel, 1, 0);
+
+    const occupationValue = new TextBlock("occupationValue");
+    occupationValue.text = activeRecord.occupation.length > 40 ? activeRecord.occupation.substring(0, 40) + "..." : activeRecord.occupation;
+    occupationValue.color = labColors.slate8;
+    occupationValue.fontSize = 18;
+    occupationValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    occupationValue.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    occupationValue.paddingLeft = "10px";
+    occupationValue.paddingRight = "10px";
+    occupationValue.paddingTop = "10px";
+    occupationValue.paddingBottom = "10px";
+    gridRight.addControl(occupationValue, 1, 1);
+
+    // Row three: education label and value
+    const educationLabel = new TextBlock("educationLabel");
+    educationLabel.text = "Education";
+    educationLabel.color = labColors.slate6;
+    educationLabel.fontSize = 18;
+    educationLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    educationLabel.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    educationLabel.paddingLeft = "10px";
+    educationLabel.paddingTop = "10px";
+    educationLabel.paddingBottom = "14px";
+    gridRight.addControl(educationLabel, 2, 0);
+
+    const educationValue = new TextBlock("educationValue");
+    educationValue.text = activeRecord.education.length > 40 ? activeRecord.education.substring(0, 40) + "..." : activeRecord.education;
+    educationValue.color = labColors.slate8;
+    educationValue.fontSize = 18;
+    educationValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    educationValue.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    educationValue.paddingLeft = "10px";
+    educationValue.paddingRight = "10px";
+    educationValue.paddingTop = "10px";
+    educationValue.paddingBottom = "14px";
+    gridRight.addControl(educationValue, 2, 1);
+
     window.addEventListener("keydown", (e) => {
       if (e.key === "=") {
         activeIndex.value++;
@@ -257,6 +339,27 @@
       texture.getControlByName("image").source = activeRecord.imageUrl;
       texture.getControlByName("knownFor").text = `Known for: ${activeRecord.knownFor}`;
       texture.getControlByName("shortDescription").textBlock.text = activeRecord.shortDescription;
+      // Update the grid values
+      const bornDate = new Date(activeRecord.born);
+      const bornString = bornDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric"
+      });
+      texture.getControlByName("birthdateValue").text = bornString;
+      const diedDate = new Date(activeRecord.died);
+      const diedString = diedDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric"
+      });
+      texture.getControlByName("diedValue").text = diedString;
+      texture.getControlByName("yearsActiveValue").text = activeRecord.activeYears;
+
+      // Update the gridRight values with a max length of 40 characters
+      texture.getControlByName("knownForValue").text = activeRecord.knownFor.length > 40 ? activeRecord.knownFor.substring(0, 40) + "..." : activeRecord.knownFor;
+      texture.getControlByName("occupationValue").text = activeRecord.occupation.length > 40 ? activeRecord.occupation.substring(0, 40) + "..." : activeRecord.occupation;
+      texture.getControlByName("educationValue").text = activeRecord.education.length > 40 ? activeRecord.education.substring(0, 40) + "..." : activeRecord.education;
     });
   };
 
