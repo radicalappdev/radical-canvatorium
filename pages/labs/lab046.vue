@@ -19,7 +19,7 @@
 
     const { plane: grabPlane, advancedTexture: grabTexture } = canLabCardSimple(2, 0.8, scene);
     grabPlane.name = "grab-plane";
-    grabPlane.position = new Vector3(0, 1, -0.05);
+    grabPlane.position = new Vector3(0, 0.5, -0.05);
     grabPlane.scaling = new Vector3(0.2, 0.2, 0.2);
     grabTexture.name = "grab-texture";
     grabTexture.getControlByName("rect").alpha = 0;
