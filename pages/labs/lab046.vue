@@ -1,6 +1,6 @@
 <script setup>
   import { Vector3 } from "babylonjs";
-  import { TextBlock, Image, Control, Rectangle, Button } from "babylonjs-gui";
+  import { TextBlock, Image, Control, Rectangle, Button, Grid } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -34,8 +34,14 @@
     imageContainer.cornerRadius = 20;
     advancedTexture.addControl(imageContainer);
 
-    // load an image on the GUI
     const image = new Image("image", activeRecord.imageUrl);
+    image.alpha = 0.9;
+    image.onPointerEnterObservable.add(() => {
+      image.alpha = 1;
+    });
+    image.onPointerOutObservable.add(() => {
+      image.alpha = 0.9;
+    });
     imageContainer.addControl(image);
 
     const cardText = new TextBlock("name");
@@ -72,7 +78,6 @@
     shortDescription.thickness = 1;
     shortDescription.color = labColors.slate2;
     shortDescription.top = -20;
-
     shortDescription.textBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     shortDescription.textBlock.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     shortDescription.textBlock.fontSize = 22;
@@ -81,12 +86,9 @@
     shortDescription.textBlock.paddingRight = "10px";
     shortDescription.textBlock.paddingTop = "10px";
     shortDescription.textBlock.paddingBottom = "10px";
-
-    // shortDescription.pointerEnterAnimation = () => {};
+    // Override the default pointerUp and pointerDown animations
     shortDescription.pointerDownAnimation = () => {};
     shortDescription.pointerUpAnimation = () => {};
-
-    // add a hover effect to the text
     shortDescription.onPointerEnterObservable.add(() => {
       shortDescription.background = labColors.slate3 + "ff";
       shortDescription.color = labColors.slate4 + "80";
@@ -97,17 +99,15 @@
     });
     advancedTexture.addControl(shortDescription);
 
-    // add a new rectangle to the advancedTexture
     const containerLeft = new Rectangle("lab-card-rect");
     containerLeft.color = labColors.slate2;
     containerLeft.thickness = 1;
     containerLeft.background = labColors.slate3 + "80";
     containerLeft.cornerRadius = 20;
-    containerLeft.widthInPixels = 300;
+    containerLeft.widthInPixels = 240;
     containerLeft.heightInPixels = 140;
     containerLeft.top = 130;
-    containerLeft.left = -230;
-    // add hover effect
+    containerLeft.left = -260;
     containerLeft.onPointerEnterObservable.add(() => {
       containerLeft.background = labColors.slate3 + "ff";
       containerLeft.color = labColors.slate4 + "80";
@@ -118,16 +118,113 @@
     });
     advancedTexture.addControl(containerLeft);
 
+    // add a 2x3 grid to the left container
+    const grid = new Grid();
+    grid.addColumnDefinition(0.5);
+    grid.addColumnDefinition(0.5);
+    grid.addRowDefinition(0.33);
+    grid.addRowDefinition(0.33);
+    grid.addRowDefinition(0.33);
+    containerLeft.addControl(grid);
+
+    // Row one: birthdate label and value
+    const birthdateLabel = new TextBlock("birthdateLabel");
+    birthdateLabel.text = "Born";
+    birthdateLabel.color = labColors.slate6;
+    birthdateLabel.fontSize = 18;
+    birthdateLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    birthdateLabel.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    birthdateLabel.paddingLeft = "10px";
+    birthdateLabel.paddingRight = "10px";
+    birthdateLabel.paddingTop = "14px";
+    birthdateLabel.paddingBottom = "10px";
+    grid.addControl(birthdateLabel, 0, 0);
+
+    // localize the activeRecord.born date
+    const bornDate = new Date(activeRecord.born);
+    const bornString = bornDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric"
+    });
+    const birthdateValue = new TextBlock("birthdateValue");
+    birthdateValue.text = bornString;
+    birthdateValue.color = labColors.slate8;
+    birthdateValue.fontSize = 18;
+    birthdateValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    birthdateValue.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    birthdateValue.paddingLeft = "10px";
+    birthdateValue.paddingRight = "10px";
+    birthdateValue.paddingTop = "14px";
+    birthdateValue.paddingBottom = "10px";
+    grid.addControl(birthdateValue, 0, 1);
+
+    // Row Two: Died label and value
+    const diedLabel = new TextBlock("diedLabel");
+    diedLabel.text = "Died";
+    diedLabel.color = labColors.slate6;
+    diedLabel.fontSize = 18;
+    diedLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    diedLabel.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    diedLabel.paddingLeft = "10px";
+    diedLabel.paddingRight = "10px";
+    diedLabel.paddingTop = "10px";
+    diedLabel.paddingBottom = "10px";
+    grid.addControl(diedLabel, 1, 0);
+
+    // localize the activeRecord.died date
+    const diedDate = new Date(activeRecord.died);
+    const diedString = diedDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric"
+    });
+    const diedValue = new TextBlock("diedValue");
+    diedValue.text = diedString;
+    diedValue.color = labColors.slate8;
+    diedValue.fontSize = 18;
+    diedValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    diedValue.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    diedValue.paddingLeft = "10px";
+    diedValue.paddingRight = "10px";
+    diedValue.paddingTop = "10px";
+    diedValue.paddingBottom = "10px";
+    grid.addControl(diedValue, 1, 1);
+
+    // Row three: years active label and value
+    const yearsActiveLabel = new TextBlock("yearsActiveLabel");
+    yearsActiveLabel.text = "Years Active";
+    yearsActiveLabel.color = labColors.slate6;
+    yearsActiveLabel.fontSize = 18;
+    yearsActiveLabel.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    yearsActiveLabel.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    yearsActiveLabel.paddingLeft = "10px";
+    yearsActiveLabel.paddingRight = "10px";
+    yearsActiveLabel.paddingTop = "10px";
+    yearsActiveLabel.paddingBottom = "14px";
+    grid.addControl(yearsActiveLabel, 2, 0);
+
+    const yearsActiveValue = new TextBlock("yearsActiveValue");
+    yearsActiveValue.text = activeRecord.activeYears;
+    yearsActiveValue.color = labColors.slate8;
+    yearsActiveValue.fontSize = 18;
+    yearsActiveValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    yearsActiveValue.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    yearsActiveValue.paddingLeft = "10px";
+    yearsActiveValue.paddingRight = "10px";
+    yearsActiveValue.paddingTop = "10px";
+    yearsActiveValue.paddingBottom = "14px";
+    grid.addControl(yearsActiveValue, 2, 1);
+
     const containerRight = new Rectangle("lab-card-rect");
     containerRight.color = labColors.slate2;
     containerRight.thickness = 1;
     containerRight.background = labColors.slate3 + "80";
     containerRight.cornerRadius = 20;
-    containerRight.widthInPixels = 440;
+    containerRight.widthInPixels = 500;
     containerRight.heightInPixels = 140;
     containerRight.top = 130;
-    containerRight.left = 160;
-    // add hover effect
+    containerRight.left = 130;
     containerRight.onPointerEnterObservable.add(() => {
       containerRight.background = labColors.slate3 + "ff";
       containerRight.color = labColors.slate4 + "80";
@@ -137,8 +234,6 @@
       containerRight.color = labColors.slate2;
     });
     advancedTexture.addControl(containerRight);
-
-    // add a text block to the rectangle
 
     window.addEventListener("keydown", (e) => {
       if (e.key === "=") {
