@@ -29,10 +29,8 @@
     sixDofDragBehavior.allowMultiPointers = true;
     sixDofDragBehavior.moveAttached = false;
     sixDofDragBehavior.maxDragAngle = 0;
-    // don't allow grabbing child objects
-    // sixDofDragBehavior.useObjectOrientationForDragging = false;
-
     grabPlane.addBehavior(sixDofDragBehavior);
+    sixDofDragBehavior.draggableMeshes = [grabPlane];
 
     const rectIndicator = new Rectangle("rect-indicator");
     rectIndicator.width = "200px";
@@ -400,10 +398,12 @@
     watch(activeIndex, (newValue) => {
       const texture = scene.getTextureByName("lab-card-rect-texture");
       activeRecord = computingData[newValue];
+
       texture.getControlByName("name").text = activeRecord.name;
       texture.getControlByName("image").source = activeRecord.imageUrl;
       texture.getControlByName("knownFor").text = `Known for: ${activeRecord.knownFor}`;
       texture.getControlByName("shortDescription").textBlock.text = activeRecord.shortDescription;
+
       // Update the grid values
       const bornDate = new Date(activeRecord.born);
       const bornString = bornDate.toLocaleDateString("en-US", {
