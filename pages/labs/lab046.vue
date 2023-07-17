@@ -1,6 +1,6 @@
 <script setup>
-  import { Vector3 } from "babylonjs";
-  import { TextBlock, Image, Control, Rectangle, Button, Grid } from "babylonjs-gui";
+  import { Vector3, SixDofDragBehavior } from "babylonjs";
+  import { TextBlock, Image, Control, Rectangle, Button, Grid, AdvancedDynamicTexture } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -12,16 +12,74 @@
   const createLabContent = async (scene) => {
     const activeIndex = ref(0);
     let activeRecord = reactive(computingData[activeIndex.value]);
-    console.log(activeRecord.value);
 
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -2);
 
+    // Create a new small plane with an advanced texture to display two buttons
+    const { plane: toolbarPlane, advancedTexture: toolbarTexture } = canLabCardSimple(4, 0.8, scene);
+    toolbarPlane.name = "toolbar-plane";
+    toolbarPlane.position = new Vector3(0, 1, -0.05);
+    toolbarPlane.scaling = new Vector3(0.2, 0.2, 0.2);
+
+    // Add a grab behavior to the toolbar plane
+    const sixDofDragBehavior = new SixDofDragBehavior();
+    sixDofDragBehavior.allowMultiPointers = true;
+    // keep the toolbar plane in front of the camera
+    // sixDofDragBehavior.dragDeltaRatio = new Vector3(0, 0, 0);
+    sixDofDragBehavior.moveAttached = false;
+    sixDofDragBehavior.maxDragAngle = 0;
+    toolbarPlane.addBehavior(sixDofDragBehavior);
+
+    toolbarTexture.getControlByName("rect").alpha = 0;
+
+    const buttonLeft = canLabButtonSimple("button-left", "<");
+    buttonLeft.width = "50px";
+    buttonLeft.height = "50px";
+    buttonLeft.left = "-150px";
+    buttonLeft.onPointerUpObservable.add(() => {
+      // reduce the count, but when gettin to 0, go to the last record
+      let newIndex = activeIndex.value - 1;
+      if (newIndex < 0) {
+        newIndex = computingData.length - 1;
+      }
+      activeIndex.value = newIndex;
+    });
+    toolbarTexture.addControl(buttonLeft);
+
+    const rectIndicator = new Rectangle("rect-indicator");
+    rectIndicator.width = "200px";
+    rectIndicator.height = "20px";
+    rectIndicator.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    rectIndicator.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    // rectIndicator.color = labColors.slate2;
+    rectIndicator.thickness = 0;
+    rectIndicator.background = labColors.slate7;
+    rectIndicator.cornerRadius = 20;
+    rectIndicator.top = -30;
+    toolbarTexture.addControl(rectIndicator);
+
+    const buttonRight = canLabButtonSimple("button-right", ">");
+    buttonRight.width = "50px";
+    buttonRight.height = "50px";
+    buttonRight.left = "150px";
+
+    buttonRight.onPointerUpObservable.add(() => {
+      // increase the count, but when getting to the last record, go to 0
+      let newIndex = activeIndex.value + 1;
+      if (newIndex > computingData.length - 1) {
+        newIndex = 0;
+      }
+      activeIndex.value = newIndex;
+    });
+    toolbarTexture.addControl(buttonRight);
+
     const { plane, advancedTexture } = canLabCardSimple(8, 4.6, scene);
     plane.name = "parent-plane";
-    plane.position = new Vector3(0, 1.2, 0);
-    plane.scaling = new Vector3(0.2, 0.2, 0.2);
+    // plane.scaling = new Vector3(0.8, 0.8, 0.8);
+    plane.parent = toolbarPlane;
+    plane.position = new Vector3(0, 2.7, 0);
 
     const imageContainer = new Rectangle("masker");
     imageContainer.width = "100px";
