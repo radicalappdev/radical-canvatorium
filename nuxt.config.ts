@@ -9,6 +9,9 @@ export default defineNuxtConfig({
     https: {
       key: options.key,
       cert: options.cert
+    },
+    alias: {
+      "@": "./"
     }
     // https: {
     //   key: fs.readFileSync(path.resolve(__dirname, "key.pem")),
