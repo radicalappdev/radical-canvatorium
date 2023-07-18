@@ -12,7 +12,6 @@
   const createLabContent = async (scene) => {
     // Data and state
     const activeIndex = ref(0);
-    let activeRecord = reactive(computingData[activeIndex.value]);
 
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
@@ -27,7 +26,7 @@
     // --------------------------
     // Create a toolbar for the window
     // --------------------------
-    const toolbarMesh = exampleToolbar(activeIndex, computingData, scene);
+    const { toolbarMesh, activeRecord } = exampleToolbar(activeIndex, computingData, scene);
     toolbarMesh.parent = windowGroupMesh;
 
     // --------------------------
@@ -61,7 +60,7 @@
     imageContainer.addControl(image);
 
     const cardText = new TextBlock("name");
-    cardText.text = activeRecord.name;
+    cardText.text = "";
     cardText.color = labColors.slate8;
     cardText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     cardText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -71,7 +70,6 @@
     contentTexture.addControl(cardText);
 
     const knownFor = new TextBlock("knownFor");
-    knownFor.text = `Known for: ${activeRecord.knownFor}`;
     knownFor.color = labColors.slate8;
     knownFor.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     knownFor.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -80,7 +78,7 @@
     knownFor.fontSize = 18;
     contentTexture.addControl(knownFor);
 
-    const shortDescription = Button.CreateSimpleButton("shortDescription", activeRecord.shortDescription);
+    const shortDescription = Button.CreateSimpleButton("shortDescription", "");
     shortDescription.background = labColors.slate3 + "80";
     shortDescription.textWrapping = true;
     shortDescription.paddingLeft = "30px";
@@ -159,15 +157,7 @@
     birthdateLabel.paddingBottom = "10px";
     grid.addControl(birthdateLabel, 0, 0);
 
-    // localize the activeRecord.born date
-    const bornDate = new Date(activeRecord.born);
-    const bornString = bornDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric"
-    });
     const birthdateValue = new TextBlock("birthdateValue");
-    birthdateValue.text = bornString;
     birthdateValue.color = labColors.slate8;
     birthdateValue.fontSize = 18;
     birthdateValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
@@ -191,15 +181,7 @@
     diedLabel.paddingBottom = "10px";
     grid.addControl(diedLabel, 1, 0);
 
-    // localize the activeRecord.died date
-    const diedDate = new Date(activeRecord.died);
-    const diedString = diedDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric"
-    });
     const diedValue = new TextBlock("diedValue");
-    diedValue.text = diedString;
     diedValue.color = labColors.slate8;
     diedValue.fontSize = 18;
     diedValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
@@ -224,7 +206,6 @@
     grid.addControl(yearsActiveLabel, 2, 0);
 
     const yearsActiveValue = new TextBlock("yearsActiveValue");
-    yearsActiveValue.text = activeRecord.activeYears;
     yearsActiveValue.color = labColors.slate8;
     yearsActiveValue.fontSize = 18;
     yearsActiveValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
@@ -277,7 +258,6 @@
     gridRight.addControl(knownForLabel, 0, 0);
 
     const knownForValue = new TextBlock("knownForValue");
-    knownForValue.text = activeRecord.knownFor.length > 40 ? activeRecord.knownFor.substring(0, 40) + "..." : activeRecord.knownFor;
     knownForValue.color = labColors.slate8;
     knownForValue.fontSize = 18;
     knownForValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -301,7 +281,6 @@
     gridRight.addControl(occupationLabel, 1, 0);
 
     const occupationValue = new TextBlock("occupationValue");
-    occupationValue.text = activeRecord.occupation.length > 40 ? activeRecord.occupation.substring(0, 40) + "..." : activeRecord.occupation;
     occupationValue.color = labColors.slate8;
     occupationValue.fontSize = 18;
     occupationValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -325,7 +304,6 @@
     gridRight.addControl(educationLabel, 2, 0);
 
     const educationValue = new TextBlock("educationValue");
-    educationValue.text = activeRecord.education.length > 40 ? activeRecord.education.substring(0, 40) + "..." : activeRecord.education;
     educationValue.color = labColors.slate8;
     educationValue.fontSize = 18;
     educationValue.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -336,37 +314,41 @@
     educationValue.paddingBottom = "14px";
     gridRight.addControl(educationValue, 2, 1);
 
-    watch(activeIndex, (newValue) => {
-      const texture = scene.getTextureByName("content-texture");
-      activeRecord = computingData[newValue];
+    watch(
+      activeRecord,
+      (newValue) => {
+        const texture = scene.getTextureByName("content-texture");
+        // activeRecord = computingData[newValue];
 
-      texture.getControlByName("name").text = activeRecord.name;
-      texture.getControlByName("image").source = activeRecord.imageUrl;
-      texture.getControlByName("knownFor").text = `Known for: ${activeRecord.knownFor}`;
-      texture.getControlByName("shortDescription").textBlock.text = activeRecord.shortDescription;
+        texture.getControlByName("name").text = newValue.name;
+        texture.getControlByName("image").source = newValue.imageUrl;
+        texture.getControlByName("knownFor").text = `Known for: ${newValue.knownFor}`;
+        texture.getControlByName("shortDescription").textBlock.text = newValue.shortDescription;
 
-      // Update the grid values
-      const bornDate = new Date(activeRecord.born);
-      const bornString = bornDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric"
-      });
-      texture.getControlByName("birthdateValue").text = bornString;
-      const diedDate = new Date(activeRecord.died);
-      const diedString = diedDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric"
-      });
-      texture.getControlByName("diedValue").text = diedString;
-      texture.getControlByName("yearsActiveValue").text = activeRecord.activeYears;
+        // Update the grid values
+        const bornDate = new Date(newValue.born);
+        const bornString = bornDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric"
+        });
+        texture.getControlByName("birthdateValue").text = bornString;
+        const diedDate = new Date(newValue.died);
+        const diedString = diedDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric"
+        });
+        texture.getControlByName("diedValue").text = diedString;
+        texture.getControlByName("yearsActiveValue").text = newValue.activeYears;
 
-      // Update the gridRight values with a max length of 40 characters
-      texture.getControlByName("knownForValue").text = activeRecord.knownFor.length > 40 ? activeRecord.knownFor.substring(0, 40) + "..." : activeRecord.knownFor;
-      texture.getControlByName("occupationValue").text = activeRecord.occupation.length > 40 ? activeRecord.occupation.substring(0, 40) + "..." : activeRecord.occupation;
-      texture.getControlByName("educationValue").text = activeRecord.education.length > 40 ? activeRecord.education.substring(0, 40) + "..." : activeRecord.education;
-    });
+        // Update the gridRight values with a max length of 40 characters
+        texture.getControlByName("knownForValue").text = newValue.knownFor.length > 40 ? newValue.knownFor.substring(0, 40) + "..." : newValue.knownFor;
+        texture.getControlByName("occupationValue").text = newValue.occupation.length > 40 ? newValue.occupation.substring(0, 40) + "..." : newValue.occupation;
+        texture.getControlByName("educationValue").text = newValue.education.length > 40 ? newValue.education.substring(0, 40) + "..." : newValue.education;
+      },
+      { immediate: true }
+    );
 
     window.addEventListener("keydown", (e) => {
       if (e.key === "=") {
@@ -386,6 +368,7 @@
 
   // use toolbar
   const exampleToolbar = (activeIndex, computingData, scene) => {
+    const activeRecord = computed(() => computingData[activeIndex.value]);
     const handlePrevButtonClick = () => {
       let newIndex = activeIndex.value - 1;
       if (newIndex < 0) {
@@ -405,7 +388,6 @@
     const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
     toolbarMesh.name = "toolbar-mesh";
     toolbarMesh.position = new Vector3(3, 0, -0.05);
-    // toolbarMesh.parent = windowGroupMesh;
     toolbarTexture.getControlByName("rect").alpha = 0;
     toolbarTexture.name = "toolbar-texture";
 
@@ -423,7 +405,10 @@
     toolbarButtonNext.onPointerUpObservable.add(handleNextButtonClick);
     toolbarTexture.addControl(toolbarButtonNext);
 
-    return toolbarMesh;
+    return {
+      toolbarMesh,
+      activeRecord
+    };
   };
 
   const bjsCanvas = ref(null);
