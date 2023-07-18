@@ -17,45 +17,52 @@
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -2);
 
-    const { plane: grabPlane, advancedTexture: grabTexture } = canLabCardSimple(2, 0.8, scene);
-    grabPlane.name = "grab-plane";
-    grabPlane.position = new Vector3(0, 0.5, -0.05);
-    grabPlane.scaling = new Vector3(0.2, 0.2, 0.2);
-    grabTexture.name = "grab-texture";
-    grabTexture.getControlByName("rect").alpha = 0;
+    // --------------------------
+    // Create a window group object. This is a parent object that will contain the window and toolbar planes, and any other objects we want to add to the window
+    // TODO: Create a new UI component from this.
+    // --------------------------
+    const { plane: windowGroupMesh, advancedTexture: windowGroupTexture } = canLabCardSimple(2, 0.8, scene);
+    windowGroupMesh.name = "window-group-mesh";
+    windowGroupMesh.position = new Vector3(0, 0.5, -0.05);
+    windowGroupMesh.scaling = new Vector3(0.2, 0.2, 0.2);
+    windowGroupTexture.name = "window-group-texture";
+    windowGroupTexture.getControlByName("rect").alpha = 0;
 
     // Add a grab behavior to the toolbar plane
-    const sixDofDragBehavior = new SixDofDragBehavior();
-    sixDofDragBehavior.allowMultiPointers = true;
-    sixDofDragBehavior.moveAttached = false;
-    sixDofDragBehavior.maxDragAngle = 0;
-    grabPlane.addBehavior(sixDofDragBehavior);
-    sixDofDragBehavior.draggableMeshes = [grabPlane];
+    const windowGroupDragBehavior = new SixDofDragBehavior();
+    windowGroupDragBehavior.allowMultiPointers = true;
+    windowGroupDragBehavior.moveAttached = false;
+    windowGroupDragBehavior.maxDragAngle = 0;
+    windowGroupMesh.addBehavior(windowGroupDragBehavior);
+    windowGroupDragBehavior.draggableMeshes = [windowGroupMesh];
 
-    const rectIndicator = new Rectangle("rect-indicator");
-    rectIndicator.width = "200px";
-    rectIndicator.height = "20px";
-    rectIndicator.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-    rectIndicator.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    rectIndicator.thickness = 0;
-    rectIndicator.background = labColors.slate7;
-    rectIndicator.cornerRadius = 20;
-    rectIndicator.top = -30;
-    grabTexture.addControl(rectIndicator);
+    const windowGroupDragIndicator = new Rectangle("window-group-drag-indicator");
+    windowGroupDragIndicator.width = "200px";
+    windowGroupDragIndicator.height = "20px";
+    windowGroupDragIndicator.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    windowGroupDragIndicator.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    windowGroupDragIndicator.thickness = 0;
+    windowGroupDragIndicator.background = labColors.slate7;
+    windowGroupDragIndicator.cornerRadius = 20;
+    windowGroupDragIndicator.top = -30;
+    windowGroupTexture.addControl(windowGroupDragIndicator);
 
+    // --------------------------
     // Create a new small plane with an advanced texture to display two buttons
-    const { plane: toolbarPlane, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
-    toolbarPlane.name = "toolbar-plane";
-    toolbarPlane.position = new Vector3(3, 0, -0.05);
-    toolbarPlane.parent = grabPlane;
+    // TODO: Create a new UI component from this.
+    // --------------------------
+    const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
+    toolbarMesh.name = "toolbar-mesh";
+    toolbarMesh.position = new Vector3(3, 0, -0.05);
+    toolbarMesh.parent = windowGroupMesh;
     toolbarTexture.getControlByName("rect").alpha = 0;
     toolbarTexture.name = "toolbar-texture";
 
-    const buttonLeft = canLabButtonSimple("button-left", "<");
-    buttonLeft.width = "50px";
-    buttonLeft.height = "50px";
-    buttonLeft.left = "-30px";
-    buttonLeft.onPointerUpObservable.add(() => {
+    const toolbarButtonPrev = canLabButtonSimple("toolbar-button-prev", "<");
+    toolbarButtonPrev.width = "50px";
+    toolbarButtonPrev.height = "50px";
+    toolbarButtonPrev.left = "-30px";
+    toolbarButtonPrev.onPointerUpObservable.add(() => {
       // reduce the count, but when gettin to 0, go to the last record
       let newIndex = activeIndex.value - 1;
       if (newIndex < 0) {
@@ -63,14 +70,14 @@
       }
       activeIndex.value = newIndex;
     });
-    toolbarTexture.addControl(buttonLeft);
+    toolbarTexture.addControl(toolbarButtonPrev);
 
-    const buttonRight = canLabButtonSimple("button-right", ">");
-    buttonRight.width = "50px";
-    buttonRight.height = "50px";
-    buttonRight.left = "30px";
+    const toolbarButtonNext = canLabButtonSimple("toolbar-button-next", ">");
+    toolbarButtonNext.width = "50px";
+    toolbarButtonNext.height = "50px";
+    toolbarButtonNext.left = "30px";
 
-    buttonRight.onPointerUpObservable.add(() => {
+    toolbarButtonNext.onPointerUpObservable.add(() => {
       // increase the count, but when getting to the last record, go to 0
       let newIndex = activeIndex.value + 1;
       if (newIndex > computingData.length - 1) {
@@ -78,13 +85,16 @@
       }
       activeIndex.value = newIndex;
     });
-    toolbarTexture.addControl(buttonRight);
+    toolbarTexture.addControl(toolbarButtonNext);
 
-    const { plane, advancedTexture } = canLabCardSimple(8, 4.6, scene);
-    plane.name = "parent-plane";
-    // plane.scaling = new Vector3(0.8, 0.8, 0.8);
-    plane.parent = grabPlane;
-    plane.position = new Vector3(0, 2.7, 0);
+    // --------------------------
+    // Create the main content card
+    // --------------------------
+    const { plane: contentMesh, advancedTexture: contentTexture } = canLabCardSimple(8, 4.6, scene);
+    contentMesh.name = "parent-plane";
+    contentMesh.parent = windowGroupMesh;
+    contentMesh.position = new Vector3(0, 2.7, 0);
+    contentTexture.name = "content-texture";
 
     const imageContainer = new Rectangle("masker");
     imageContainer.width = "100px";
@@ -95,7 +105,7 @@
     imageContainer.top = "30px";
     imageContainer.thickness = 0;
     imageContainer.cornerRadius = 20;
-    advancedTexture.addControl(imageContainer);
+    contentTexture.addControl(imageContainer);
 
     const image = new Image("image", activeRecord.imageUrl);
     image.alpha = 0.9;
@@ -115,7 +125,7 @@
     cardText.top = 40;
     cardText.left = 150;
     cardText.fontSize = 48;
-    advancedTexture.addControl(cardText);
+    contentTexture.addControl(cardText);
 
     const knownFor = new TextBlock("knownFor");
     knownFor.text = `Known for: ${activeRecord.knownFor}`;
@@ -125,7 +135,7 @@
     knownFor.top = 100;
     knownFor.left = 150;
     knownFor.fontSize = 18;
-    advancedTexture.addControl(knownFor);
+    contentTexture.addControl(knownFor);
 
     const shortDescription = Button.CreateSimpleButton("shortDescription", activeRecord.shortDescription);
     shortDescription.background = labColors.slate3 + "80";
@@ -160,7 +170,7 @@
       shortDescription.background = labColors.slate3 + "80";
       shortDescription.color = labColors.slate2;
     });
-    advancedTexture.addControl(shortDescription);
+    contentTexture.addControl(shortDescription);
 
     const containerLeft = new Rectangle("lab-card-rect");
     containerLeft.color = labColors.slate2;
@@ -179,7 +189,10 @@
       containerLeft.background = labColors.slate3 + "80";
       containerLeft.color = labColors.slate2;
     });
-    advancedTexture.addControl(containerLeft);
+    containerLeft.onPointerUpObservable.add(() => {
+      console.log("containerLeft clicked");
+    });
+    contentTexture.addControl(containerLeft);
 
     // add a 2x3 grid to the left container
     const grid = new Grid();
@@ -296,7 +309,7 @@
       containerRight.background = labColors.slate3 + "80";
       containerRight.color = labColors.slate2;
     });
-    advancedTexture.addControl(containerRight);
+    contentTexture.addControl(containerRight);
 
     // Add a 2x3 grid to the right container
     // knownFor, occupation, education and their labels
@@ -396,7 +409,7 @@
     });
 
     watch(activeIndex, (newValue) => {
-      const texture = scene.getTextureByName("lab-card-rect-texture");
+      const texture = scene.getTextureByName("content-texture");
       activeRecord = computingData[newValue];
 
       texture.getControlByName("name").text = activeRecord.name;
