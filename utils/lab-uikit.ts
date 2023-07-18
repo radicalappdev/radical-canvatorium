@@ -72,3 +72,7 @@ export const canLabWindowGroup = (scene: Scene) => {
 
   return windowGroupMesh;
 };
+
+// export const canLabToolbar = (scene: Scene) => {
+
+// };

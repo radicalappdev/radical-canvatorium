@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3, SixDofDragBehavior } from "babylonjs";
+  import { Vector3 } from "babylonjs";
   import { TextBlock, Image, Control, Rectangle, Button, Grid, AdvancedDynamicTexture } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
@@ -10,9 +10,6 @@
   });
 
   const createLabContent = async (scene) => {
-    const activeIndex = ref(0);
-    let activeRecord = reactive(computingData[activeIndex.value]);
-
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -2);
@@ -23,45 +20,49 @@
     // --------------------------
     const windowGroupMesh = canLabWindowGroup(scene);
 
+    const activeIndex = ref(0);
+    let activeRecord = reactive(computingData[activeIndex.value]);
+
+    useToolbar(activeIndex, computingData, windowGroupMesh, scene);
     // --------------------------
     // Create a new small plane with an advanced texture to display two buttons
     // TODO: Create a new UI component from this.
     // --------------------------
-    const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
-    toolbarMesh.name = "toolbar-mesh";
-    toolbarMesh.position = new Vector3(3, 0, -0.05);
-    toolbarMesh.parent = windowGroupMesh;
-    toolbarTexture.getControlByName("rect").alpha = 0;
-    toolbarTexture.name = "toolbar-texture";
+    // const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
+    // toolbarMesh.name = "toolbar-mesh";
+    // toolbarMesh.position = new Vector3(3, 0, -0.05);
+    // toolbarMesh.parent = windowGroupMesh;
+    // toolbarTexture.getControlByName("rect").alpha = 0;
+    // toolbarTexture.name = "toolbar-texture";
 
-    const toolbarButtonPrev = canLabButtonSimple("toolbar-button-prev", "<");
-    toolbarButtonPrev.width = "50px";
-    toolbarButtonPrev.height = "50px";
-    toolbarButtonPrev.left = "-30px";
-    toolbarButtonPrev.onPointerUpObservable.add(() => {
-      // reduce the count, but when gettin to 0, go to the last record
-      let newIndex = activeIndex.value - 1;
-      if (newIndex < 0) {
-        newIndex = computingData.length - 1;
-      }
-      activeIndex.value = newIndex;
-    });
-    toolbarTexture.addControl(toolbarButtonPrev);
+    // const toolbarButtonPrev = canLabButtonSimple("toolbar-button-prev", "<");
+    // toolbarButtonPrev.width = "50px";
+    // toolbarButtonPrev.height = "50px";
+    // toolbarButtonPrev.left = "-30px";
+    // toolbarButtonPrev.onPointerUpObservable.add(() => {
+    //   // reduce the count, but when gettin to 0, go to the last record
+    //   let newIndex = activeIndex.value - 1;
+    //   if (newIndex < 0) {
+    //     newIndex = computingData.length - 1;
+    //   }
+    //   activeIndex.value = newIndex;
+    // });
+    // toolbarTexture.addControl(toolbarButtonPrev);
 
-    const toolbarButtonNext = canLabButtonSimple("toolbar-button-next", ">");
-    toolbarButtonNext.width = "50px";
-    toolbarButtonNext.height = "50px";
-    toolbarButtonNext.left = "30px";
+    // const toolbarButtonNext = canLabButtonSimple("toolbar-button-next", ">");
+    // toolbarButtonNext.width = "50px";
+    // toolbarButtonNext.height = "50px";
+    // toolbarButtonNext.left = "30px";
 
-    toolbarButtonNext.onPointerUpObservable.add(() => {
-      // increase the count, but when getting to the last record, go to 0
-      let newIndex = activeIndex.value + 1;
-      if (newIndex > computingData.length - 1) {
-        newIndex = 0;
-      }
-      activeIndex.value = newIndex;
-    });
-    toolbarTexture.addControl(toolbarButtonNext);
+    // toolbarButtonNext.onPointerUpObservable.add(() => {
+    //   // increase the count, but when getting to the last record, go to 0
+    //   let newIndex = activeIndex.value + 1;
+    //   if (newIndex > computingData.length - 1) {
+    //     newIndex = 0;
+    //   }
+    //   activeIndex.value = newIndex;
+    // });
+    // toolbarTexture.addControl(toolbarButtonNext);
 
     // --------------------------
     // Create the main content card
@@ -415,6 +416,46 @@
         activeIndex.value = 0;
       }
     });
+  };
+
+  // use toolbar
+  const useToolbar = (activeIndex, computingData, windowGroupMesh, scene) => {
+    const handlePrevButtonClick = () => {
+      let newIndex = activeIndex.value - 1;
+      if (newIndex < 0) {
+        newIndex = computingData.length - 1;
+      }
+      activeIndex.value = newIndex;
+    };
+
+    const handleNextButtonClick = () => {
+      let newIndex = activeIndex.value + 1;
+      if (newIndex > computingData.length - 1) {
+        newIndex = 0;
+      }
+      activeIndex.value = newIndex;
+    };
+
+    const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
+    toolbarMesh.name = "toolbar-mesh";
+    toolbarMesh.position = new Vector3(3, 0, -0.05);
+    toolbarMesh.parent = windowGroupMesh;
+    toolbarTexture.getControlByName("rect").alpha = 0;
+    toolbarTexture.name = "toolbar-texture";
+
+    const toolbarButtonPrev = canLabButtonSimple("toolbar-button-prev", "<");
+    toolbarButtonPrev.width = "50px";
+    toolbarButtonPrev.height = "50px";
+    toolbarButtonPrev.left = "-30px";
+    toolbarButtonPrev.onPointerUpObservable.add(handlePrevButtonClick);
+    toolbarTexture.addControl(toolbarButtonPrev);
+
+    const toolbarButtonNext = canLabButtonSimple("toolbar-button-next", ">");
+    toolbarButtonNext.width = "50px";
+    toolbarButtonNext.height = "50px";
+    toolbarButtonNext.left = "30px";
+    toolbarButtonNext.onPointerUpObservable.add(handleNextButtonClick);
+    toolbarTexture.addControl(toolbarButtonNext);
   };
 
   const bjsCanvas = ref(null);
