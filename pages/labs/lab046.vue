@@ -1,6 +1,5 @@
 <script setup>
   import { Vector3 } from "babylonjs";
-  import { TextBlock, Image, Control, Rectangle, Button, Grid, AdvancedDynamicTexture } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({

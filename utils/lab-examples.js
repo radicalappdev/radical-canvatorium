@@ -45,8 +45,10 @@ export const exampleToolbar = (activeIndex, computingData, scene) => {
 // --------------------------
 export const exampleContent = (activeRecord, scene) => {
   const { plane: contentMesh, advancedTexture: contentTexture } = canLabCardSimple(8, 4.6, scene);
-  contentMesh.name = "parent-plane";
-  contentTexture.name = "content-texture";
+  contentMesh.name = "content-mesh";
+  // Just a hack to give the texture a unique name
+  const cardTextureName = "content-texture-" + Date.now();
+  contentTexture.name = cardTextureName;
 
   const imageContainer = new Rectangle("masker");
   imageContainer.width = "100px";
@@ -327,7 +329,8 @@ export const exampleContent = (activeRecord, scene) => {
   watch(
     activeRecord,
     (newValue) => {
-      const texture = scene.getTextureByName("content-texture");
+      console.log("card texture name", cardTextureName);
+      const texture = scene.getTextureByName(cardTextureName);
       // activeRecord = computingData[newValue];
 
       texture.getControlByName("name").text = newValue.name;
