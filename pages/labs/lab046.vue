@@ -19,33 +19,9 @@
 
     // --------------------------
     // Create a window group object. This is a parent object that will contain the window and toolbar planes, and any other objects we want to add to the window
-    // TODO: Create a new UI component from this.
+    // This can be found in lab-uikit.ts
     // --------------------------
-    const { plane: windowGroupMesh, advancedTexture: windowGroupTexture } = canLabCardSimple(2, 0.8, scene);
-    windowGroupMesh.name = "window-group-mesh";
-    windowGroupMesh.position = new Vector3(0, 0.5, -0.05);
-    windowGroupMesh.scaling = new Vector3(0.2, 0.2, 0.2);
-    windowGroupTexture.name = "window-group-texture";
-    windowGroupTexture.getControlByName("rect").alpha = 0;
-
-    // Add a grab behavior to the toolbar plane
-    const windowGroupDragBehavior = new SixDofDragBehavior();
-    windowGroupDragBehavior.allowMultiPointers = true;
-    windowGroupDragBehavior.moveAttached = false;
-    windowGroupDragBehavior.maxDragAngle = 0;
-    windowGroupMesh.addBehavior(windowGroupDragBehavior);
-    windowGroupDragBehavior.draggableMeshes = [windowGroupMesh];
-
-    const windowGroupDragIndicator = new Rectangle("window-group-drag-indicator");
-    windowGroupDragIndicator.width = "200px";
-    windowGroupDragIndicator.height = "20px";
-    windowGroupDragIndicator.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-    windowGroupDragIndicator.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    windowGroupDragIndicator.thickness = 0;
-    windowGroupDragIndicator.background = labColors.slate7;
-    windowGroupDragIndicator.cornerRadius = 20;
-    windowGroupDragIndicator.top = -30;
-    windowGroupTexture.addControl(windowGroupDragIndicator);
+    const windowGroupMesh = canLabWindowGroup(scene);
 
     // --------------------------
     // Create a new small plane with an advanced texture to display two buttons
@@ -393,21 +369,6 @@
     educationValue.paddingBottom = "14px";
     gridRight.addControl(educationValue, 2, 1);
 
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "=") {
-        activeIndex.value++;
-      }
-      if (e.key === "-") {
-        activeIndex.value--;
-      }
-      if (activeIndex.value < 0) {
-        activeIndex.value = computingData.length - 1;
-      }
-      if (activeIndex.value > computingData.length - 1) {
-        activeIndex.value = 0;
-      }
-    });
-
     watch(activeIndex, (newValue) => {
       const texture = scene.getTextureByName("content-texture");
       activeRecord = computingData[newValue];
@@ -438,6 +399,21 @@
       texture.getControlByName("knownForValue").text = activeRecord.knownFor.length > 40 ? activeRecord.knownFor.substring(0, 40) + "..." : activeRecord.knownFor;
       texture.getControlByName("occupationValue").text = activeRecord.occupation.length > 40 ? activeRecord.occupation.substring(0, 40) + "..." : activeRecord.occupation;
       texture.getControlByName("educationValue").text = activeRecord.education.length > 40 ? activeRecord.education.substring(0, 40) + "..." : activeRecord.education;
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "=") {
+        activeIndex.value++;
+      }
+      if (e.key === "-") {
+        activeIndex.value--;
+      }
+      if (activeIndex.value < 0) {
+        activeIndex.value = computingData.length - 1;
+      }
+      if (activeIndex.value > computingData.length - 1) {
+        activeIndex.value = 0;
+      }
     });
   };
 
