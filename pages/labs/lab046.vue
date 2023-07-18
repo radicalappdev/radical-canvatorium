@@ -10,8 +10,9 @@
   });
 
   const createLabContent = async (scene) => {
-    // Data and state
+    // Data and state at parent scope
     const activeIndex = ref(0);
+    const activeRecord = computed(() => computingData[activeIndex.value]);
 
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
@@ -26,15 +27,84 @@
     // --------------------------
     // Create a toolbar for the window
     // --------------------------
-    const { toolbarMesh, activeRecord } = exampleToolbar(activeIndex, computingData, scene);
+    const { toolbarMesh } = exampleToolbar(activeIndex, computingData, scene);
     toolbarMesh.parent = windowGroupMesh;
+    // TODO: Position and scale the toolbar here, not in the exampleToolbar function
 
     // --------------------------
     // Create the main content card
     // --------------------------
+    const { contentMesh } = exampleContent(activeRecord, scene);
+    contentMesh.parent = windowGroupMesh;
+    // TODO: Position and scale the content card here, not in the exampleContent function
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "=") {
+        activeIndex.value++;
+      }
+      if (e.key === "-") {
+        activeIndex.value--;
+      }
+      if (activeIndex.value < 0) {
+        activeIndex.value = computingData.length - 1;
+      }
+      if (activeIndex.value > computingData.length - 1) {
+        activeIndex.value = 0;
+      }
+    });
+  };
+
+  // use toolbar
+  const exampleToolbar = (activeIndex, computingData, scene) => {
+    // const activeRecord = computed(() => computingData[activeIndex.value]);
+    const handlePrevButtonClick = () => {
+      let newIndex = activeIndex.value - 1;
+      if (newIndex < 0) {
+        newIndex = computingData.length - 1;
+      }
+      activeIndex.value = newIndex;
+    };
+
+    const handleNextButtonClick = () => {
+      let newIndex = activeIndex.value + 1;
+      if (newIndex > computingData.length - 1) {
+        newIndex = 0;
+      }
+      activeIndex.value = newIndex;
+    };
+
+    const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
+    toolbarMesh.name = "toolbar-mesh";
+    toolbarMesh.position = new Vector3(3, 0, -0.05);
+    toolbarTexture.getControlByName("rect").alpha = 0;
+    toolbarTexture.name = "toolbar-texture";
+
+    const toolbarButtonPrev = canLabButtonSimple("toolbar-button-prev", "<");
+    toolbarButtonPrev.width = "50px";
+    toolbarButtonPrev.height = "50px";
+    toolbarButtonPrev.left = "-30px";
+    toolbarButtonPrev.onPointerUpObservable.add(handlePrevButtonClick);
+    toolbarTexture.addControl(toolbarButtonPrev);
+
+    const toolbarButtonNext = canLabButtonSimple("toolbar-button-next", ">");
+    toolbarButtonNext.width = "50px";
+    toolbarButtonNext.height = "50px";
+    toolbarButtonNext.left = "30px";
+    toolbarButtonNext.onPointerUpObservable.add(handleNextButtonClick);
+    toolbarTexture.addControl(toolbarButtonNext);
+
+    return {
+      toolbarMesh
+    };
+  };
+
+  // --------------------------
+  // Create the main content card
+  // --------------------------
+  const exampleContent = (activeRecord, scene) => {
     const { plane: contentMesh, advancedTexture: contentTexture } = canLabCardSimple(8, 4.6, scene);
     contentMesh.name = "parent-plane";
-    contentMesh.parent = windowGroupMesh;
+    // contentMesh.parent = windowGroupMesh;
     contentMesh.position = new Vector3(0, 2.7, 0);
     contentTexture.name = "content-texture";
 
@@ -350,64 +420,8 @@
       { immediate: true }
     );
 
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "=") {
-        activeIndex.value++;
-      }
-      if (e.key === "-") {
-        activeIndex.value--;
-      }
-      if (activeIndex.value < 0) {
-        activeIndex.value = computingData.length - 1;
-      }
-      if (activeIndex.value > computingData.length - 1) {
-        activeIndex.value = 0;
-      }
-    });
-  };
-
-  // use toolbar
-  const exampleToolbar = (activeIndex, computingData, scene) => {
-    const activeRecord = computed(() => computingData[activeIndex.value]);
-    const handlePrevButtonClick = () => {
-      let newIndex = activeIndex.value - 1;
-      if (newIndex < 0) {
-        newIndex = computingData.length - 1;
-      }
-      activeIndex.value = newIndex;
-    };
-
-    const handleNextButtonClick = () => {
-      let newIndex = activeIndex.value + 1;
-      if (newIndex > computingData.length - 1) {
-        newIndex = 0;
-      }
-      activeIndex.value = newIndex;
-    };
-
-    const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
-    toolbarMesh.name = "toolbar-mesh";
-    toolbarMesh.position = new Vector3(3, 0, -0.05);
-    toolbarTexture.getControlByName("rect").alpha = 0;
-    toolbarTexture.name = "toolbar-texture";
-
-    const toolbarButtonPrev = canLabButtonSimple("toolbar-button-prev", "<");
-    toolbarButtonPrev.width = "50px";
-    toolbarButtonPrev.height = "50px";
-    toolbarButtonPrev.left = "-30px";
-    toolbarButtonPrev.onPointerUpObservable.add(handlePrevButtonClick);
-    toolbarTexture.addControl(toolbarButtonPrev);
-
-    const toolbarButtonNext = canLabButtonSimple("toolbar-button-next", ">");
-    toolbarButtonNext.width = "50px";
-    toolbarButtonNext.height = "50px";
-    toolbarButtonNext.left = "30px";
-    toolbarButtonNext.onPointerUpObservable.add(handleNextButtonClick);
-    toolbarTexture.addControl(toolbarButtonNext);
-
     return {
-      toolbarMesh,
-      activeRecord
+      contentMesh
     };
   };
 
