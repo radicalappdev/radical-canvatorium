@@ -32,16 +32,19 @@
     button.onPointerUpObservable.add(() => {
       console.log("Modal Open");
       showModal.value = true;
-      //   lab047_example_1(scene);
+      // The button still thinks it's active after the modal is closed, so we need to reset it
+      // remove focus from the button and the button's parent
+      button.focused = false;
+      button.parent.focused = false;
     });
 
     const lab047_example_1 = (scene) => {
-      const { plane: modalMesh, advancedTexture: modalTexture } = canLabCardSimple(6, 3.2, scene);
+      const { plane: modalMesh, advancedTexture: modalTexture } = canLabCardSimple(7.2, 3.4, scene);
 
       const paragraph = new TextBlock();
-      paragraph.text = "A modal that appears in front of the parent card. I could fade the parent card to de-emphasize it.";
+      paragraph.text = activeRecord.value.longDescription;
       paragraph.color = labColors.slate8;
-      paragraph.fontSize = 28;
+      paragraph.fontSize = 22;
       paragraph.textWrapping = true;
       paragraph.width = 0.9;
       paragraph.height = 0.9;
@@ -55,12 +58,11 @@
       const button1 = canLabButtonSimple("modal-close", "Close");
       button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
       button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-      button1.top = "-40px";
+      button1.top = "-20px";
       button1.zIndex = 1;
       button1.onPointerUpObservable.add(() => {
         console.log("Modal Close");
         showModal.value = false;
-        // modalMesh.dispose();
       });
       modalTexture.addControl(button1);
 
@@ -75,16 +77,16 @@
 
     watch(showModal, (newValue) => {
       if (newValue) {
-        Animation.CreateAndStartAnimation("move-main", contentMesh, "position.z", 60, 6, contentMesh.position.z, 0.1, 0);
+        Animation.CreateAndStartAnimation("move-main", contentMesh, "position.z", 60, 6, contentMesh.position.z, 0.2, 0);
         Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 1, 0.5, 0);
 
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0.1);
+        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0);
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
       } else {
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "position.z", 60, 6, 0.1, 0, 0);
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
 
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, 0, modalMesh.position.z, 0.1);
+        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, 0, modalMesh.position.z, 0.2);
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 1, 0, 0);
       }
     });
