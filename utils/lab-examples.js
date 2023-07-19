@@ -363,5 +363,5 @@ export const exampleContent = (activeRecord, scene) => {
     { immediate: true }
   );
 
-  return contentMesh;
+  return { contentMesh, contentTexture };
 };
