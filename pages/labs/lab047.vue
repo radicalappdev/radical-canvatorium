@@ -31,13 +31,8 @@
     const sdc = contentTexture.getControlByName("short-description-container");
     sdc.onPointerUpObservable.add(() => {
       console.log("Modal Open");
+      sdc.onPointerOutObservable.notifyObservers(sdc);
       showModal.value = true;
-
-      // This control never fires the onPointerOutObservable because another object is in front of it
-      // So we need to manually reset the state of the control
-      // mark as dirty does not work
-      contentTexture.markAsDirty();
-      sdc.markAsDirty();
     });
 
     const lab047_example_1 = (scene) => {
@@ -76,6 +71,7 @@
     const { modalMesh, modalTexture } = lab047_example_1(scene);
     modalMesh.parent = windowGroupMesh;
     modalMesh.position = new Vector3(0, 2.5, 1);
+    modalMesh.isPickable = false;
 
     watch(showModal, (newValue) => {
       if (newValue) {
