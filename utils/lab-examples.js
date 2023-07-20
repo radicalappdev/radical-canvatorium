@@ -90,40 +90,39 @@ export const exampleContent = (activeRecord, scene) => {
   knownFor.fontSize = 18;
   contentTexture.addControl(knownFor);
 
-  const shortDescription = Button.CreateSimpleButton("shortDescription", "");
-  shortDescription.background = labColors.slate3 + "80";
+  const shortDescriptionContainer = new Rectangle("short-description-container");
+  shortDescriptionContainer.color = labColors.slate2;
+  shortDescriptionContainer.thickness = 1;
+  shortDescriptionContainer.background = labColors.slate3 + "80";
+  shortDescriptionContainer.cornerRadius = 20;
+  shortDescriptionContainer.heightInPixels = 146;
+  shortDescriptionContainer.top = -20;
+  shortDescriptionContainer.paddingLeft = "30px";
+  shortDescriptionContainer.paddingRight = "30px";
+  shortDescriptionContainer.paddingTop = "10px";
+  shortDescriptionContainer.paddingBottom = "10px";
+  shortDescriptionContainer.onPointerEnterObservable.add(() => {
+    shortDescriptionContainer.background = labColors.slate3 + "ff";
+    shortDescriptionContainer.color = labColors.slate4 + "80";
+  });
+  shortDescriptionContainer.onPointerOutObservable.add(() => {
+    shortDescriptionContainer.background = labColors.slate3 + "80";
+    shortDescriptionContainer.color = labColors.slate2;
+  });
+  contentTexture.addControl(shortDescriptionContainer);
+
+  const shortDescription = new TextBlock("short-description-text");
+  shortDescription.text = "";
   shortDescription.textWrapping = true;
-  shortDescription.paddingLeft = "30px";
-  shortDescription.paddingRight = "30px";
-  shortDescription.paddingTop = "10px";
-  shortDescription.paddingBottom = "10px";
-  shortDescription.heightInPixels = 146;
+  shortDescription.color = labColors.slate8;
   shortDescription.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   shortDescription.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  shortDescription.cornerRadius = 20;
-  shortDescription.thickness = 1;
-  shortDescription.color = labColors.slate2;
-  shortDescription.top = -20;
-  shortDescription.textBlock.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-  shortDescription.textBlock.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-  shortDescription.textBlock.fontSize = 22;
-  shortDescription.textBlock.color = labColors.slate8;
-  shortDescription.textBlock.paddingLeft = "10px";
-  shortDescription.textBlock.paddingRight = "10px";
-  shortDescription.textBlock.paddingTop = "10px";
-  shortDescription.textBlock.paddingBottom = "10px";
-  // Override the default pointerUp and pointerDown animations
-  shortDescription.pointerDownAnimation = () => {};
-  shortDescription.pointerUpAnimation = () => {};
-  shortDescription.onPointerEnterObservable.add(() => {
-    shortDescription.background = labColors.slate3 + "ff";
-    shortDescription.color = labColors.slate4 + "80";
-  });
-  shortDescription.onPointerOutObservable.add(() => {
-    shortDescription.background = labColors.slate3 + "80";
-    shortDescription.color = labColors.slate2;
-  });
-  contentTexture.addControl(shortDescription);
+  shortDescription.fontSize = 22;
+  shortDescription.paddingLeft = "10px";
+  shortDescription.paddingRight = "10px";
+  shortDescription.paddingTop = "10px";
+  shortDescription.paddingBottom = "10px";
+  shortDescriptionContainer.addControl(shortDescription);
 
   const containerLeft = new Rectangle("lab-card-rect");
   containerLeft.color = labColors.slate2;
@@ -336,7 +335,7 @@ export const exampleContent = (activeRecord, scene) => {
       texture.getControlByName("name").text = newValue.name;
       texture.getControlByName("image").source = newValue.imageUrl;
       texture.getControlByName("knownFor").text = `Known for: ${newValue.knownFor}`;
-      texture.getControlByName("shortDescription").textBlock.text = newValue.shortDescription;
+      texture.getControlByName("short-description-text").text = newValue.shortDescription;
 
       // Update the grid values
       const bornDate = new Date(newValue.born);

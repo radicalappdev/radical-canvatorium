@@ -23,19 +23,21 @@
     const windowGroupMesh = canLabWindowGroup(scene);
 
     // Use the content mesh from lab examples
-    const { contentMesh, contentTexture } = exampleContent(activeRecord, scene);
+    let { contentMesh, contentTexture } = exampleContent(activeRecord, scene);
     contentMesh.parent = windowGroupMesh;
     contentMesh.position = new Vector3(0, 2.7, 0);
 
     // get the shortDescription button from the contentTexture
-    const button = contentTexture.getControlByName("shortDescription");
-    button.onPointerUpObservable.add(() => {
+    const sdc = contentTexture.getControlByName("short-description-container");
+    sdc.onPointerUpObservable.add(() => {
       console.log("Modal Open");
       showModal.value = true;
-      // The button still thinks it's active after the modal is closed, so we need to reset it
-      // remove focus from the button and the button's parent
-      button.focused = false;
-      button.parent.focused = false;
+
+      // This control never fires the onPointerOutObservable because another object is in front of it
+      // So we need to manually reset the state of the control
+      // mark as dirty does not work
+      contentTexture.markAsDirty();
+      sdc.markAsDirty();
     });
 
     const lab047_example_1 = (scene) => {
@@ -51,7 +53,6 @@
       paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
       paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
       paragraph.top = 30;
-
       modalTexture.addControl(paragraph);
 
       // Add a Close button to the bottom of the card
@@ -77,13 +78,13 @@
 
     watch(showModal, (newValue) => {
       if (newValue) {
-        Animation.CreateAndStartAnimation("move-main", contentMesh, "position.z", 60, 6, contentMesh.position.z, 0.2, 0);
+        Animation.CreateAndStartAnimation("move-main", contentMesh, "position.z", 60, 6, contentMesh.position.z, 0.4, 0);
         Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 1, 0.5, 0);
 
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0);
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
       } else {
-        Animation.CreateAndStartAnimation("open-modal", contentMesh, "position.z", 60, 6, 0.1, 0, 0);
+        Animation.CreateAndStartAnimation("open-modal", contentMesh, "position.z", 60, 6, 0.4, 0, 0);
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
 
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, 0, modalMesh.position.z, 0.2);
