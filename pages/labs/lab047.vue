@@ -38,6 +38,10 @@
       // mark as dirty does not work
       contentTexture.markAsDirty();
       sdc.markAsDirty();
+
+      const anotherControl = contentTexture.getControlByName("container-left");
+      contentTexture.focusedControl = anotherControl;
+      // contentTexture.focusedControl = anotherControl;
     });
 
     const lab047_example_1 = (scene) => {
