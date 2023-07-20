@@ -6,7 +6,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 047 - Modals, Dialogs, and Sheets",
-    description: "Building a main window that will be used across a series of labs."
+    description: "Exploring modal, dialog, and sheet patterns."
   });
 
   const createLabContent = async (scene) => {
@@ -38,10 +38,6 @@
       // mark as dirty does not work
       contentTexture.markAsDirty();
       sdc.markAsDirty();
-
-      const anotherControl = contentTexture.getControlByName("container-left");
-      contentTexture.focusedControl = anotherControl;
-      // contentTexture.focusedControl = anotherControl;
     });
 
     const lab047_example_1 = (scene) => {
@@ -72,6 +68,7 @@
       modalTexture.addControl(button1);
 
       modalMesh.visibility = 0;
+      modalMesh.isPickable = false;
 
       return { modalMesh, modalTexture };
     };
@@ -87,12 +84,16 @@
 
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0);
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
+
+        modalMesh.isPickable = true;
       } else {
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "position.z", 60, 6, 0.4, 0, 0);
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
 
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, 0, modalMesh.position.z, 0.2);
+        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 1, 0);
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 1, 0, 0);
+
+        modalMesh.isPickable = false;
       }
     });
   };

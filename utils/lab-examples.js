@@ -122,9 +122,11 @@ export const exampleContent = (activeRecord, scene) => {
   shortDescription.paddingRight = "10px";
   shortDescription.paddingTop = "10px";
   shortDescription.paddingBottom = "10px";
+  // shortDescription can not block pointer events
+  shortDescription.isPointerBlocker = false;
   shortDescriptionContainer.addControl(shortDescription);
 
-  const containerLeft = new Rectangle("lab-card-rect");
+  const containerLeft = new Rectangle("container-left");
   containerLeft.color = labColors.slate2;
   containerLeft.thickness = 1;
   containerLeft.background = labColors.slate3 + "80";
