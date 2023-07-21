@@ -26,16 +26,18 @@
 
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
-    // scene.debugLayer.show();
     // Lab 001 only. Move the camera to a better position for the initial scene.
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -4);
 
-    // make the camera move back and forth along it's orbit path, but stay in front of the lab content
-    scene.registerBeforeRender(() => {
-      cam.alpha += 0.005;
-    });
+    const { plane } = createLabCard();
 
+    scene.registerBeforeRender(() => {
+      plane.rotation.y += 0.005;
+    });
+  };
+
+  const createLabCard = (scene) => {
     const { plane, advancedTexture } = canLabCardSimple(6, 3.6, scene);
 
     plane.name = "can-plane";
@@ -75,6 +77,8 @@
     subtitleText2.fontFamily = "Verdana";
     subtitleText2.top = 100;
     advancedTexture.addControl(subtitleText2);
+
+    return { plane, advancedTexture };
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
