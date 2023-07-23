@@ -35,40 +35,7 @@
       showModal.value = true;
     });
 
-    const lab047_example_1 = (scene) => {
-      const { plane: modalMesh, advancedTexture: modalTexture } = canLabCardSimple(7.2, 3.4, scene);
-
-      const paragraph = new TextBlock();
-      paragraph.text = activeRecord.value.longDescription;
-      paragraph.color = labColors.slate8;
-      paragraph.fontSize = 22;
-      paragraph.textWrapping = true;
-      paragraph.width = 0.9;
-      paragraph.height = 0.9;
-      paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-      paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-      paragraph.top = 30;
-      modalTexture.addControl(paragraph);
-
-      // Add a Close button to the bottom of the card
-      const button1 = canLabButtonSimple("modal-close", "Close");
-      button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-      button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-      button1.top = "-20px";
-      button1.zIndex = 1;
-      button1.onPointerUpObservable.add(() => {
-        console.log("Modal Close");
-        showModal.value = false;
-      });
-      modalTexture.addControl(button1);
-
-      modalMesh.visibility = 0;
-      modalMesh.isPickable = false;
-
-      return { modalMesh, modalTexture };
-    };
-
-    const { modalMesh, modalTexture } = lab047_example_1(scene);
+    const { modalMesh, modalTexture } = lab047_example_1(activeRecord, showModal, scene);
     modalMesh.parent = windowGroupMesh;
     modalMesh.position = new Vector3(0, 2.5, 1);
     modalMesh.isPickable = false;
@@ -92,6 +59,40 @@
         modalMesh.isPickable = false;
       }
     });
+  };
+
+  // Create a card with a long description
+  const lab047_example_1 = (activeRecord, showModal, scene) => {
+    const { plane: modalMesh, advancedTexture: modalTexture } = canLabCardSimple(7.2, 3.4, scene);
+
+    const paragraph = new TextBlock();
+    paragraph.text = activeRecord.value.longDescription;
+    paragraph.color = labColors.slate8;
+    paragraph.fontSize = 22;
+    paragraph.textWrapping = true;
+    paragraph.width = 0.9;
+    paragraph.height = 0.9;
+    paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    paragraph.top = 30;
+    modalTexture.addControl(paragraph);
+
+    // Add a Close button to the bottom of the card
+    const button1 = canLabButtonSimple("modal-close", "Close");
+    button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    button1.top = "-20px";
+    button1.zIndex = 1;
+    button1.onPointerUpObservable.add(() => {
+      console.log("Modal Close");
+      showModal.value = false;
+    });
+    modalTexture.addControl(button1);
+
+    modalMesh.visibility = 0;
+    modalMesh.isPickable = false;
+
+    return { modalMesh, modalTexture };
   };
 
   const bjsCanvas = ref(null);
