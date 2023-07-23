@@ -26,7 +26,7 @@
     toolbarMesh.position = new Vector3(3, 0, -0.05);
 
     // Create the main content card. This can be found in lab-examples.js
-    const contentMesh = exampleContent(activeRecord, scene);
+    const { contentMesh } = exampleContent(activeRecord, scene);
     contentMesh.parent = windowGroupMesh;
     contentMesh.position = new Vector3(0, 2.7, 0);
   };
