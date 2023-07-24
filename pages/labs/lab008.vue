@@ -1,18 +1,57 @@
 <script setup>
-  import { MeshBuilder, Vector3, StandardMaterial, Color3 } from "babylonjs";
-  import { AdvancedDynamicTexture, StackPanel, ScrollViewer, TextBlock, Control } from "babylonjs-gui";
+  import { AbstractMesh, Vector3 } from "babylonjs";
+  import { GUI3DManager, NearMenu, TouchHolographicButton, ScrollViewer, TextBlock, Control } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
-    title: "Lab 008 - Near Input",
-    description: "Using controllers and hand tracking to interact with small nearby objects in VR.",
+    title: "Lab 008 - Near Menu",
+    description: "Revamped version of Lab 008, using the new NearMenu control. I'm still not fond of this control.",
     labNotes: ``
   });
 
   const createLabContent = async (scene, xrPromise) => {
     scene.getCameraByName("camera").position = new BABYLON.Vector3(0, 1, -2);
 
-    console.log("Only logs after this point will be displayed in VR. This one won't.");
+    // Create the 3D UI manager
+    const anchor = new AbstractMesh("anchor", scene);
+    const manager = new GUI3DManager(scene);
+
+    console.log("3D GUI:", manager, anchor);
+
+    var near = new NearMenu("near");
+    manager.addControl(near);
+    // manager.useRealisticScaling = true;
+    manager.controlScaling = 0.06;
+
+    var button0 = new TouchHolographicButton("button0");
+    button0.text = "Oculus";
+    button0.onPointerClickObservable.add(() => {
+      console.log("Oculus was a way better name...");
+    });
+    console.log("Button0", button0);
+    near.addButton(button0);
+
+    var button1 = new TouchHolographicButton("button1");
+    button1.text = "Vision";
+    button1.onPointerClickObservable.add(() => {
+      console.log("Silly name, but take my money!");
+    });
+
+    near.addButton(button1);
+
+    var button2 = new TouchHolographicButton("button2");
+    button2.text = "Vive";
+    button2.onPointerClickObservable.add(() => {
+      console.log("Lol what every happend to them?");
+    });
+    near.addButton(button2);
+
+    console.log("Near Menu:", near);
+    near.defaultBehavior.followBehavior.defaultDistance = 0.25;
+    near.defaultBehavior.followBehavior.minimumDistance = 0.2;
+    near.defaultBehavior.followBehavior.maximumDistance = 0.75;
+    near.defaultBehavior.followBehavior.pitchOffset = -35;
+    console.log("Near ", near.mesh);
 
     createLabConsoleCard(scene);
 
@@ -36,7 +75,7 @@
     };
     overrideConsole(); // call once to override console.log()
 
-    console.log("Lab 007 - Console logging in VR with Babylon JS");
+    console.log("Lab 007 - Near Interactions");
     console.log("");
 
     const width = 6;
@@ -56,8 +95,6 @@
     scrollViewer.barColor = labColors.slate7;
     scrollViewer.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     advancedTexture.addControl(scrollViewer);
-
-    console.log("scrollViewer", scrollViewer.width, scrollViewer.height);
 
     const loggerText = new TextBlock("logger-text");
     loggerText.textWrapping = true;
@@ -93,50 +130,15 @@
   async function customizeXRForLab(xrPromise) {
     const xr = await xrPromise;
 
-    console.log("Lab 007 applying customizations to the XR experience.");
-    console.log("");
-    console.log("Enter immersive mode and press any of these buttons to see the console log in VR");
-    console.log(" • X and Y buttons on the left controller");
-    console.log(" • A and B buttons on the right controller");
+    console.log("Lab 008 applying customizations to the XR experience.");
     console.log("");
 
-    xr.input.onControllerAddedObservable.add((controller) => {
-      controller.onMotionControllerInitObservable.add((motionController) => {
-        if (motionController.handness === "left") {
-          const xr_ids = motionController.getComponentIds();
+    xr.baseExperience.featuresManager.enableFeature(BABYLON.WebXRFeatureName.HAND_TRACKING, "latest", {
+      xrInput: xr.input,
 
-          let xButton = motionController.getComponent(xr_ids[3]);
-          xButton.onButtonStateChangedObservable.add(() => {
-            if (xButton.pressed) {
-              console.log("X button pressed");
-            }
-          });
-
-          let yButton = motionController.getComponent(xr_ids[4]);
-          yButton.onButtonStateChangedObservable.add(() => {
-            if (yButton.pressed) {
-              console.log("Y button pressed");
-            }
-          });
-        }
-        if (motionController.handness === "right") {
-          const xr_ids = motionController.getComponentIds();
-
-          let aButton = motionController.getComponent(xr_ids[3]);
-          aButton.onButtonStateChangedObservable.add(() => {
-            if (aButton.pressed) {
-              console.log("A button pressed");
-            }
-          });
-
-          let bButton = motionController.getComponent(xr_ids[4]);
-          bButton.onButtonStateChangedObservable.add(() => {
-            if (bButton.pressed) {
-              console.log("B button pressed");
-            }
-          });
-        }
-      });
+      jointMeshes: {
+        // enablePhysics: true
+      }
     });
   }
 
