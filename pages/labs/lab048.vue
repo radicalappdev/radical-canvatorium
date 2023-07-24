@@ -5,7 +5,7 @@
 
   definePageMeta({
     featured: false,
-    title: "Lab 047 - Main Window + Replace",
+    title: "Lab 048 - Main Window + Replace",
     description: "Replacing windows with other windows."
   });
 
@@ -30,8 +30,8 @@
     // Get the shortDescription button from the contentTexture
     const sdc = contentTexture.getControlByName("short-description-container");
     sdc?.onPointerUpObservable.add(() => {
-      console.log("Modal Open");
-      // Because a new object appears in front of the control, we need to manually trigger the onPointerOutObservable
+      console.log("Replace Main with Description");
+      // manually trigger the onPointerOutObservable to remove the hover effect
       sdc.onPointerOutObservable.notifyObservers(sdc);
       showModal.value = true;
     });
@@ -43,16 +43,16 @@
 
     watch(showModal, (newValue) => {
       if (newValue) {
-        Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 1, 0.0, 0);
+        Animation.CreateAndStartAnimation("close-main", contentMesh, "visibility", 60, 6, 1, 0.0, 0);
         contentMesh.isPickable = false;
 
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
+        Animation.CreateAndStartAnimation("open-replace", modalMesh, "visibility", 60, 6, 0, 1, 0);
         modalMesh.isPickable = true;
       } else {
-        Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
+        Animation.CreateAndStartAnimation("open-main", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
         contentMesh.isPickable = true;
 
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 1, 0, 0);
+        Animation.CreateAndStartAnimation("close-replace", modalMesh, "visibility", 60, 6, 1, 0, 0);
         modalMesh.isPickable = false;
       }
     });
@@ -71,21 +71,25 @@
     paragraph.height = 0.9;
     paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    paragraph.top = 30;
+    paragraph.top = 80;
     modalTexture.addControl(paragraph);
 
     // Add a Close button to the bottom of the card
-    const button1 = canLabButtonSimple("modal-close", "Close");
-    button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-    button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    button1.top = "-20px";
+    const button1 = canLabButtonSimple("replace-close", "< Back");
+    button1.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    button1.top = "30px";
+    button1.left = "30px";
     button1.zIndex = 1;
     button1.onPointerUpObservable.add(() => {
-      console.log("Modal Close");
+      console.log("Replace Description with Main");
       showModal.value = false;
     });
     modalTexture.addControl(button1);
 
+    // Debugging only
+    // modalMesh.visibility = 1;
+    // modalMesh.position.z = -0.1;
     modalMesh.visibility = 0;
     modalMesh.isPickable = false;
 

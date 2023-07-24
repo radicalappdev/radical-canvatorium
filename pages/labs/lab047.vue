@@ -48,17 +48,17 @@
         Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 1, 0.5, 0);
 
         // Move the modal window forward in z-space and fade it in
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0);
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
+        Animation.CreateAndStartAnimation("move-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0);
+        Animation.CreateAndStartAnimation("fade-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
         modalMesh.isPickable = true;
       } else {
         // Move the main window forward in z-space and fade it in
-        Animation.CreateAndStartAnimation("open-modal", contentMesh, "position.z", 60, 6, 0.4, 0, 0);
-        Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
+        Animation.CreateAndStartAnimation("move-main", contentMesh, "position.z", 60, 6, 0.4, 0, 0);
+        Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
 
         // Move the modal window back in z-space and fade it out
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 1, 0);
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 1, 0, 0);
+        Animation.CreateAndStartAnimation("move-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 1, 0);
+        Animation.CreateAndStartAnimation("fade-modal", modalMesh, "visibility", 60, 6, 1, 0, 0);
         modalMesh.isPickable = false;
       }
     });
