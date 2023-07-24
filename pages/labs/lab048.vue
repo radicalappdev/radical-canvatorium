@@ -6,15 +6,15 @@
   definePageMeta({
     featured: false,
     title: "Lab 048 - Main Window + Replace",
-    description: "Replacing windows with other windows."
+    description: "Replace the main content with another window of the same size and shape. Useful for navitation stacks."
   });
 
   const createLabContent = async (scene) => {
     // Data and state at parent scope
-    const activeIndex = ref(1);
+    const activeIndex = ref(2);
     const activeRecord = computed(() => computingData[activeIndex.value]);
 
-    const showModal = ref(false);
+    const showReplace = ref(false);
 
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -2);
@@ -33,34 +33,41 @@
       console.log("Replace Main with Description");
       // manually trigger the onPointerOutObservable to remove the hover effect
       sdc.onPointerOutObservable.notifyObservers(sdc);
-      showModal.value = true;
+      showReplace.value = true;
     });
 
-    const { modalMesh } = lab048_example_1(activeRecord, showModal, scene);
-    modalMesh.parent = windowGroupMesh;
-    modalMesh.position = new Vector3(0, 2.7, 0);
-    modalMesh.isPickable = false;
+    const { replaceMesh: replaceMesh } = lab048_example_1(activeRecord, showReplace, scene);
+    replaceMesh.parent = windowGroupMesh;
+    replaceMesh.position = new Vector3(0, 2.7, 0);
+    replaceMesh.isPickable = false;
 
-    watch(showModal, (newValue) => {
+    watch(showReplace, (newValue) => {
       if (newValue) {
         Animation.CreateAndStartAnimation("close-main", contentMesh, "visibility", 60, 6, 1, 0.0, 0);
         contentMesh.isPickable = false;
 
-        Animation.CreateAndStartAnimation("open-replace", modalMesh, "visibility", 60, 6, 0, 1, 0);
-        modalMesh.isPickable = true;
+        Animation.CreateAndStartAnimation("open-replace", replaceMesh, "visibility", 60, 6, 0, 1, 0);
+        replaceMesh.isPickable = true;
       } else {
         Animation.CreateAndStartAnimation("open-main", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
         contentMesh.isPickable = true;
 
-        Animation.CreateAndStartAnimation("close-replace", modalMesh, "visibility", 60, 6, 1, 0, 0);
-        modalMesh.isPickable = false;
+        Animation.CreateAndStartAnimation("close-replace", replaceMesh, "visibility", 60, 6, 1, 0, 0);
+        replaceMesh.isPickable = false;
+      }
+    });
+
+    // press the space bar to toggle the replace window
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "Space") {
+        showReplace.value = !showReplace.value;
       }
     });
   };
 
   // Create a card with a long description
-  const lab048_example_1 = (activeRecord, showModal, scene) => {
-    const { plane: modalMesh, advancedTexture: modalTexture } = canLabCardSimple(8, 4.6, scene);
+  const lab048_example_1 = (activeRecord, showReplace, scene) => {
+    const { plane: replaceMesh, advancedTexture: replaceTexture } = canLabCardSimple(8, 4.6, scene);
 
     const paragraph = new TextBlock();
     paragraph.text = activeRecord.value.longDescription;
@@ -72,7 +79,7 @@
     paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     paragraph.top = 80;
-    modalTexture.addControl(paragraph);
+    replaceTexture.addControl(paragraph);
 
     // Add a Close button to the bottom of the card
     const button1 = canLabButtonSimple("replace-close", "< Back");
@@ -83,17 +90,14 @@
     button1.zIndex = 1;
     button1.onPointerUpObservable.add(() => {
       console.log("Replace Description with Main");
-      showModal.value = false;
+      showReplace.value = false;
     });
-    modalTexture.addControl(button1);
+    replaceTexture.addControl(button1);
 
-    // Debugging only
-    // modalMesh.visibility = 1;
-    // modalMesh.position.z = -0.1;
-    modalMesh.visibility = 0;
-    modalMesh.isPickable = false;
+    replaceMesh.visibility = 0;
+    replaceMesh.isPickable = false;
 
-    return { modalMesh, modalTexture };
+    return { replaceMesh: replaceMesh, replaceTexture: replaceTexture };
   };
 
   const bjsCanvas = ref(null);
