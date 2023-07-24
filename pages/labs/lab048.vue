@@ -5,8 +5,8 @@
 
   definePageMeta({
     featured: false,
-    title: "Lab 047 - Main Window + Modal",
-    description: "This lab builds on Lab 046 by adding a modal window when the user clicks on the short description. "
+    title: "Lab 047 - Main Window + Replace",
+    description: "Replacing windows with other windows."
   });
 
   const createLabContent = async (scene) => {
@@ -36,28 +36,22 @@
       showModal.value = true;
     });
 
-    const { modalMesh } = lab047_example_1(activeRecord, showModal, scene);
+    const { modalMesh } = lab048_example_1(activeRecord, showModal, scene);
     modalMesh.parent = windowGroupMesh;
-    modalMesh.position = new Vector3(0, 2.5, 1);
+    modalMesh.position = new Vector3(0, 2.7, 0);
     modalMesh.isPickable = false;
 
     watch(showModal, (newValue) => {
       if (newValue) {
-        // Move the main window back in z-space and fade it out
-        Animation.CreateAndStartAnimation("move-main", contentMesh, "position.z", 60, 6, contentMesh.position.z, 0.4, 0);
-        Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 1, 0.5, 0);
+        Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 1, 0.0, 0);
+        contentMesh.isPickable = false;
 
-        // Move the modal window forward in z-space and fade it in
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0);
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
         modalMesh.isPickable = true;
       } else {
-        // Move the main window forward in z-space and fade it in
-        Animation.CreateAndStartAnimation("open-modal", contentMesh, "position.z", 60, 6, 0.4, 0, 0);
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
+        contentMesh.isPickable = true;
 
-        // Move the modal window back in z-space and fade it out
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 1, 0);
         Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 1, 0, 0);
         modalMesh.isPickable = false;
       }
@@ -65,8 +59,8 @@
   };
 
   // Create a card with a long description
-  const lab047_example_1 = (activeRecord, showModal, scene) => {
-    const { plane: modalMesh, advancedTexture: modalTexture } = canLabCardSimple(7.2, 3.4, scene);
+  const lab048_example_1 = (activeRecord, showModal, scene) => {
+    const { plane: modalMesh, advancedTexture: modalTexture } = canLabCardSimple(8, 4.6, scene);
 
     const paragraph = new TextBlock();
     paragraph.text = activeRecord.value.longDescription;
