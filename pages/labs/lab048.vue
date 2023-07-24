@@ -6,7 +6,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 048 - Main Window + Replace",
-    description: "Replace the main content with another window of the same size and shape. Useful for navitation stacks."
+    description: "Replace the main content with another window of the same size and shape. Useful for navigation stacks."
   });
 
   const createLabContent = async (scene) => {
