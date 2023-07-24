@@ -6,8 +6,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 047 - Main Window + Modal",
-    description:
-      "This lab builds on Lab 046 by adding a modal window when the user clicks on the short description. The new window is populated with the long description and appears in front of the main window. The main window is dimmed and moved back in z-space. The new window is added to the window group, so it can be moved along with the other objects."
+    description: "This lab builds on Lab 046 by adding a modal window when the user clicks on the short description. "
   });
 
   const createLabContent = async (scene) => {
@@ -49,17 +48,17 @@
         Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 1, 0.5, 0);
 
         // Move the modal window forward in z-space and fade it in
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0);
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
+        Animation.CreateAndStartAnimation("move-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 0, 0);
+        Animation.CreateAndStartAnimation("fade-modal", modalMesh, "visibility", 60, 6, 0, 1, 0);
         modalMesh.isPickable = true;
       } else {
         // Move the main window forward in z-space and fade it in
-        Animation.CreateAndStartAnimation("open-modal", contentMesh, "position.z", 60, 6, 0.4, 0, 0);
-        Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
+        Animation.CreateAndStartAnimation("move-main", contentMesh, "position.z", 60, 6, 0.4, 0, 0);
+        Animation.CreateAndStartAnimation("fade-main", contentMesh, "visibility", 60, 6, 0.5, 1, 0);
 
         // Move the modal window back in z-space and fade it out
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 1, 0);
-        Animation.CreateAndStartAnimation("open-modal", modalMesh, "visibility", 60, 6, 1, 0, 0);
+        Animation.CreateAndStartAnimation("move-modal", modalMesh, "position.z", 60, 6, modalMesh.position.z, 1, 0);
+        Animation.CreateAndStartAnimation("fade-modal", modalMesh, "visibility", 60, 6, 1, 0, 0);
         modalMesh.isPickable = false;
       }
     });
