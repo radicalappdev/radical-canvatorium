@@ -23,11 +23,15 @@
     // Create a window group object. This is a parent object that will contain the window and toolbar planes, and any other objects we want to add to the window. This can be found in lab-uikit.ts
     const windowGroupMesh = canLabWindowGroup(scene);
 
+    // 3D GUI needs an anchor and a manager
     const anchor = new TransformNode("anchor");
     const manager = new GUI3DManager(scene);
+
+    // Use the PlanePanel to create a grid of cards
     const plainPanel = new PlanePanel();
     plainPanel.margin = 0.1;
     plainPanel.columns = 4;
+    // TODO: Reverse the order of the cards
     manager.addControl(plainPanel);
     plainPanel.linkToTransformNode(anchor);
 
@@ -42,7 +46,7 @@
       button.scaling = new Vector3(0.3, 0.3, 0.3);
 
       button.onPointerUpObservable.add(() => {
-        console.log("Clicked on button");
+        console.log("3D Button Pressed for " + record.name);
         activeIndex.value = index;
         showMain.value = true;
       });
@@ -54,7 +58,7 @@
     anchor.position = new Vector3(0, 2.7, 0);
 
     // Create the main content card. This can be found in lab-examples.js
-    const { contentMesh, contentTexture } = exampleContent(activeRecord, scene);
+    const { contentMesh } = exampleContent(activeRecord, scene);
     contentMesh.parent = windowGroupMesh;
     contentMesh.position = new Vector3(0, 2.7, 0);
     contentMesh.isPickable = false;
@@ -69,26 +73,28 @@
 
     watch(showMain, (newValue) => {
       if (newValue) {
+        // show the main window and toolbar
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0, 1, 0);
         contentMesh.isPickable = true;
-
-        // show the toolbar
         Animation.CreateAndStartAnimation("open-modal", toolbarMesh, "visibility", 60, 6, 0, 1, 0);
         toolbarMesh.isPickable = true;
 
         // get all content in the anchor and hide it
         anchor.getChildMeshes().forEach((mesh) => {
           Animation.CreateAndStartAnimation("open-modal", mesh, "visibility", 60, 6, 1, 0, 0);
+          mesh.isPickable = false;
         });
       } else {
+        // hide the main window and toolbar
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 1, 0, 0);
-        // hide the toolbarMesh
+        contentMesh.isPickable = false;
         Animation.CreateAndStartAnimation("open-modal", toolbarMesh, "visibility", 60, 6, 1, 0, 0);
         toolbarMesh.isPickable = false;
 
         // get all content in the anchor and show it
         anchor.getChildMeshes().forEach((mesh) => {
           Animation.CreateAndStartAnimation("open-modal", mesh, "visibility", 60, 6, 0, 1, 0);
+          mesh.isPickable = true;
         });
       }
     });
