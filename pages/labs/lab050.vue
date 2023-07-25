@@ -1,6 +1,6 @@
 <script setup>
-  import { AbstractMesh, Vector3 } from "babylonjs";
-  import { TextBlock, Image, Control, Rectangle } from "babylonjs-gui";
+  import { AbstractMesh, MeshBuilder, TransformNode, Vector3 } from "babylonjs";
+  import { TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -70,6 +70,9 @@
     cardText.isPointerBlocker = false;
     detailTexture.addControl(cardText);
 
+    detailMesh.isPickable = false;
+    // detailTexture.isPickable = false;
+
     watch(
       record,
       (newValue) => {
@@ -85,38 +88,33 @@
   };
 
   const createCollection = (collectionData, scene) => {
-    const numberToChunk = 4;
-    const spacing = 1.4;
+    const anchor = new TransformNode("anchor");
+    const manager = new GUI3DManager(scene);
+    const plainPanel = new PlanePanel();
+    plainPanel.margin = 0.1;
+    plainPanel.columns = 4;
+    manager.addControl(plainPanel);
+    plainPanel.linkToTransformNode(anchor);
 
-    const startPosition = new Vector3((-(numberToChunk - 1) * spacing) / 2, 0, 0);
-    const collectionContainer = new AbstractMesh("collection-container");
+    // create a card for each record and add them to the plainPanel
+    collectionData.forEach((record) => {
+      const { smallMesh, smallTexture } = lab050_example_1(record, scene);
+      smallMesh.parent = anchor;
+      smallMesh.position = new Vector3(0, 0, 0);
+      smallMesh.scaling = new Vector3(0.3, 0.3, 0.3);
 
-    const chunks = chunk(collectionData, numberToChunk);
-    chunks.forEach((chunk, rowIndex) => {
-      const rowContainer = new AbstractMesh(`row-${rowIndex}`);
-      rowContainer.position = new Vector3(0, rowIndex * -1.6, 0);
-      rowContainer.parent = collectionContainer;
+      const button = new MeshButton3D(smallMesh, "button");
+      button.scaling = new Vector3(0.3, 0.3, 0.3);
 
-      chunk.forEach((record, colIndex) => {
-        const offsetX = colIndex * spacing;
-        const offsetPosition = startPosition.add(new Vector3(offsetX, 0, 0));
-        const { smallMesh, smallTexture } = lab050_example_1(record, scene);
-        smallMesh.parent = rowContainer;
-        smallMesh.position = offsetPosition;
-        smallMesh.scaling = new Vector3(0.3, 0.3, 0.3);
+      button.onPointerDownObservable.add(() => {
+        console.log("Clicked on button");
       });
+
+      plainPanel.addControl(button);
     });
 
-    return collectionContainer;
+    return anchor;
   };
-
-  function chunk(array, size) {
-    const result = [];
-    for (let i = 0; i < array.length; i += size) {
-      result.push(array.slice(i, i + size));
-    }
-    return result;
-  }
 
   const bjsCanvas = ref(null);
   useCanvatoriumScene(bjsCanvas, createLabContent);
