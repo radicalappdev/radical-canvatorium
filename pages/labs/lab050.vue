@@ -20,9 +20,25 @@
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -2);
 
-    // Create a window group object. This is a parent object that will contain the window and toolbar planes, and any other objects we want to add to the window. This can be found in lab-uikit.ts
+    // Create a window group object
     const windowGroupMesh = canLabWindowGroup(scene);
 
+    // Create the main window and hide it
+    const { contentMesh } = exampleContent(activeRecord, scene);
+    contentMesh.parent = windowGroupMesh;
+    contentMesh.position = new Vector3(0, 2.7, 0);
+    contentMesh.isPickable = false;
+    contentMesh.visibility = 0;
+
+    // Create a toolbar for the window and hide it
+    const toolbarMesh = lab050_example_2(showMain, scene);
+    toolbarMesh.parent = windowGroupMesh;
+    toolbarMesh.position = new Vector3(-3.6, 5.4, -0.05);
+    toolbarMesh.isPickable = false;
+    toolbarMesh.visibility = 0;
+
+    // ---------------------------
+    // START Collection View
     // 3D GUI needs an anchor and a manager
     const anchor = new TransformNode("anchor");
     const manager = new GUI3DManager(scene);
@@ -37,15 +53,14 @@
 
     // create a card for each record and add them to the plainPanel
     collectionData.forEach((record, index) => {
-      const { smallMesh, smallTexture } = lab050_example_1(record, scene);
-      smallMesh.parent = anchor;
-      smallMesh.position = new Vector3(0, 0, 0);
-      smallMesh.scaling = new Vector3(0.45, 0.45, 0.45);
-      smallMesh.isPickable = false;
+      const { cellMesh } = lab050_example_1(record, scene);
+      cellMesh.parent = anchor;
+      cellMesh.position = new Vector3(0, 0, 0);
+      cellMesh.scaling = new Vector3(0.45, 0.45, 0.45);
+      cellMesh.isPickable = false;
 
-      const button = new MeshButton3D(smallMesh, "button");
+      const button = new MeshButton3D(cellMesh, "button");
       button.scaling = new Vector3(0.3, 0.3, 0.3);
-
       button.onPointerUpObservable.add(() => {
         console.log("3D Button Pressed for " + record.name);
         activeIndex.value = index;
@@ -58,19 +73,8 @@
     anchor.parent = windowGroupMesh;
     anchor.position = new Vector3(0, 2.7, 0);
 
-    // Create the main content card. This can be found in lab-examples.js
-    const { contentMesh } = exampleContent(activeRecord, scene);
-    contentMesh.parent = windowGroupMesh;
-    contentMesh.position = new Vector3(0, 2.7, 0);
-    contentMesh.isPickable = false;
-    contentMesh.visibility = 0;
-
-    // Create a toolbar for the window with a button to open the detail window
-    const toolbarMesh = lab050_example_2(showMain, scene);
-    toolbarMesh.parent = windowGroupMesh;
-    toolbarMesh.position = new Vector3(-3.6, 5.4, -0.05);
-    toolbarMesh.isPickable = false;
-    toolbarMesh.visibility = 0;
+    // END Collection View
+    // ---------------------------
 
     watch(showMain, (newValue) => {
       if (newValue) {
@@ -145,7 +149,7 @@
       { immediate: true }
     );
 
-    return { smallMesh: cellMesh, smallTexture: cellTexture };
+    return { cellMesh: cellMesh, cellTexture: cellTexture };
   };
 
   const lab050_example_2 = (showDetail, scene) => {
