@@ -41,6 +41,7 @@
       smallMesh.parent = anchor;
       smallMesh.position = new Vector3(0, 0, 0);
       smallMesh.scaling = new Vector3(0.45, 0.45, 0.45);
+      smallMesh.isPickable = false;
 
       const button = new MeshButton3D(smallMesh, "button");
       button.scaling = new Vector3(0.3, 0.3, 0.3);
@@ -101,10 +102,10 @@
   };
 
   const lab050_example_1 = (record, scene) => {
-    const { plane: detailMesh, advancedTexture: detailTexture } = canLabCardSimple(4, 4.6, scene);
+    const { plane: cellMesh, advancedTexture: cellTexture } = canLabCardSimple(4, 4.6, scene);
 
     const cardTextureName = "content-texture-" + record.id;
-    detailTexture.name = cardTextureName;
+    cellTexture.name = cardTextureName;
 
     const imageContainer = new Rectangle("masker");
     imageContainer.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -118,31 +119,25 @@
     imageContainer.width = `${1024 * (4 / 10) - 0}px`;
     imageContainer.height = `${1024 * (4 / 10) - 0}px`;
 
-    detailTexture.addControl(imageContainer);
+    cellTexture.addControl(imageContainer);
 
     const image = new Image("image", record.imageUrl);
     image.alpha = 1;
     imageContainer.addControl(image);
 
     // Add a text block for the name, in front of the image
-    const cardText = new TextBlock("name");
-    cardText.text = "";
-    cardText.color = labColors.slate8;
-    cardText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-    cardText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-    cardText.paddingBottom = 28;
-    cardText.fontSize = 32;
-    cardText.zIndex = 5;
-    cardText.isPointerBlocker = false;
-    detailTexture.addControl(cardText);
-
-    detailMesh.isPickable = false;
-    // detailTexture.isPickable = false;
+    const name = new TextBlock("name");
+    name.text = "";
+    name.color = labColors.slate8;
+    name.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    name.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+    name.paddingBottom = 28;
+    name.fontSize = 32;
+    cellTexture.addControl(name);
 
     watch(
       record,
       (newValue) => {
-        console.log("card texture name", cardTextureName);
         const texture = scene.getTextureByName(cardTextureName);
         texture.getControlByName("name").text = newValue.name;
         texture.getControlByName("image").source = newValue.imageUrl;
@@ -150,7 +145,7 @@
       { immediate: true }
     );
 
-    return { smallMesh: detailMesh, smallTexture: detailTexture };
+    return { smallMesh: cellMesh, smallTexture: cellTexture };
   };
 
   const lab050_example_2 = (showDetail, scene) => {
