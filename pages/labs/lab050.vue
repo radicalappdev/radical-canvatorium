@@ -45,16 +45,32 @@
 
     // Use the PlanePanel to create a grid of cards
     const plainPanel = new PlanePanel();
+    const columns = 2;
     plainPanel.margin = 0.1;
-    plainPanel.columns = 4;
-    // TODO: Modify  the order of the cards
-    // The order of the PlanePanel seems to be left to right, bottom to top
-    // Change it so that it is left to right, top to bottom
+    plainPanel.columns = columns;
+
     manager.addControl(plainPanel);
     plainPanel.linkToTransformNode(anchor);
 
+    // This is a hack to reorder the array because the PlanePanel seems to order the cards left to right, bottom to top
+    // We want left to right, top to bottom
+    // Current order: 0, 1, 2, 3, 4, 5, 6, 7
+    // Desired order: 4, 5, 6, 7, 0, 1, 2, 3
+    function reorderArray(array, splitIndex) {
+      if (splitIndex >= array.length || splitIndex < 0) {
+        throw new Error("Invalid split index");
+      }
+
+      const firstPart = array.slice(splitIndex);
+      const secondPart = array.slice(0, splitIndex);
+
+      return firstPart.concat(secondPart);
+    }
+
+    const sortedData = reorderArray(collectionData, columns);
+
     // create a card for each record and add them to the plainPanel
-    collectionData.forEach((record, index) => {
+    sortedData.forEach((record, index) => {
       const { cellMesh } = lab050_example_1(record, scene);
       cellMesh.parent = anchor;
       cellMesh.position = new Vector3(0, 0, 0);
