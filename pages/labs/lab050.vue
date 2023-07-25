@@ -34,10 +34,10 @@
     contentMesh.visibility = 0;
   };
 
-  const lab050_example_1 = (activeRecord, scene) => {
+  const lab050_example_1 = (record, scene) => {
     const { plane: detailMesh, advancedTexture: detailTexture } = canLabCardSimple(4, 4.6, scene);
 
-    const cardTextureName = "content-texture-" + activeRecord.id;
+    const cardTextureName = "content-texture-" + record.id;
     detailTexture.name = cardTextureName;
 
     const imageContainer = new Rectangle("masker");
@@ -54,7 +54,7 @@
 
     detailTexture.addControl(imageContainer);
 
-    const image = new Image("image", activeRecord.imageUrl);
+    const image = new Image("image", record.imageUrl);
     image.alpha = 1;
     imageContainer.addControl(image);
 
@@ -71,7 +71,7 @@
     detailTexture.addControl(cardText);
 
     watch(
-      activeRecord,
+      record,
       (newValue) => {
         console.log("card texture name", cardTextureName);
         const texture = scene.getTextureByName(cardTextureName);
