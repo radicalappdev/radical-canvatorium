@@ -47,7 +47,9 @@
     const plainPanel = new PlanePanel();
     plainPanel.margin = 0.1;
     plainPanel.columns = 4;
-    // TODO: Reverse the order of the cards
+    // TODO: Modify  the order of the cards
+    // The order of the PlanePanel seems to be left to right, bottom to top
+    // Change it so that it is left to right, top to bottom
     manager.addControl(plainPanel);
     plainPanel.linkToTransformNode(anchor);
 
