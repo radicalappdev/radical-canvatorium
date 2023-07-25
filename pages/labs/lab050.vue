@@ -1,5 +1,5 @@
 <script setup>
-  import { AbstractMesh, MeshBuilder, TransformNode, Vector3, Animation } from "babylonjs";
+  import { TransformNode, Vector3, Animation } from "babylonjs";
   import { TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
@@ -54,24 +54,42 @@
     anchor.position = new Vector3(0, 2.7, 0);
 
     // Create the main content card. This can be found in lab-examples.js
-    const { contentMesh } = exampleContent(activeRecord, scene);
+    const { contentMesh, contentTexture } = exampleContent(activeRecord, scene);
     contentMesh.parent = windowGroupMesh;
     contentMesh.position = new Vector3(0, 2.7, 0);
     contentMesh.isPickable = false;
     contentMesh.visibility = 0;
+
+    // Create a toolbar for the window with a button to open the detail window
+    const toolbarMesh = lab050_example_2(showMain, scene);
+    toolbarMesh.parent = windowGroupMesh;
+    toolbarMesh.position = new Vector3(-3.6, 5.4, -0.05);
+    toolbarMesh.isPickable = false;
+    toolbarMesh.visibility = 0;
 
     watch(showMain, (newValue) => {
       if (newValue) {
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 0, 1, 0);
         contentMesh.isPickable = true;
 
-        // scale the anchor down to 0
-        Animation.CreateAndStartAnimation("open-modal", anchor, "scaling", 60, 6, anchor.scaling, new Vector3(0, 0, 0), 0);
+        // show the toolbar
+        Animation.CreateAndStartAnimation("open-modal", toolbarMesh, "visibility", 60, 6, 0, 1, 0);
+        toolbarMesh.isPickable = true;
+
+        // get all content in the anchor and hide it
+        anchor.getChildMeshes().forEach((mesh) => {
+          Animation.CreateAndStartAnimation("open-modal", mesh, "visibility", 60, 6, 1, 0, 0);
+        });
       } else {
         Animation.CreateAndStartAnimation("open-modal", contentMesh, "visibility", 60, 6, 1, 0, 0);
+        // hide the toolbarMesh
+        Animation.CreateAndStartAnimation("open-modal", toolbarMesh, "visibility", 60, 6, 1, 0, 0);
+        toolbarMesh.isPickable = false;
 
-        // scale the anchor up to 1
-        Animation.CreateAndStartAnimation("open-modal", anchor, "scaling", 60, 6, anchor.scaling, new Vector3(1, 1, 1), 0);
+        // get all content in the anchor and show it
+        anchor.getChildMeshes().forEach((mesh) => {
+          Animation.CreateAndStartAnimation("open-modal", mesh, "visibility", 60, 6, 0, 1, 0);
+        });
       }
     });
   };
@@ -127,6 +145,27 @@
     );
 
     return { smallMesh: detailMesh, smallTexture: detailTexture };
+  };
+
+  const lab050_example_2 = (showDetail, scene) => {
+    const toggleDetailWindow = () => {
+      showDetail.value = !showDetail.value;
+    };
+
+    const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
+    toolbarMesh.name = "toolbar-mesh";
+    toolbarTexture.name = "toolbar-texture";
+    toolbarTexture.getControlByName("rect").alpha = 0; // just a hack to hide the card background
+
+    const toolbarButtonToggleDetail = canLabButtonSimple("toolbar-button-toggle-detail", "Back");
+    toolbarButtonToggleDetail.width = "100px";
+    toolbarButtonToggleDetail.height = "50px";
+    toolbarButtonToggleDetail.left = "30px";
+    toolbarButtonToggleDetail.onPointerUpObservable.add(toggleDetailWindow);
+    toolbarButtonToggleDetail.textBlock.fontSize = 22;
+    toolbarTexture.addControl(toolbarButtonToggleDetail);
+
+    return toolbarMesh;
   };
 
   const bjsCanvas = ref(null);
