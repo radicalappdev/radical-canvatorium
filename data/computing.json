@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "name": "Joseph Marie Jacquard",
     "born": "1752-07-07",
     "died": "1834-08-07",
@@ -14,6 +15,7 @@
     "imageAttribution": "DALL-E Prompt: Illustrate a stylized portrait of Joseph Marie Jacquard, surrounded by a complex pattern of woven cloth and the mechanical gears of his revolutionary Jacquard loom."
   },
   {
+    "id": 2,
     "name": "Charles Babbage",
     "born": "1791-12-26",
     "died": "1871-10-18",
@@ -29,6 +31,7 @@
   },
 
   {
+    "id": 3,
     "name": "George Boole",
     "born": "1815-11-02",
     "died": "1864-12-08",
@@ -43,6 +46,7 @@
     "imageAttribution": "DALL-E Prompt: Create a stylized image of George Boole, with symbols of logic (like AND, OR, NOT gates) orbiting around him, reflecting his Boolean algebra's influence on digital logic."
   },
   {
+    "id": 4,
     "name": "Ada Lovelace",
     "born": "1815-12-10",
     "died": "1852-11-27",
@@ -57,6 +61,7 @@
     "imageAttribution": "DALL-E Prompt: Craft a stylized portrait of Ada Lovelace seated at an ornate 19th century desk, pen in hand, focused on a large piece of parchment where she is illustrating the first computer program. Her detailed notes and complex diagrams, which suggest the inner workings of the Analytical Engine, should sprawl across the parchment. Ada's appearance should be reflective of her era, with an intricate hairstyle and a period-appropriate dress."
   },
   {
+    "id": 5,
     "name": "John Von Neumann",
     "born": "1903-12-28",
     "died": "1957-02-08",
@@ -71,6 +76,7 @@
     "imageAttribution": "DALL-E Prompt: Depict a stylized John Von Neumann, sitting in front of an early computer model with its myriad cables and lights, representing the Von Neumann architecture."
   },
   {
+    "id": 6,
     "name": "Claude Shannon",
     "born": "1916-04-30",
     "died": "2001-02-24",
@@ -85,6 +91,7 @@
     "imageAttribution": "DALL-E Prompt: Create a stylized image of Claude Shannon, surrounded by flowing streams of binary digits (1s and 0s), symbolic of his pivotal role in information theory."
   },
   {
+    "id": 7,
     "name": "Alan Turing",
     "born": "1912-06-23",
     "died": "1954-06-07",
@@ -99,6 +106,7 @@
     "imageAttribution": "DALL-E Prompt: Illustrate a stylized Alan Turing, deciphering coded messages with the backdrop of the Enigma machine and its rotating cipher wheels."
   },
   {
+    "id": 8,
     "name": "Grace Hopper",
     "born": "1906-12-09",
     "died": "1992-01-01",
