@@ -6,7 +6,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 049 - Main Window + Details",
-    description: "Open a details window to the side of the main window. Useful for inspectors, etc."
+    description: "Use a button to toggle a detail window to the side of the main window. Useful for inspectors, etc."
   });
 
   const createLabContent = async (scene) => {
@@ -67,7 +67,7 @@
     const paragraph = new TextBlock();
     paragraph.text = activeRecord.value.longDescription;
     paragraph.color = labColors.slate8;
-    paragraph.fontSize = 20;
+    paragraph.fontSize = 18;
     paragraph.textWrapping = true;
     paragraph.width = 0.85;
     paragraph.height = 0.85;
