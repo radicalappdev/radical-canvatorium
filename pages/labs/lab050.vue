@@ -85,18 +85,20 @@
   };
 
   const createCollection = (collectionData, scene) => {
-    const startPosition = new Vector3(-2.1, 0, 0);
+    const numberToChunk = 4;
+    const spacing = 1.4;
 
+    const startPosition = new Vector3((-(numberToChunk - 1) * spacing) / 2, 0, 0);
     const collectionContainer = new AbstractMesh("collection-container");
 
-    const chunks = chunk(collectionData, 4);
+    const chunks = chunk(collectionData, numberToChunk);
     chunks.forEach((chunk, rowIndex) => {
       const rowContainer = new AbstractMesh(`row-${rowIndex}`);
       rowContainer.position = new Vector3(0, rowIndex * -1.6, 0);
       rowContainer.parent = collectionContainer;
 
       chunk.forEach((record, colIndex) => {
-        const offsetX = colIndex * 1.4;
+        const offsetX = colIndex * spacing;
         const offsetPosition = startPosition.add(new Vector3(offsetX, 0, 0));
         const { smallMesh, smallTexture } = lab050_example_1(record, scene);
         smallMesh.parent = rowContainer;
