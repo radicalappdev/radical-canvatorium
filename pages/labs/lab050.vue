@@ -12,6 +12,7 @@
   const createLabContent = async (scene) => {
     // Data and state at parent scope
     const activeIndex = ref(0);
+    const collectionData = reactive(computingData);
     const activeRecord = computed(() => computingData[activeIndex.value]);
 
     // Position the non-VR camera to better see the card
@@ -20,10 +21,23 @@
 
     // Create a window group object. This is a parent object that will contain the window and toolbar planes, and any other objects we want to add to the window. This can be found in lab-uikit.ts
     const windowGroupMesh = canLabWindowGroup(scene);
-    const { smallMesh, smallTexture } = lab050_example_1(activeRecord, scene);
-    smallMesh.parent = windowGroupMesh;
-    smallMesh.position = new Vector3(0, 2.7, 0);
-    // smallMesh.scaling = new Vector3(0.3, 0.3, 0.3);
+
+    // Create a function that will loop over the collection data
+
+    const createCollection = (collectionData) => {
+      const startPosition = new Vector3(-2.1, 0, 0);
+
+      collectionData.forEach((record, index) => {
+        const offset = index * 1.4;
+        const offsetPosition = startPosition.add(new Vector3(offset, 0, 0));
+        const { smallMesh, smallTexture } = lab050_example_1(record, index, scene);
+        smallMesh.parent = windowGroupMesh;
+        smallMesh.position = offsetPosition;
+        smallMesh.scaling = new Vector3(0.3, 0.3, 0.3);
+      });
+    };
+
+    createCollection(collectionData);
 
     // Create the main content card. This can be found in lab-examples.js
     const { contentMesh } = exampleContent(activeRecord, scene);
@@ -33,10 +47,10 @@
     contentMesh.visibility = 0;
   };
 
-  const lab050_example_1 = (activeRecord, scene) => {
+  const lab050_example_1 = (activeRecord, index, scene) => {
     const { plane: detailMesh, advancedTexture: detailTexture } = canLabCardSimple(4, 4.6, scene);
 
-    const cardTextureName = "content-texture-" + Date.now();
+    const cardTextureName = "content-texture-" + index;
     detailTexture.name = cardTextureName;
 
     const imageContainer = new Rectangle("masker");
