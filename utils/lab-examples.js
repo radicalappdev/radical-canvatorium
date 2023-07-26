@@ -62,6 +62,7 @@ export const exampleContent = (activeRecord, scene) => {
   contentTexture.addControl(imageContainer);
 
   const image = new Image("image", activeRecord.imageUrl);
+  image.name = "image";
   image.alpha = 0.9;
   image.onPointerEnterObservable.add(() => {
     image.alpha = 1;
