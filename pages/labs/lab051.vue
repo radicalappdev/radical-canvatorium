@@ -27,6 +27,10 @@
     contentMesh.parent = windowGroupMesh;
     contentMesh.position = new Vector3(0, 2.7, 0);
 
+    const toolbarMesh = exampleToolbar(activeIndex, computingData, scene);
+    toolbarMesh.parent = windowGroupMesh;
+    toolbarMesh.position = new Vector3(3, 0, -0.05);
+
     // Get the shortDescription button from the contentTexture
     const image = contentTexture.getControlByName("image");
     image?.onPointerEnterObservable.add(() => {
@@ -36,17 +40,20 @@
       showTip.value = false;
     });
 
-    const { modalMesh } = lab047_example_1(activeRecord, showTip, scene);
-    modalMesh.parent = windowGroupMesh;
-    modalMesh.position = new Vector3(-2.2, 5.2, -0.2);
-    modalMesh.scaling = new Vector3(0.5, 0.5, 0.5);
-    modalMesh.isPickable = false;
+    const { modalMesh: tipMesh } = lab047_example_1(activeRecord, showTip, scene);
+    tipMesh.parent = windowGroupMesh;
+    tipMesh.position = new Vector3(-2.3, 5.3, -0.25);
+    tipMesh.scaling = new Vector3(0.5, 0.5, 0.5);
+    tipMesh.isPickable = false;
+    tipMesh.visibility = 0;
 
     watch(showTip, (newValue) => {
       if (newValue) {
         // Show the tooltip
+        Animation.CreateAndStartAnimation("fade-modal", tipMesh, "visibility", 60, 6, 0, 1, 0);
       } else {
         // Hide the tooltop
+        Animation.CreateAndStartAnimation("fade-modal", tipMesh, "visibility", 60, 6, 1, 0, 0);
       }
     });
   };
