@@ -75,6 +75,14 @@
     paragraph.paddingTop = "20px";
     tipTexture.addControl(paragraph);
 
+    watch(
+      activeRecord,
+      (newValue) => {
+        paragraph.text = newValue.imageAttribution;
+      },
+      { immediate: true }
+    );
+
     return { modalMesh: tipMesh, modalTexture: tipTexture };
   };
 
