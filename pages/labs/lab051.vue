@@ -56,6 +56,24 @@
         Animation.CreateAndStartAnimation("fade-modal", tipMesh, "visibility", 60, 6, 1, 0, 0);
       }
     });
+
+    // press left and right arrow keys to move through the list
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "ArrowLeft") {
+        let newIndex = activeIndex.value - 1;
+        if (newIndex < 0) {
+          newIndex = computingData.length - 1;
+        }
+        activeIndex.value = newIndex;
+      }
+      if (e.code === "ArrowRight") {
+        let newIndex = activeIndex.value + 1;
+        if (newIndex > computingData.length - 1) {
+          newIndex = 0;
+        }
+        activeIndex.value = newIndex;
+      }
+    });
   };
 
   // Create a card with a long description
@@ -65,7 +83,7 @@
     const paragraph = new TextBlock();
     paragraph.text = activeRecord.value.imageAttribution;
     paragraph.color = labColors.slate8;
-    paragraph.fontSize = 28;
+    paragraph.fontSize = 24;
     paragraph.textWrapping = true;
     paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
