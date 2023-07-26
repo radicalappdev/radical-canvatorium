@@ -5,8 +5,8 @@
 
   definePageMeta({
     featured: false,
-    title: "Lab 050 - Collection View",
-    description: "A small Collection view as an alternative to a list views."
+    title: "Lab 050 - Collection View with Plane Panel",
+    description: "An exaple of using Plane Panel as an alternative to a list views. Click on an item to show the full card."
   });
 
   const createLabContent = async (scene) => {
