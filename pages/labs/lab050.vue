@@ -6,7 +6,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 050 - Collection View with Plane Panel",
-    description: "An exaple of using Plane Panel as an alternative to a list views. Click on an item to show the full card."
+    description: "An example of using Plane Panel as an alternative to a list views. Click on an item to show the full card."
   });
 
   const createLabContent = async (scene) => {
@@ -45,10 +45,8 @@
 
     // Use the PlanePanel to create a grid of cards
     const plainPanel = new PlanePanel();
-    const columns = 4;
+    plainPanel.columns = 4;
     plainPanel.margin = 0.1;
-    plainPanel.columns = columns;
-
     manager.addControl(plainPanel);
     plainPanel.linkToTransformNode(anchor);
 
@@ -61,6 +59,7 @@
         return;
       }
 
+      // Invert the Y axis to force the plane to draw from top to bottom
       let newPos = new BABYLON.Vector3(nodePosition.x, -nodePosition.y, nodePosition.z);
 
       control.position = newPos;
@@ -81,6 +80,8 @@
       }
     };
 
+    plainPanel.blockLayout = true;
+
     // create a card for each record and add them to the plainPanel
     collectionData.forEach((record, index) => {
       const { cellMesh } = lab050_example_1(record, scene);
@@ -100,12 +101,15 @@
       plainPanel.addControl(button);
     });
 
+    plainPanel.blockLayout = false;
+
     anchor.parent = windowGroupMesh;
     anchor.position = new Vector3(0, 2.7, 0);
 
     // END Collection View
     // ---------------------------
 
+    // watch the showMain value and animate between states
     watch(showMain, (newValue) => {
       if (newValue) {
         // show the main window and toolbar
