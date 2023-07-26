@@ -45,32 +45,44 @@
 
     // Use the PlanePanel to create a grid of cards
     const plainPanel = new PlanePanel();
-    const columns = 2;
+    const columns = 4;
     plainPanel.margin = 0.1;
     plainPanel.columns = columns;
 
     manager.addControl(plainPanel);
     plainPanel.linkToTransformNode(anchor);
 
-    // This is a hack to reorder the array because the PlanePanel seems to order the cards left to right, bottom to top
-    // We want left to right, top to bottom
-    // Current order: 0, 1, 2, 3, 4, 5, 6, 7
-    // Desired order: 4, 5, 6, 7, 0, 1, 2, 3
-    function reorderArray(array, splitIndex) {
-      if (splitIndex >= array.length || splitIndex < 0) {
-        throw new Error("Invalid split index");
+    // This is a hack to reorder the plane panel
+    // https://forum.babylonjs.com/t/change-layout-order-of-plane-panel/42709
+    plainPanel._mapGridNode = function (control, nodePosition) {
+      const mesh = control.mesh;
+
+      if (!mesh) {
+        return;
       }
 
-      const firstPart = array.slice(splitIndex);
-      const secondPart = array.slice(0, splitIndex);
+      let newPos = new BABYLON.Vector3(nodePosition.x, -nodePosition.y, nodePosition.z);
 
-      return firstPart.concat(secondPart);
-    }
+      control.position = newPos;
 
-    const sortedData = reorderArray(collectionData, columns);
+      const target = newPos.clone();
+
+      switch (this.orientation) {
+        case BABYLON.GUI.Container3D.FACEORIGIN_ORIENTATION:
+        case BABYLON.GUI.Container3D.FACEFORWARD_ORIENTATION:
+          target.addInPlace(new BABYLON.Vector3(0, 0, 1));
+          mesh.lookAt(target);
+          break;
+        case BABYLON.GUI.Container3D.FACEFORWARDREVERSED_ORIENTATION:
+        case BABYLON.GUI.Container3D.FACEORIGINREVERSED_ORIENTATION:
+          target.addInPlace(new BABYLON.Vector3(0, 0, -1));
+          mesh.lookAt(target);
+          break;
+      }
+    };
 
     // create a card for each record and add them to the plainPanel
-    sortedData.forEach((record, index) => {
+    collectionData.forEach((record, index) => {
       const { cellMesh } = lab050_example_1(record, scene);
       cellMesh.parent = anchor;
       cellMesh.position = new Vector3(0, 0, 0);
