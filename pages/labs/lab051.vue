@@ -6,7 +6,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 051 - Main Window + Tooltip",
-    description: "Adding a simple tooltip to the image in the main window. "
+    description: "Adding a simple tooltip for the image on the main window. The tooltip will appear above the windwow on hover."
   });
 
   const createLabContent = async (scene) => {
@@ -40,9 +40,9 @@
       showTip.value = false;
     });
 
-    const { modalMesh: tipMesh } = lab047_example_1(activeRecord, showTip, scene);
+    const { tipMesh: tipMesh } = lab047_example_1(activeRecord, showTip, scene);
     tipMesh.parent = windowGroupMesh;
-    tipMesh.position = new Vector3(-2.3, 5.3, -0.25);
+    tipMesh.position = new Vector3(-2.25, 5.6, 0);
     tipMesh.scaling = new Vector3(0.5, 0.5, 0.5);
     tipMesh.isPickable = false;
     tipMesh.visibility = 0;
@@ -80,9 +80,15 @@
   const lab047_example_1 = (activeRecord, showModal, scene) => {
     const { plane: tipMesh, advancedTexture: tipTexture } = canLabCardSimple(6, 2, scene);
 
+    const rect = tipTexture.getControlByName("rect");
+    if (rect) {
+      rect.background = labColors.slate8;
+      rect.alpha = 1;
+    }
+
     const paragraph = new TextBlock();
     paragraph.text = activeRecord.value.imageAttribution;
-    paragraph.color = labColors.slate8;
+    paragraph.color = labColors.slate1;
     paragraph.fontSize = 24;
     paragraph.textWrapping = true;
     paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -101,7 +107,7 @@
       { immediate: true }
     );
 
-    return { modalMesh: tipMesh, modalTexture: tipTexture };
+    return { tipMesh: tipMesh, modalTexture: tipTexture };
   };
 
   const bjsCanvas = ref(null);
