@@ -6,7 +6,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 051 - Main Window + Tooltip",
-    description: "Adding a simple tooltip for the image on the main window. The tooltip will appear above the windwow on hover."
+    description: "Adding a simple tooltip for the image on the main window. The tooltip will appear above the window on hover."
   });
 
   const createLabContent = async (scene) => {
@@ -40,7 +40,7 @@
       showTip.value = false;
     });
 
-    const { tipMesh: tipMesh } = lab047_example_1(activeRecord, showTip, scene);
+    const { tipMesh: tipMesh } = lab051_example_1(activeRecord, scene);
     tipMesh.parent = windowGroupMesh;
     tipMesh.position = new Vector3(-2.25, 5.6, 0);
     tipMesh.scaling = new Vector3(0.5, 0.5, 0.5);
@@ -77,7 +77,7 @@
   };
 
   // Create a card with a long description
-  const lab047_example_1 = (activeRecord, showModal, scene) => {
+  const lab051_example_1 = (activeRecord, scene) => {
     const { plane: tipMesh, advancedTexture: tipTexture } = canLabCardSimple(6, 2, scene);
 
     const rect = tipTexture.getControlByName("rect");
