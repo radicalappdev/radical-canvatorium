@@ -1,6 +1,6 @@
 <script setup>
   import * as earcut from "earcut";
-  import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial, Color3, ArcRotateCamera, Animation } from "babylonjs";
+  import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial, Color3, ArcRotateCamera, Animation, CubicEase, Mesh, EasingFunction } from "babylonjs";
   import { SkyMaterial, CellMaterial, GridMaterial, GradientMaterial, NormalMaterial } from "babylonjs-materials";
   //   import { TextBlock } from "babylonjs-gui";
 
@@ -17,9 +17,9 @@
   const createLabContent = async (scene) => {
     const animateIntro = true;
     ArcRotateCamera.prototype.spinTo = function (whichprop, targetval, speed) {
-      var ease = new BABYLON.CubicEase();
-      ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-      BABYLON.Animation.CreateAndStartAnimation("at4", this, whichprop, speed, 120, this[whichprop], targetval, 0, ease);
+      var ease = new CubicEase();
+      ease.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
+      Animation.CreateAndStartAnimation("at4", this, whichprop, speed, 120, this[whichprop], targetval, 0, ease);
     };
     // Lab 001 only. Move the camera to a better position for the initial scene.
     const camera = scene.getCameraByName("camera");
@@ -30,7 +30,7 @@
     camera.lowerRadiusLimit = 2;
     camera.upperRadiusLimit = 128;
     // camera.setPosition(new Vector3(-30, 12, 85));
-    camera.setPosition(new BABYLON.Vector3(0, 3.5, 0));
+    camera.setPosition(new Vector3(0, 3.5, 0));
     camera.setTarget(new Vector3(0, 1, 24));
 
     if (animateIntro) {
@@ -55,7 +55,7 @@
     skybox.position = new Vector3(-20, 10, 10);
     skybox.material = skyMaterial;
 
-    const daylight = new DirectionalLight("daylight", new BABYLON.Vector3(sunPos.x - sunPos.x * 2, sunPos.y, sunPos.z - sunPos.z * 2), scene);
+    const daylight = new DirectionalLight("daylight", new Vector3(sunPos.x - sunPos.x * 2, sunPos.y, sunPos.z - sunPos.z * 2), scene);
     daylight.intensity = 0.5;
 
     const groundGridMaterial = new GridMaterial("ground-mat", scene);
@@ -70,7 +70,7 @@
     groundMaterial.diffuseColor = new Color3.FromHexString(labColors.slate4);
     groundMaterial.computeHighLevel = true;
 
-    const ground = BABYLON.MeshBuilder.CreateDisc(
+    const ground = MeshBuilder.CreateDisc(
       "ground",
       {
         radius: 64
@@ -102,7 +102,7 @@
     );
     myText.scaling = new Vector3(0.2, 0.2, 0.2);
     myText.position = new Vector3(-6, 12, -4);
-    myText.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y;
+    myText.billboardMode = Mesh.BILLBOARDMODE_Y;
     // myText.rotation = new Vector3(0, Math.PI, 0);
 
     const textMat1 = new GradientMaterial("grad", scene);
@@ -127,7 +127,7 @@
     );
     myText2.scaling = new Vector3(0.18, 0.18, 0.18);
     myText2.position = new Vector3(-42, 4, 3);
-    myText2.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y;
+    myText2.billboardMode = Mesh.BILLBOARDMODE_Y;
     myText2.visibility = 0;
     var normalMaterial = new NormalMaterial("normal", scene);
     myText2.material = normalMaterial;
@@ -215,7 +215,7 @@
     createWallsOutside(scene);
 
     const columnDoric = createColumnDoric(scene);
-    columnDoric.position = new BABYLON.Vector3(-16.15, 0, 0);
+    columnDoric.position = new Vector3(-16.15, 0, 0);
     columnFactory(columnDoric);
   };
 
@@ -236,17 +236,17 @@
     const blockMat = new CellMaterial("base-mat", scene);
     blockMat.diffuseColor = new Color3.FromHexString(labColors.slate2);
 
-    const floor = BABYLON.MeshBuilder.CreateBox("floor", { height: 0.2, width: 36.5, depth: 15 }, scene);
+    const floor = MeshBuilder.CreateBox("floor", { height: 0.2, width: 36.5, depth: 15 }, scene);
     floor.material = blockMat;
-    floor.position = new BABYLON.Vector3(0, 0, -7);
+    floor.position = new Vector3(0, 0, -7);
 
-    const step1 = BABYLON.MeshBuilder.CreateBox("step1", { height: 0.2, width: 37.3, depth: 15.8 }, scene);
+    const step1 = MeshBuilder.CreateBox("step1", { height: 0.2, width: 37.3, depth: 15.8 }, scene);
     step1.material = blockMat;
-    step1.position = new BABYLON.Vector3(0, -0.2, -7);
+    step1.position = new Vector3(0, -0.2, -7);
 
-    const step2 = BABYLON.MeshBuilder.CreateBox("step2", { height: 0.2, width: 38.1, depth: 16.6 }, scene);
+    const step2 = MeshBuilder.CreateBox("step2", { height: 0.2, width: 38.1, depth: 16.6 }, scene);
     step2.material = blockMat;
-    step2.position = new BABYLON.Vector3(0, -0.4, -7);
+    step2.position = new Vector3(0, -0.4, -7);
 
     return [floor, step1, step2];
   };
@@ -254,123 +254,123 @@
   const createRoof = (scene) => {
     const blockMat = new NormalMaterial("normal", scene);
 
-    const roofCap1 = BABYLON.MeshBuilder.CreateCylinder("roofCap1", {
+    const roofCap1 = MeshBuilder.CreateCylinder("roofCap1", {
       tessellation: 3
     });
     roofCap1.convertToFlatShadedMesh();
-    roofCap1.rotation = new BABYLON.Vector3(0, 0, Math.PI / 2);
-    roofCap1.scaling = new BABYLON.Vector3(3, 0.5, 17);
-    roofCap1.position = new BABYLON.Vector3(-17.6, 7.85, -7);
+    roofCap1.rotation = new Vector3(0, 0, Math.PI / 2);
+    roofCap1.scaling = new Vector3(3, 0.5, 17);
+    roofCap1.position = new Vector3(-17.6, 7.85, -7);
     roofCap1.material = blockMat;
 
     const roofCap2 = roofCap1.clone("roofCap2");
-    roofCap2.position = new BABYLON.Vector3(17.6, 7.85, -7);
+    roofCap2.position = new Vector3(17.6, 7.85, -7);
 
-    const roofCenterMat = new BABYLON.StandardMaterial("base-mat", scene);
+    const roofCenterMat = new StandardMaterial("base-mat", scene);
     roofCenterMat.diffuseColor = new Color3.FromHexString(labColors.teal);
 
-    const roofCenter = BABYLON.MeshBuilder.CreateCylinder("roofCenter", {
+    const roofCenter = MeshBuilder.CreateCylinder("roofCenter", {
       tessellation: 3
     });
     roofCenter.convertToFlatShadedMesh();
-    roofCenter.rotation = new BABYLON.Vector3(0, 0, Math.PI / 2);
-    roofCenter.scaling = new BABYLON.Vector3(3, 17.4, 17);
-    roofCenter.position = new BABYLON.Vector3(0, 7.8, -7);
+    roofCenter.rotation = new Vector3(0, 0, Math.PI / 2);
+    roofCenter.scaling = new Vector3(3, 17.4, 17);
+    roofCenter.position = new Vector3(0, 7.8, -7);
     roofCenter.material = roofCenterMat;
   };
 
   const createCeilingBlock = (scene) => {
     const blockMat = new NormalMaterial("normal", scene);
 
-    const ceiling = BABYLON.MeshBuilder.CreateBox("ceiling", { height: 1.1, width: 36.5, depth: 15 }, scene);
+    const ceiling = MeshBuilder.CreateBox("ceiling", { height: 1.1, width: 36.5, depth: 15 }, scene);
     ceiling.material = blockMat;
-    ceiling.position = new BABYLON.Vector3(0, 6.55, -7);
+    ceiling.position = new Vector3(0, 6.55, -7);
   };
 
   const createCeiling = (scene) => {
     const blockMat = new NormalMaterial("normal", scene);
 
-    const ceilingPlane = BABYLON.MeshBuilder.CreatePlane("ceiling-plane", { width: 36.2, height: 14 }, scene);
+    const ceilingPlane = MeshBuilder.CreatePlane("ceiling-plane", { width: 36.2, height: 14 }, scene);
     ceilingPlane.material = blockMat;
-    ceilingPlane.position = new BABYLON.Vector3(0, 5.9, -7);
-    ceilingPlane.rotation = new BABYLON.Vector3(-Math.PI / 2, 0, 0);
+    ceilingPlane.position = new Vector3(0, 5.9, -7);
+    ceilingPlane.rotation = new Vector3(-Math.PI / 2, 0, 0);
   };
 
   const createRails = (scene) => {
     const railMat = new NormalMaterial("normal", scene);
 
-    const rail1 = BABYLON.MeshBuilder.CreateBox("rail", { height: 0.6, width: 36.3, depth: 0.8 }, scene);
+    const rail1 = MeshBuilder.CreateBox("rail", { height: 0.6, width: 36.3, depth: 0.8 }, scene);
     rail1.material = railMat;
-    rail1.position = new BABYLON.Vector3(0, 5.76, 0);
+    rail1.position = new Vector3(0, 5.76, 0);
 
     const rail2 = rail1.clone();
-    rail2.position = new BABYLON.Vector3(0, 5.76, -14);
+    rail2.position = new Vector3(0, 5.76, -14);
 
-    const rail3 = BABYLON.MeshBuilder.CreateBox("rail", { height: 0.56, width: 0.75, depth: 14 }, scene);
+    const rail3 = MeshBuilder.CreateBox("rail", { height: 0.56, width: 0.75, depth: 14 }, scene);
     rail3.material = railMat;
-    rail3.position = new BABYLON.Vector3(17.75, 5.76, -7);
+    rail3.position = new Vector3(17.75, 5.76, -7);
 
     const rail4 = rail3.clone();
-    rail4.position = new BABYLON.Vector3(-17.75, 5.76, -7);
+    rail4.position = new Vector3(-17.75, 5.76, -7);
   };
 
   const createCorners = (scene) => {
-    const cornerMat = new BABYLON.StandardMaterial("corner-mat", scene);
+    const cornerMat = new StandardMaterial("corner-mat", scene);
     cornerMat.diffuseColor = new Color3.FromHexString(labColors.slate3);
 
-    const corner1 = BABYLON.MeshBuilder.CreateBox("corner1", { height: 7, width: 0.82, depth: 0.82 }, scene);
+    const corner1 = MeshBuilder.CreateBox("corner1", { height: 7, width: 0.82, depth: 0.82 }, scene);
     corner1.material = cornerMat;
-    corner1.position = new BABYLON.Vector3(17.75, 3.5, 0);
+    corner1.position = new Vector3(17.75, 3.5, 0);
 
     const corner2 = corner1.clone();
-    corner2.position = new BABYLON.Vector3(-17.75, 3.5, 0);
+    corner2.position = new Vector3(-17.75, 3.5, 0);
 
     const corner3 = corner1.clone();
-    corner3.position = new BABYLON.Vector3(17.75, 3.5, -14);
+    corner3.position = new Vector3(17.75, 3.5, -14);
 
     const corner4 = corner1.clone();
-    corner4.position = new BABYLON.Vector3(-17.75, 3.5, -14);
+    corner4.position = new Vector3(-17.75, 3.5, -14);
   };
 
   const createWallsInside = (scene) => {
-    const wallMat = new BABYLON.StandardMaterial("wall-mat", scene);
+    const wallMat = new StandardMaterial("wall-mat", scene);
     wallMat.diffuseColor = new Color3.FromHexString(labColors.slate2);
 
-    const wall1 = BABYLON.MeshBuilder.CreatePlane("wall1", { height: 6, width: 35 }, scene);
-    wall1.position = new BABYLON.Vector3(0, 3, -13.4);
-    wall1.rotation = new BABYLON.Vector3(0, Math.PI, 0);
+    const wall1 = MeshBuilder.CreatePlane("wall1", { height: 6, width: 35 }, scene);
+    wall1.position = new Vector3(0, 3, -13.4);
+    wall1.rotation = new Vector3(0, Math.PI, 0);
     wall1.material = wallMat;
 
-    const wall2 = BABYLON.MeshBuilder.CreatePlane("wall2", { height: 6, width: 14 }, scene);
-    wall2.position = new BABYLON.Vector3(17.37, 3, -7);
-    wall2.rotation = new BABYLON.Vector3(0, Math.PI / 2, 0);
+    const wall2 = MeshBuilder.CreatePlane("wall2", { height: 6, width: 14 }, scene);
+    wall2.position = new Vector3(17.37, 3, -7);
+    wall2.rotation = new Vector3(0, Math.PI / 2, 0);
     wall2.material = wallMat;
 
     const wall3 = wall2.clone();
-    wall3.position = new BABYLON.Vector3(-17.37, 3, -7);
-    wall3.rotation = new BABYLON.Vector3(0, -Math.PI / 2, 0);
+    wall3.position = new Vector3(-17.37, 3, -7);
+    wall3.rotation = new Vector3(0, -Math.PI / 2, 0);
   };
 
   const createWallsOutside = (scene) => {
     const wallMat = new NormalMaterial("normal", scene);
 
-    const wall1 = BABYLON.MeshBuilder.CreatePlane("wall1", { height: 6, width: 35 }, scene);
-    wall1.position = new BABYLON.Vector3(0, 3, -14.2);
-    wall1.rotation = new BABYLON.Vector3(0, 0, 0);
+    const wall1 = MeshBuilder.CreatePlane("wall1", { height: 6, width: 35 }, scene);
+    wall1.position = new Vector3(0, 3, -14.2);
+    wall1.rotation = new Vector3(0, 0, 0);
     wall1.material = wallMat;
 
-    const wall2 = BABYLON.MeshBuilder.CreatePlane("wall2", { height: 6, width: 14 }, scene);
-    wall2.position = new BABYLON.Vector3(18, 3, -7);
-    wall2.rotation = new BABYLON.Vector3(0, -Math.PI / 2, 0);
+    const wall2 = MeshBuilder.CreatePlane("wall2", { height: 6, width: 14 }, scene);
+    wall2.position = new Vector3(18, 3, -7);
+    wall2.rotation = new Vector3(0, -Math.PI / 2, 0);
     wall2.material = wallMat;
 
     const wall3 = wall2.clone();
-    wall3.position = new BABYLON.Vector3(-18, 3, -7);
-    wall3.rotation = new BABYLON.Vector3(0, Math.PI / 2, 0);
+    wall3.position = new Vector3(-18, 3, -7);
+    wall3.rotation = new Vector3(0, Math.PI / 2, 0);
   };
 
   const createColumnDoric = (scene) => {
-    // const colMat = new BABYLON.StandardMaterial("column-doric-mat", scene);
+    // const colMat = new StandardMaterial("column-doric-mat", scene);
     const colMat = new NormalMaterial("normal", scene);
     // colMat.topColor = new Color3.FromHexString(labColors.blue);
     // colMat.bottomColor = new Color3.FromHexString(labColors.cyan);
@@ -378,26 +378,26 @@
     // colMat.smoothness = 1;
     // colMat.scale = 2;
 
-    const profile = [new BABYLON.Vector3(0.48, 0, 0), new BABYLON.Vector3(0.38, 5.1, 0), new BABYLON.Vector3(0.46, 5.175, 0), new BABYLON.Vector3(0.5, 5.3, 0)];
+    const profile = [new Vector3(0.48, 0, 0), new Vector3(0.38, 5.1, 0), new Vector3(0.46, 5.175, 0), new Vector3(0.5, 5.3, 0)];
 
-    const column = BABYLON.MeshBuilder.CreateLathe("stand", {
+    const column = MeshBuilder.CreateLathe("stand", {
       tessellation: 18,
       shape: profile,
-      sideOrientation: BABYLON.Mesh.DOUBLESIDE
+      sideOrientation: Mesh.DOUBLESIDE
     });
     column.material = colMat;
     column.convertToFlatShadedMesh();
 
-    const cap = BABYLON.MeshBuilder.CreateBox("menu-card", {
+    const cap = MeshBuilder.CreateBox("menu-card", {
       width: 1.02,
       height: 0.16,
       depth: 1.02
     });
     cap.material = colMat;
     cap.parent = column;
-    cap.position = new BABYLON.Vector3(0, 5.38, 0);
+    cap.position = new Vector3(0, 5.38, 0);
 
-    const result = BABYLON.Mesh.MergeMeshes([column, cap], true, true);
+    const result = Mesh.MergeMeshes([column, cap], true, true);
     return result;
   };
 
@@ -409,7 +409,7 @@
       i++;
       x += 1.7;
       const newCol = column.createInstance("column");
-      newCol.position = new BABYLON.Vector3(x, column.position.y, column.position.z);
+      newCol.position = new Vector3(x, column.position.y, column.position.z);
     } while (i < numberOfColumns);
   };
 </script>
