@@ -17,18 +17,31 @@
 
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
+    const animateIntro = true;
+    ArcRotateCamera.prototype.spinTo = function (whichprop, targetval, speed) {
+      var ease = new BABYLON.CubicEase();
+      ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+      BABYLON.Animation.CreateAndStartAnimation("at4", this, whichprop, speed, 120, this[whichprop], targetval, 0, ease);
+    };
     // Lab 001 only. Move the camera to a better position for the initial scene.
     const camera = scene.getCameraByName("camera");
-    // cam.position = new Vector3(-30, 8.6, 65);
 
     // const camera = new ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 3, new Vector3(0, 0, 0), scene);
     camera.wheelDeltaPercentage = 0.01;
     camera.upperBetaLimit = Math.PI / 1.5;
     camera.lowerRadiusLimit = 2;
     camera.upperRadiusLimit = 128;
-    camera.setPosition(new Vector3(-30, 12, 85));
+    // camera.setPosition(new Vector3(-30, 12, 85));
+    camera.setPosition(new BABYLON.Vector3(0, 3.5, -6));
     camera.setTarget(new Vector3(0, 1, 24));
-    // camera.attachControl(canvas, true);
+
+    if (animateIntro) {
+      setTimeout(() => camera.spinTo("radius", 12, 20), 2000);
+      setTimeout(() => camera.spinTo("beta", 1.2, 20), 4000);
+      setTimeout(() => camera.spinTo("alpha", Math.PI / 2, 34), 5500);
+      setTimeout(() => camera.spinTo("radius", 36, 16), 7000);
+      setTimeout(() => camera.spinTo("alpha", 1, 10), 9000);
+    }
 
     var sunPos = new Vector3(-100, 15, -100);
 
