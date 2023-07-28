@@ -1,6 +1,13 @@
 <script setup>
-  import { Vector3 } from "babylonjs";
+  import * as earcut from "earcut";
+  import { Vector3, MeshBuilder } from "babylonjs";
+  import { SkyMaterial } from "babylonjs-materials";
   import { TextBlock } from "babylonjs-gui";
+
+  // Fonts from https://www.kenney.nl/assets/kenney-fonts
+  // Converted with http://gero3.github.io/facetype.js/
+
+  console.log(earcut);
 
   definePageMeta({
     featured: false,
@@ -13,6 +20,36 @@
     // Lab 001 only. Move the camera to a better position for the initial scene.
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -4);
+
+    var sunPos = new Vector3(8, 4, 20);
+
+    var skyMaterial = new SkyMaterial("skyMaterial", scene);
+    skyMaterial.backFaceCulling = false;
+    skyMaterial.turbidity = 0.1;
+    skyMaterial.luminance = 0.25;
+    skyMaterial.useSunPosition = true; // Do not set sun position from azimuth and inclination
+    skyMaterial.sunPosition = sunPos;
+    skyMaterial.cameraOffset.y = 64;
+
+    var skybox = MeshBuilder.CreateBox("skyBox", { size: 1000 }, scene);
+    skybox.material = skyMaterial;
+
+    var fontData = await (await fetch("../../assets/3d-fonts/Kenney_Future_Regular.json")).json();
+    console.log(fontData);
+    var myText = MeshBuilder.CreateText(
+      "myText",
+      "3D Graphics",
+      fontData,
+      {
+        size: 16,
+        resolution: 64,
+        depth: 10
+      },
+      scene,
+      earcut
+    );
+    console.log(myText);
+    myText.scaling = new Vector3(0.1, 0.1, 0.1);
 
     const { plane } = createLabCard();
 
@@ -30,7 +67,7 @@
     advancedTexture.name = "can-texture";
 
     const cardText = new TextBlock("card-text");
-    cardText.text = "3D Graphics";
+    cardText.text = "3D";
     // font sometimg modern and clean and sans
     cardText.fontFamily = "Verdana";
     cardText.color = labColors.slate8;
