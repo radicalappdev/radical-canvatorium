@@ -1,7 +1,7 @@
 <script setup>
   import * as earcut from "earcut";
   import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial, Color3, ArcRotateCamera } from "babylonjs";
-  import { SkyMaterial, CellMaterial, GridMaterial } from "babylonjs-materials";
+  import { SkyMaterial, CellMaterial, GridMaterial, GradientMaterial } from "babylonjs-materials";
   //   import { TextBlock } from "babylonjs-gui";
 
   // Fonts from https://www.kenney.nl/assets/kenney-fonts
@@ -15,9 +15,16 @@
     description: "lol"
   });
 
+  //   var gradientMaterial = new GradientMaterial("grad", scene);
+  //   gradientMaterial.topColor = Color3.Red(); // Set the gradient top color
+  //   gradientMaterial.bottomColor = Color3.Blue();
+  //   gradientMaterial.backFaceCulling = false;
+  //   gradientMaterial.scale = 100;
+  //   gradientMaterial.smoothness = 0.01;
+
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
-    const animateIntro = true;
+    const animateIntro = false;
     ArcRotateCamera.prototype.spinTo = function (whichprop, targetval, speed) {
       var ease = new BABYLON.CubicEase();
       ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
@@ -124,7 +131,7 @@
   // Otherwise, you can pass in an options object with the following properties:
   const labSceneOptions = {
     useCamera: true,
-    useLight: true,
+    useLight: false,
     useRoom: false
   };
 
@@ -133,7 +140,8 @@
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 
   const createBase = (scene) => {
-    const blockMat = new BABYLON.StandardMaterial("base-mat", scene);
+    const blockMat = new CellMaterial("base-mat", scene);
+    blockMat.diffuseColor = new Color3.FromHexString(labColors.slate2);
 
     const floor = BABYLON.MeshBuilder.CreateBox("floor", { height: 0.2, width: 36.5, depth: 15 }, scene);
     floor.material = blockMat;
@@ -152,6 +160,7 @@
 
   const createRoof = (scene) => {
     const blockMat = new BABYLON.StandardMaterial("base-mat", scene);
+    blockMat.diffuseColor = new Color3.FromHexString(labColors.red);
 
     const roofCap1 = BABYLON.MeshBuilder.CreateCylinder("roofCap1", {
       tessellation: 3
@@ -166,6 +175,7 @@
     roofCap2.position = new BABYLON.Vector3(17.6, 7.85, -7);
 
     const roofCenterMat = new BABYLON.StandardMaterial("base-mat", scene);
+    roofCenterMat.diffuseColor = new Color3.FromHexString(labColors.teal);
 
     const roofCenter = BABYLON.MeshBuilder.CreateCylinder("roofCenter", {
       tessellation: 3
@@ -179,6 +189,7 @@
 
   const createCeilingBlock = (scene) => {
     const blockMat = new BABYLON.StandardMaterial("ceiling-mat", scene);
+    blockMat.diffuseColor = new Color3.FromHexString(labColors.red);
 
     const ceiling = BABYLON.MeshBuilder.CreateBox("ceiling", { height: 1.1, width: 36.5, depth: 15 }, scene);
     ceiling.material = blockMat;
@@ -187,6 +198,7 @@
 
   const createCeiling = (scene) => {
     const blockMat = new BABYLON.StandardMaterial("ceiling-mat", scene);
+    blockMat.diffuseColor = new Color3.FromHexString(labColors.slate2);
 
     const ceilingPlane = BABYLON.MeshBuilder.CreatePlane("ceiling-plane", { width: 36.2, height: 14 }, scene);
     ceilingPlane.material = blockMat;
@@ -196,6 +208,7 @@
 
   const createRails = (scene) => {
     const railMat = new BABYLON.StandardMaterial("rail-mat", scene);
+    railMat.diffuseColor = new Color3.FromHexString(labColors.teal);
 
     const rail1 = BABYLON.MeshBuilder.CreateBox("rail", { height: 0.6, width: 36.3, depth: 0.8 }, scene);
     rail1.material = railMat;
@@ -214,6 +227,7 @@
 
   const createCorners = (scene) => {
     const cornerMat = new BABYLON.StandardMaterial("corner-mat", scene);
+    cornerMat.diffuseColor = new Color3.FromHexString(labColors.slate3);
 
     const corner1 = BABYLON.MeshBuilder.CreateBox("corner1", { height: 7, width: 0.82, depth: 0.82 }, scene);
     corner1.material = cornerMat;
@@ -231,6 +245,7 @@
 
   const createWallsInside = (scene) => {
     const wallMat = new BABYLON.StandardMaterial("wall-mat", scene);
+    wallMat.diffuseColor = new Color3.FromHexString(labColors.slate2);
 
     const wall1 = BABYLON.MeshBuilder.CreatePlane("wall1", { height: 6, width: 35 }, scene);
     wall1.position = new BABYLON.Vector3(0, 3, -13.4);
@@ -249,6 +264,7 @@
 
   const createWallsOutside = (scene) => {
     const wallMat = new BABYLON.StandardMaterial("wall-mat", scene);
+    wallMat.diffuseColor = new Color3.FromHexString(labColors.slate2);
 
     const wall1 = BABYLON.MeshBuilder.CreatePlane("wall1", { height: 6, width: 35 }, scene);
     wall1.position = new BABYLON.Vector3(0, 3, -14.2);
@@ -266,7 +282,13 @@
   };
 
   const createColumnDoric = (scene) => {
-    const colMat = new BABYLON.StandardMaterial("column-doric-mat", scene);
+    // const colMat = new BABYLON.StandardMaterial("column-doric-mat", scene);
+    const colMat = new GradientMaterial("grad", scene);
+    colMat.topColor = new Color3.FromHexString(labColors.blue);
+    colMat.bottomColor = new Color3.FromHexString(labColors.cyan);
+    colMat.offset = -2;
+    colMat.smoothness = 1;
+    colMat.scale = 2;
 
     const profile = [new BABYLON.Vector3(0.48, 0, 0), new BABYLON.Vector3(0.38, 5.1, 0), new BABYLON.Vector3(0.46, 5.175, 0), new BABYLON.Vector3(0.5, 5.3, 0)];
 
