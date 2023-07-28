@@ -1,6 +1,6 @@
 <script setup>
   import * as earcut from "earcut";
-  import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial, Color3, ArcRotateCamera } from "babylonjs";
+  import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial, Color3, ArcRotateCamera, Animation } from "babylonjs";
   import { SkyMaterial, CellMaterial, GridMaterial, GradientMaterial, NormalMaterial } from "babylonjs-materials";
   //   import { TextBlock } from "babylonjs-gui";
 
@@ -30,7 +30,7 @@
     camera.lowerRadiusLimit = 2;
     camera.upperRadiusLimit = 128;
     // camera.setPosition(new Vector3(-30, 12, 85));
-    camera.setPosition(new BABYLON.Vector3(0, 3.5, -6));
+    camera.setPosition(new BABYLON.Vector3(0, 3.5, 0));
     camera.setTarget(new Vector3(0, 1, 24));
 
     if (animateIntro) {
@@ -128,6 +128,13 @@
     myText2.scaling = new Vector3(0.18, 0.18, 0.18);
     myText2.position = new Vector3(-42, 7, 3);
     myText2.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y;
+    myText2.visibility = 0;
+
+    setTimeout(() => {
+      Animation.CreateAndStartAnimation("fade-main", myText2, "visibility", 60, 120, 0, 1, 0);
+    }, 14000);
+
+    // Animation.CreateAndStartAnimation("fade-main", myText2, "visibility", 60 , 6, 1, 0.5, 0);
 
     var normalMaterial = new NormalMaterial("normal", scene);
     myText2.material = normalMaterial;
