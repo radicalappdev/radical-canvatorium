@@ -15,7 +15,7 @@
 
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
-    const animateIntro = true;
+    const animateIntro = false;
     ArcRotateCamera.prototype.spinTo = function (whichprop, targetval, speed) {
       var ease = new BABYLON.CubicEase();
       ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
@@ -129,15 +129,81 @@
     myText2.position = new Vector3(-42, 7, 3);
     myText2.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y;
     myText2.visibility = 0;
+    var normalMaterial = new NormalMaterial("normal", scene);
+    myText2.material = normalMaterial;
 
     setTimeout(() => {
       Animation.CreateAndStartAnimation("fade-main", myText2, "visibility", 60, 120, 0, 1, 0);
     }, 14000);
 
-    // Animation.CreateAndStartAnimation("fade-main", myText2, "visibility", 60 , 6, 1, 0.5, 0);
+    // Create a Tetrahedron
+    const tetra = MeshBuilder.CreatePolyhedron("tetra", { type: 0, size: 10 }, scene);
+    tetra.position = new Vector3(-60, 12, 10);
+    tetra.rotation = new Vector3(1, 0, -1);
+    // tetra material: gradient of teal and cyan
+    const tetraMat = new GradientMaterial("grad", scene);
+    tetraMat.topColor = new Color3.FromHexString(labColors.teal);
+    tetraMat.bottomColor = new Color3.FromHexString(labColors.cyan);
+    tetraMat.smoothness = 1;
+    tetraMat.scale = 1;
+    tetra.material = tetraMat;
 
-    var normalMaterial = new NormalMaterial("normal", scene);
-    myText2.material = normalMaterial;
+    // animate the tetra up and down endlessly
+    const tetraAnimY = new Animation("tetraAnim", "position.y", 6, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+    const tetraAnimZ = new Animation("tetraAnim", "position.z", 6, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+    const tetraKeys = [];
+    tetraKeys.push({
+      frame: 0,
+      value: 12
+    });
+    tetraKeys.push({
+      frame: 60,
+      value: 20
+    });
+    tetraKeys.push({
+      frame: 120,
+      value: 12
+    });
+    tetraAnimY.setKeys(tetraKeys);
+    tetraAnimZ.setKeys(tetraKeys);
+    tetra.animations = [];
+    tetra.animations.push(tetraAnimY);
+    tetra.animations.push(tetraAnimZ);
+    scene.beginAnimation(tetra, 0, 120, true);
+
+    // Create a Octahedron
+    const octa = MeshBuilder.CreatePolyhedron("octa", { type: 1, size: 10 }, scene);
+    octa.position = new Vector3(-50, 20, -20);
+    octa.rotation = new Vector3(1, 0, -1);
+    // octa material: gradient orange and red
+    const octaMat = new GradientMaterial("grad", scene);
+    octaMat.topColor = new Color3.FromHexString(labColors.orange);
+    octaMat.bottomColor = new Color3.FromHexString(labColors.red);
+    octaMat.smoothness = 1;
+    octaMat.scale = 1;
+    octa.material = octaMat;
+
+    // animate the octa in all three axes endlessly at different speeds
+    const octaAnimX = new Animation("octaAnim", "rotation.x", 6, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+    const octaAnimY = new Animation("octaAnim", "rotation.y", 6, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+    const octaAnimZ = new Animation("octaAnim", "rotation.z", 6, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+    const octaKeys = [];
+    octaKeys.push({
+      frame: 0,
+      value: 0
+    });
+    octaKeys.push({
+      frame: 60,
+      value: Math.PI * 2
+    });
+    octaAnimX.setKeys(octaKeys);
+    octaAnimY.setKeys(octaKeys);
+    octaAnimZ.setKeys(octaKeys);
+    octa.animations = [];
+    octa.animations.push(octaAnimX);
+    octa.animations.push(octaAnimY);
+    octa.animations.push(octaAnimZ);
+    scene.beginAnimation(octa, 0, 120, true);
 
     createBase(scene);
     createRoof(scene);
