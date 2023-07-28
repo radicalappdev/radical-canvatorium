@@ -15,7 +15,7 @@
 
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
-    const animateIntro = false;
+    const animateIntro = true;
     ArcRotateCamera.prototype.spinTo = function (whichprop, targetval, speed) {
       var ease = new BABYLON.CubicEase();
       ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
@@ -126,7 +126,7 @@
       earcut
     );
     myText2.scaling = new Vector3(0.18, 0.18, 0.18);
-    myText2.position = new Vector3(-42, 7, 3);
+    myText2.position = new Vector3(-42, 4, 3);
     myText2.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y;
     myText2.visibility = 0;
     var normalMaterial = new NormalMaterial("normal", scene);
@@ -134,11 +134,11 @@
 
     setTimeout(() => {
       Animation.CreateAndStartAnimation("fade-main", myText2, "visibility", 60, 120, 0, 1, 0);
-    }, 14000);
+    }, 15000);
 
     // Create a Tetrahedron
     const tetra = MeshBuilder.CreatePolyhedron("tetra", { type: 0, size: 10 }, scene);
-    tetra.position = new Vector3(-60, 12, 10);
+    tetra.position = new Vector3(-70, 12, 20);
     tetra.rotation = new Vector3(1, 0, -1);
     // tetra material: gradient of teal and cyan
     const tetraMat = new GradientMaterial("grad", scene);
@@ -173,7 +173,7 @@
 
     // Create a Octahedron
     const octa = MeshBuilder.CreatePolyhedron("octa", { type: 1, size: 10 }, scene);
-    octa.position = new Vector3(-50, 20, -20);
+    octa.position = new Vector3(-70, 20, -40);
     octa.rotation = new Vector3(1, 0, -1);
     // octa material: gradient orange and red
     const octaMat = new GradientMaterial("grad", scene);
@@ -224,7 +224,8 @@
   const labSceneOptions = {
     useCamera: true,
     useLight: false,
-    useRoom: false
+    useRoom: false,
+    useOverlay: true
   };
 
   const bjsCanvas = ref(null);
