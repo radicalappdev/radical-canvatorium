@@ -1,7 +1,7 @@
 <script setup>
   import * as earcut from "earcut";
-  import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial } from "babylonjs";
-  import { SkyMaterial } from "babylonjs-materials";
+  import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial, Color3, ArcRotateCamera } from "babylonjs";
+  import { SkyMaterial, CellMaterial, GridMaterial } from "babylonjs-materials";
   //   import { TextBlock } from "babylonjs-gui";
 
   // Fonts from https://www.kenney.nl/assets/kenney-fonts
@@ -18,10 +18,19 @@
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
     // Lab 001 only. Move the camera to a better position for the initial scene.
-    const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(-20, 8.6, -65);
+    const camera = scene.getCameraByName("camera");
+    // cam.position = new Vector3(-30, 8.6, 65);
 
-    var sunPos = new Vector3(-100, 20, 100);
+    // const camera = new ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 3, new Vector3(0, 0, 0), scene);
+    camera.wheelDeltaPercentage = 0.01;
+    camera.upperBetaLimit = Math.PI / 1.5;
+    camera.lowerRadiusLimit = 2;
+    camera.upperRadiusLimit = 128;
+    camera.setPosition(new Vector3(-30, 12, 85));
+    camera.setTarget(new Vector3(0, 1, 24));
+    // camera.attachControl(canvas, true);
+
+    var sunPos = new Vector3(-100, 15, -100);
 
     var skyMaterial = new SkyMaterial("skyMaterial", scene);
     skyMaterial.backFaceCulling = false;
@@ -35,7 +44,34 @@
     skybox.material = skyMaterial;
 
     const daylight = new DirectionalLight("daylight", new BABYLON.Vector3(sunPos.x - sunPos.x * 2, sunPos.y, sunPos.z - sunPos.z * 2), scene);
-    daylight.intensity = 1;
+    daylight.intensity = 0.5;
+
+    const groundGridMaterial = new GridMaterial("ground-mat", scene);
+    groundGridMaterial.majorUnitFrequency = 1;
+    groundGridMaterial.gridRatio = 2;
+    groundGridMaterial.backFaceCulling = false;
+    groundGridMaterial.mainColor = labColors.slate2;
+    groundGridMaterial.lineColor = labColors.slate2;
+    groundGridMaterial.opacity = 0.2;
+
+    const groundMaterial = new CellMaterial("ground-mat", scene);
+    groundMaterial.diffuseColor = new Color3.FromHexString(labColors.green);
+    groundMaterial.computeHighLevel = true;
+
+    const ground = BABYLON.MeshBuilder.CreateDisc(
+      "ground",
+      {
+        radius: 64
+      },
+      scene
+    );
+    ground.rotation = new Vector3(Math.PI / 2, 0, 0);
+    ground.position = new Vector3(0, -0.5, 24);
+    ground.material = groundMaterial;
+
+    const groundGrid = ground.clone("ground-grid");
+    groundGrid.material = groundGridMaterial;
+    groundGrid.position = new Vector3(0, -0.495, 24);
 
     var fontBlocks = await (await fetch("../../assets/3d-fonts/Kenney_Blocks_Regular.json")).json();
     var fontFuture = await (await fetch("../../assets/3d-fonts/Kenney_Future_Regular.json")).json();
@@ -62,6 +98,13 @@
     createCeilingBlock(scene);
     createCeiling(scene);
     createRails(scene);
+    createCorners(scene);
+    createWallsInside(scene);
+    createWallsOutside(scene);
+
+    const columnDoric = createColumnDoric(scene);
+    columnDoric.position = new BABYLON.Vector3(-16.15, 0, 0);
+    columnFactory(columnDoric);
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
@@ -154,6 +197,97 @@
 
     const rail4 = rail3.clone();
     rail4.position = new BABYLON.Vector3(-17.75, 5.76, -7);
+  };
+
+  const createCorners = (scene) => {
+    const cornerMat = new BABYLON.StandardMaterial("corner-mat", scene);
+
+    const corner1 = BABYLON.MeshBuilder.CreateBox("corner1", { height: 7, width: 0.82, depth: 0.82 }, scene);
+    corner1.material = cornerMat;
+    corner1.position = new BABYLON.Vector3(17.75, 3.5, 0);
+
+    const corner2 = corner1.clone();
+    corner2.position = new BABYLON.Vector3(-17.75, 3.5, 0);
+
+    const corner3 = corner1.clone();
+    corner3.position = new BABYLON.Vector3(17.75, 3.5, -14);
+
+    const corner4 = corner1.clone();
+    corner4.position = new BABYLON.Vector3(-17.75, 3.5, -14);
+  };
+
+  const createWallsInside = (scene) => {
+    const wallMat = new BABYLON.StandardMaterial("wall-mat", scene);
+
+    const wall1 = BABYLON.MeshBuilder.CreatePlane("wall1", { height: 6, width: 35 }, scene);
+    wall1.position = new BABYLON.Vector3(0, 3, -13.4);
+    wall1.rotation = new BABYLON.Vector3(0, Math.PI, 0);
+    wall1.material = wallMat;
+
+    const wall2 = BABYLON.MeshBuilder.CreatePlane("wall2", { height: 6, width: 14 }, scene);
+    wall2.position = new BABYLON.Vector3(17.37, 3, -7);
+    wall2.rotation = new BABYLON.Vector3(0, Math.PI / 2, 0);
+    wall2.material = wallMat;
+
+    const wall3 = wall2.clone();
+    wall3.position = new BABYLON.Vector3(-17.37, 3, -7);
+    wall3.rotation = new BABYLON.Vector3(0, -Math.PI / 2, 0);
+  };
+
+  const createWallsOutside = (scene) => {
+    const wallMat = new BABYLON.StandardMaterial("wall-mat", scene);
+
+    const wall1 = BABYLON.MeshBuilder.CreatePlane("wall1", { height: 6, width: 35 }, scene);
+    wall1.position = new BABYLON.Vector3(0, 3, -14.2);
+    wall1.rotation = new BABYLON.Vector3(0, 0, 0);
+    wall1.material = wallMat;
+
+    const wall2 = BABYLON.MeshBuilder.CreatePlane("wall2", { height: 6, width: 14 }, scene);
+    wall2.position = new BABYLON.Vector3(18, 3, -7);
+    wall2.rotation = new BABYLON.Vector3(0, -Math.PI / 2, 0);
+    wall2.material = wallMat;
+
+    const wall3 = wall2.clone();
+    wall3.position = new BABYLON.Vector3(-18, 3, -7);
+    wall3.rotation = new BABYLON.Vector3(0, Math.PI / 2, 0);
+  };
+
+  const createColumnDoric = (scene) => {
+    const colMat = new BABYLON.StandardMaterial("column-doric-mat", scene);
+
+    const profile = [new BABYLON.Vector3(0.48, 0, 0), new BABYLON.Vector3(0.38, 5.1, 0), new BABYLON.Vector3(0.46, 5.175, 0), new BABYLON.Vector3(0.5, 5.3, 0)];
+
+    const column = BABYLON.MeshBuilder.CreateLathe("stand", {
+      tessellation: 18,
+      shape: profile,
+      sideOrientation: BABYLON.Mesh.DOUBLESIDE
+    });
+    column.material = colMat;
+    column.convertToFlatShadedMesh();
+
+    const cap = BABYLON.MeshBuilder.CreateBox("menu-card", {
+      width: 1.02,
+      height: 0.16,
+      depth: 1.02
+    });
+    cap.material = colMat;
+    cap.parent = column;
+    cap.position = new BABYLON.Vector3(0, 5.38, 0);
+
+    const result = BABYLON.Mesh.MergeMeshes([column, cap], true, true);
+    return result;
+  };
+
+  const columnFactory = (column) => {
+    const numberOfColumns = 19;
+    var x = column.position.x;
+    var i = 0;
+    do {
+      i++;
+      x += 1.7;
+      const newCol = column.createInstance("column");
+      newCol.position = new BABYLON.Vector3(x, column.position.y, column.position.z);
+    } while (i < numberOfColumns);
   };
 </script>
 <template>
