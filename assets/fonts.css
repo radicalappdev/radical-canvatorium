@@ -1,0 +1,38 @@
+/* ~/assets/fonts.css */
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("/assets/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
+  /* Add other font weights and styles if available */
+  /* add the bold version */
+}
+
+/* ~/assets/fonts.css */
+
+/* @font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('/assets/fonts/AtkinsonHyperlegible-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+} */
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Bold";
+  src: url("/assets/fonts/AtkinsonHyperlegible-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Italic";
+  src: url("/assets/fonts/AtkinsonHyperlegible-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Bold Italic";
+  src: url("/assets/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}

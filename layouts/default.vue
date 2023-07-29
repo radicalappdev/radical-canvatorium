@@ -3,6 +3,10 @@
     <main>
       <div class="lab-container" :class="labClasses()">
         <slot />
+        <span class="ah-font">Loading font Atkinson-Hyperlegible-Regular</span>
+        <span class="ahb-font">Loading font Atkinson-Hyperlegible-Bold</span>
+        <span class="ahi-font">Loading font Atkinson-Hyperlegible-Italic</span>
+        <span hidden class="ahbi-font">Loading font Atkinson-Hyperlegible-Bold-Italic</span>
       </div>
     </main>
   </div>
@@ -85,5 +89,21 @@
     bottom: 12px;
     right: 12px;
     border-radius: 4px;
+  }
+
+  /* body {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+  } */
+  .ah-font {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+  }
+  .ahb-font {
+    font-family: "Atkinson Hyperlegible Bold", sans-serif;
+  }
+  .ahi-font {
+    font-family: "Atkinson Hyperlegible Italic", sans-serif;
+  }
+  .ahbi-font {
+    font-family: "Atkinson Hyperlegible Bold Italic", sans-serif;
   }
 </style>
