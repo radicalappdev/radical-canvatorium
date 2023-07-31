@@ -3,10 +3,15 @@
     <main>
       <div class="lab-container" :class="labClasses()">
         <slot />
-        <span class="ah-font">Loading font Atkinson-Hyperlegible-Regular</span>
-        <span class="ahb-font">Loading font Atkinson-Hyperlegible-Bold</span>
-        <span class="ahi-font">Loading font Atkinson-Hyperlegible-Italic</span>
-        <span hidden class="ahbi-font">Loading font Atkinson-Hyperlegible-Bold-Italic</span>
+        <!-- Using a font in Babylon JS is not enough to tell the browser to load it -->
+        <!-- Use the font on an off-screen element to force the browser to load it -->
+        <!-- TODO: Creating a component where I can specify the fonts that I need for a lab. -->
+        <div style="padding-top: calc(100vh * 2)">
+          <p class="ah-font">Loading font Atkinson-Hyperlegible-Regular</p>
+          <p class="ahb-font">Loading font Atkinson-Hyperlegible-Bold</p>
+          <p class="ahi-font">Loading font Atkinson-Hyperlegible-Italic</p>
+          <p hidden class="ahbi-font">Loading font Atkinson-Hyperlegible-Bold-Italic</p>
+        </div>
       </div>
     </main>
   </div>
