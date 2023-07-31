@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3, Animation } from "babylonjs";
+  import { Vector3 } from "babylonjs";
   import { TextBlock, Image, Ellipse, Control } from "babylonjs-gui";
 
   definePageMeta({
@@ -43,7 +43,7 @@
       cardText.fontSize = 64;
       if (useCustom) {
         console.log("Using custom font", useCustom);
-        cardText.fontFamily = "Atkinson Hyperlegible Bold";
+        cardText.fontFamily = "NotoSans-Bold";
       }
       advancedTexture.addControl(cardText);
 
@@ -53,7 +53,7 @@
       paragraph.background = "white";
       paragraph.fontSize = 28;
       if (useCustom) {
-        paragraph.fontFamily = "Atkinson Hyperlegible";
+        paragraph.fontFamily = "NotoSans-Medium";
       }
       paragraph.textWrapping = true;
       paragraph.width = 0.9;
@@ -77,41 +77,6 @@
   useCanvatoriumScene(bjsCanvas, createLabContent);
 </script>
 
-<style scoped>
-  .ah-font {
-    font-family: "Atkinson Hyperlegible", sans-serif;
-  }
-  .ahb-font {
-    font-family: "Atkinson Hyperlegible Bold", sans-serif;
-  }
-  .ahi-font {
-    font-family: "Atkinson Hyperlegible Italic", sans-serif;
-  }
-  .ahbi-font {
-    font-family: "Atkinson Hyperlegible Bold Italic", sans-serif;
-  }
-
-  .noto-font {
-    font-family: "NotoSans-Regular", sans-serif;
-  }
-
-  .noto-medium-font {
-    font-family: "NotoSans-Medium", sans-serif;
-  }
-</style>
-
 <template>
   <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
-  <!-- Using a font in Babylon JS is not enough to tell the browser to load it -->
-  <!-- Use the font on an off-screen element to force the browser to load it -->
-  <!-- TODO: Creating a component where I can specify the fonts that I need for a lab. -->
-  <div style="opacity: 0; z-index: -100">
-    <!-- <div style="padding-top: calc(100vh * 2)"> -->
-    <p class="ah-font">Loading font Atkinson-Hyperlegible-Regular</p>
-    <p class="ahb-font">Loading font Atkinson-Hyperlegible-Bold</p>
-    <p class="ahi-font">Loading font Atkinson-Hyperlegible-Italic</p>
-    <p class="ahbi-font">Loading font Atkinson-Hyperlegible-Bold-Italic</p>
-    <p class="noto-font">Loading font NotoSans-Regular</p>
-    <p class="noto-medium-font">Loading font NotoSans-Medium</p>
-  </div>
 </template>
