@@ -1,20 +1,18 @@
 /* ~/assets/fonts.css */
 
-@font-face {
+/* @font-face {
   font-family: "Atkinson Hyperlegible";
   src: url("/assets/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
-  /* Add other font weights and styles if available */
-  /* add the bold version */
-}
+} */
 
 /* ~/assets/fonts.css */
 
-/* @font-face {
-  font-family: 'Atkinson Hyperlegible';
-  src: url('/assets/fonts/AtkinsonHyperlegible-Regular.ttf') format('truetype');
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("/assets/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
-} */
+}
 
 @font-face {
   font-family: "Atkinson Hyperlegible Bold";
@@ -35,4 +33,27 @@
   src: url("/assets/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
   font-weight: bold;
   font-style: italic;
+}
+
+/* Add NotoSans: Regular, Medium, Bold */
+
+@font-face {
+  font-family: "NotoSans-Regular";
+  src: url("/assets/fonts/NotoSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NotoSans-Medium";
+  src: url("/assets/fonts/NotoSans-Medium.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "NotoSans-Bold";
+  src: url("/assets/fonts/NotoSans-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
 }
