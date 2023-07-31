@@ -47,7 +47,6 @@
       cardText.top = 40;
       cardText.left = 150;
       cardText.fontSize = 64;
-      cardText.fontFamily = "Atkinson Hyperlegible";
       advancedTexture.addControl(cardText);
 
       const paragraph = new TextBlock();
@@ -55,7 +54,6 @@
       paragraph.color = labColors.slate8;
       paragraph.background = "white";
       paragraph.fontSize = 28;
-      paragraph.fontFamily = "Atkinson Hyperlegible Italic";
       paragraph.textWrapping = true;
       paragraph.width = 0.9;
       paragraph.height = 0.3;
@@ -69,7 +67,6 @@
       button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
       button1.left = "50px";
       button1.top = "-40px";
-      button1.textBlock.fontFamily = "Atkinson Hyperlegible Bold";
       button1.textBlock.fontSize = 26;
       button1.onPointerUpObservable.add(() => {
         console.log("Modal Open");

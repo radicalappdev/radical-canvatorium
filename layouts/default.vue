@@ -96,9 +96,6 @@
     border-radius: 4px;
   }
 
-  /* body {
-    font-family: "Atkinson Hyperlegible", sans-serif;
-  } */
   .ah-font {
     font-family: "Atkinson Hyperlegible", sans-serif;
   }
