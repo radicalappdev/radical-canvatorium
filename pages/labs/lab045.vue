@@ -67,6 +67,7 @@
       button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
       button1.left = "50px";
       button1.top = "-40px";
+      button1.textBlock.fontSize = 26;
       button1.onPointerUpObservable.add(() => {
         console.log("Modal Open");
         showModal.value = true;

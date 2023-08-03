@@ -2,7 +2,20 @@
   <div class="flex flex-col min-h-screen">
     <main>
       <div class="lab-container" :class="labClasses()">
+        <!-- Using a font in Babylon JS is not enough to tell the browser to load it -->
+        <!-- Use the font on an off-screen element to force the browser to load it -->
+        <!-- TODO: Creating a component where I can specify the fonts that I need for a lab. -->
         <slot />
+        <div style="opacity: 0; z-index: -100">
+          <p style="font-family: 'NotoSans-Medium', sans-serif">Loading font NotoSans-Medium</p>
+          <p style="font-family: 'NotoSans-MediumItalic', sans-serif">Loading font NotoSans-MediumItalic</p>
+
+          <p style="font-family: 'NotoSans-SemiBold', sans-serif">Loading font NotoSans-SemiBold</p>
+          <p style="font-family: 'NotoSans-SemiBoldItalic', sans-serif">Loading font NotoSans-SemiBoldItalic</p>
+
+          <p style="font-family: 'NotoSans-Bold', sans-serif">Loading font NotoSans-Bold</p>
+          <p style="font-family: 'NotoSans-BoldItalic', sans-serif">Loading font NotoSans-BoldItalic</p>
+        </div>
       </div>
     </main>
   </div>
