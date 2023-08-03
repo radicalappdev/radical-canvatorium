@@ -4,8 +4,11 @@
 
   definePageMeta({
     featured: false,
-    title: "Lab 052 - Fonts",
-    description: "Working with fonts on an AdvancedDynamicTexture."
+    title: "Lab 052 - Custom Fonts",
+    description: "Working with fonts on an AdvancedDynamicTexture requires a bit of work.",
+    labNotes: `
+    Using a font in Babylon JS is not enough to tell the browser to load it. We have to import it in CSS and use it somewhere in the HRML. I'm using a hidden div to load the fonts in the detault.vue template file shared by all labs.
+    `
   });
 
   const createLabContent = async (scene) => {
