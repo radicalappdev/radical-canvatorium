@@ -18,7 +18,7 @@
 
     const scene = new THREE.Scene();
 
-    scene.background = new THREE.Color("#eeeeee");
+    scene.background = new THREE.Color(labColors.slate1);
 
     // Create a camera
     const fov = 35; // AKA Field of View
@@ -29,11 +29,14 @@
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
     camera.position.set(0, 5, 10);
 
-    const light = new THREE.AmbientLight(0x404040); // soft white light
-    scene.add(light);
+    // Add lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(0, 1, 0);
+    // Add directional light
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(10, 10, 10);
+    scene.add(directionalLight);
 
     // add orbit controls
     const controls = new OrbitControls(camera, container.value);
@@ -41,13 +44,13 @@
     controls.update();
 
     // add a grid to the scene
-    const gridHelper = new THREE.GridHelper(20, 10);
-
+    const gridHelper = new THREE.GridHelper(5, 5);
     scene.add(gridHelper);
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({ color: "#cecece" });
+    const material = new THREE.MeshStandardMaterial({ color: labColors.slate3 });
     const cube = new THREE.Mesh(geometry, material);
+    cube.position.set(0, 1, 0);
     scene.add(cube);
 
     // create the renderer
