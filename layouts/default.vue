@@ -79,7 +79,8 @@
   } */
 
   /* Used on the canvas elements in the pages rendered by the slot */
-  #bjsCanvas {
+  #bjsCanvas,
+  #sceneContainer {
     position: absolute;
     top: 0;
     left: 0;

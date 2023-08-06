@@ -13,6 +13,13 @@
       </nuxt-link>
     </div>
     <br />
+    <h2 class="text-lg font-bold my-4">All Benches</h2>
+    <div class="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4">
+      <nuxt-link v-for="route in benchRoutes" :to="route.path" class="bg-slate-100 p-2 hover:bg-slate-200 drop-shadow-lg" :key="route.path">
+        <p class="font-bold">{{ route.meta.title }}</p>
+        <p>{{ route.meta.description }}</p>
+      </nuxt-link>
+    </div>
   </div>
 </template>
 
@@ -28,4 +35,6 @@
   const allRoutes = router.options.routes;
 
   const labRoutes = allRoutes.filter((route) => route.path.startsWith("/labs") && route.path !== "/labs");
+
+  const benchRoutes = allRoutes.filter((route) => route.path.startsWith("/benches") && route.path !== "/benches");
 </script>
