@@ -4,32 +4,27 @@
   definePageMeta({
     featured: false,
     title: "Bench 500 – Hello Canvatorium + Three JS",
-    description: "This the first lab using Three JS.",
-    labNotes: `Welcome to Canvatorium Lab 500.
-  `
+    description: "A basic Three JS scene with lights, orbit controls, and a cube."
   });
 
+  // A reference to the container element
   const sceneContainer = ref(null);
 
+  // Create the Three JS scene
   const createThreeScene = (container) => {
     // Extract the width and height from the container
     const width = container.value.clientWidth;
     const height = container.value.clientHeight;
 
+    // Create a scene
     const scene = new THREE.Scene();
-
     scene.background = new THREE.Color(labColors.slate1);
 
     // Create a camera
-    const fov = 35; // AKA Field of View
-    const aspect = width / height;
-    const near = 0.1; // the near clipping plane
-    const far = 100; // the far clipping plane
-
-    const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
     camera.position.set(0, 5, 10);
 
-    // Add lights
+    // Add ambient light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
 
@@ -38,46 +33,46 @@
     directionalLight.position.set(10, 10, 10);
     scene.add(directionalLight);
 
-    // add orbit controls
+    // Add orbit controls
     const controls = new OrbitControls(camera, container.value);
     controls.target.set(0, 0, 0);
     controls.update();
 
-    // add a grid to the scene
+    // Add a grid to the scene
     const gridHelper = new THREE.GridHelper(5, 5);
     scene.add(gridHelper);
 
+    // Create a cube
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshStandardMaterial({ color: labColors.slate3 });
     const cube = new THREE.Mesh(geometry, material);
     cube.position.set(0, 1, 0);
     scene.add(cube);
 
-    // create the renderer
+    // Create the renderer
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height); // TODO: This isn't working!
     renderer.setPixelRatio(window.devicePixelRatio);
 
-    // add the automatically created <canvas> element to the page
+    // Add the automatically created <canvas> element to the page
     container.value.append(renderer.domElement);
 
-    function animate() {
-      requestAnimationFrame(animate);
+    // Render the scene
+    const runScene = () => {
+      requestAnimationFrame(runScene);
 
-      cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
 
       renderer.render(scene, camera);
-    }
+    };
 
-    animate();
+    runScene();
   };
 
+  // Create the scene when the component is mounted
   onMounted(() => {
-    console.log("onMounted", sceneContainer);
-    createThreeScene(sceneContainer);
     if (sceneContainer.value) {
-      console.log("sceneContainer.value", sceneContainer.value);
+      createThreeScene(sceneContainer);
     }
   });
 </script>
