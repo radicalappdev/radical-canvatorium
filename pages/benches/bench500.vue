@@ -1,5 +1,6 @@
 <script setup>
   import * as THREE from "three";
+  import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
   definePageMeta({
     featured: false,
     title: "Bench 500 – Hello Canvatorium + Three JS",
@@ -26,10 +27,26 @@
     const far = 100; // the far clipping plane
 
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 0, 10);
+    camera.position.set(0, 5, 10);
+
+    const light = new THREE.AmbientLight(0x404040); // soft white light
+    scene.add(light);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(0, 1, 0);
+
+    // add orbit controls
+    const controls = new OrbitControls(camera, container.value);
+    controls.target.set(0, 0, 0);
+    controls.update();
+
+    // add a grid to the scene
+    const gridHelper = new THREE.GridHelper(20, 10);
+
+    scene.add(gridHelper);
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: "#cecece" });
+    const material = new THREE.MeshStandardMaterial({ color: "#cecece" });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
