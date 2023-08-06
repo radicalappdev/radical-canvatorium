@@ -36,6 +36,10 @@
     // Add orbit controls
     const controls = new OrbitControls(camera, container.value);
     controls.target.set(0, 0, 0);
+    controls.maxPolarAngle = Math.PI / 2;
+    controls.minPolarAngle = 0;
+    controls.maxDistance = 20;
+    controls.minDistance = 5;
     controls.update();
 
     // Add a grid to the scene
