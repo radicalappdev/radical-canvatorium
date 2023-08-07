@@ -49,6 +49,37 @@
       pathsArray.push(pathObject);
     });
 
+    function extrudePath(data) {
+      // get the first path
+      const myPath = [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 5), new BABYLON.Vector3(0, 0, 10)];
+      const options = {
+        shape: data.points, //vec3 array with z = 0,
+        path: myPath, //vec3 array
+        updatable: false,
+        cap: BABYLON.Mesh.CAP_ALL,
+        sideOrientation: BABYLON.Mesh.DOUBLESIDE
+      };
+      //BABYLON.MeshBuilder.ExtrudeShape("star", {shape: myShape, path: myPath, cap: BABYLON.Mesh.CAP_ALL, sideOrientation: BABYLON.Mesh.DOUBLESIDE});
+
+      let extrudedMesh = BABYLON.MeshBuilder.ExtrudeShape("ext", options, scene);
+
+      // Create a material for the mesh
+      const material = new BABYLON.StandardMaterial("material", scene);
+      material.diffuseColor = new BABYLON.Color3.FromHexString(labColors.slate3);
+
+      // Apply the material to the mesh
+      extrudedMesh.material = material;
+      //show outline
+      extrudedMesh.enableEdgesRendering();
+      //   extrudedMesh.position = new BABYLON.Vector3(0, 0, 0);
+      scene.addMesh(extrudedMesh);
+    }
+
+    // loop through the paths array and extrude each path
+    pathsArray.forEach((path) => {
+      extrudePath(path);
+    });
+
     // Now you have an array of objects, each containing an 'id' and an array of points.
     console.log(pathsArray);
   };
