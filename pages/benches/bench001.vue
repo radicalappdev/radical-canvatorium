@@ -14,7 +14,7 @@
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -4);
 
-    const ohioSVG = await fetch("/assets/usa-oh.svg").then((res) => res.text());
+    const svgSource = await fetch("/assets/usa-tx.svg").then((res) => res.text());
     // const ohioSVG = await fetch("/assets/usa-oh.svg").then((res) => res.text());
     // console.log("SVG", ohioSVG);
 
@@ -23,7 +23,7 @@
 
     // Parse the SVG data to extract the path elements
     const parser = new DOMParser();
-    const svgDocument = parser.parseFromString(ohioSVG, "image/svg+xml");
+    const svgDocument = parser.parseFromString(svgSource, "image/svg+xml");
     const pathElements = svgDocument.querySelectorAll("path");
 
     // Iterate through each path and convert it to an object
