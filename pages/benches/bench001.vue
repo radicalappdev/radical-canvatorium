@@ -4,7 +4,7 @@
 
   definePageMeta({
     featured: false,
-    title: "Bench 000 – SVG to Babylon JS",
+    title: "Bench 001 – SVG to Babylon JS",
     description: "Loading an SVG file and converting it to 3D objects in Babylon JS."
   });
 
