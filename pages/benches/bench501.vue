@@ -70,7 +70,11 @@
     const runScene = () => {
       requestAnimationFrame(runScene);
 
-      //   cube.rotation.y += 0.01;
+      // Create an animation to move the first and last points of the line
+      const time = Date.now() * 0.001;
+      line.geometry.attributes.position.setXYZ(0, Math.sin(time) * 1, Math.cos(time) * 1, 0);
+      line.geometry.attributes.position.setXYZ(2, Math.sin(time + 1) * 1, Math.cos(time + 1) * 1, 0);
+      line.geometry.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
