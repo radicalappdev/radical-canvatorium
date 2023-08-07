@@ -10,10 +10,11 @@
 
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
-    scene.clearColor = new BABYLON.Color4(0.1, 0.1, 0.1, 1);
+    scene.clearColor = new BABYLON.Color4.FromHexString(labColors.slate3 + "ff");
     // Lab 001 only. Move the camera to a better position for the initial scene.
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -4);
+    cam.setTarget(new Vector3(0, 0, 0));
+    cam.position = new Vector3(0, 5, -6);
 
     const ohioSVG = await fetch("/assets/usa-oh.svg").then((res) => res.text());
     // const ohioSVG = await fetch("/assets/usa-oh.svg").then((res) => res.text());
@@ -83,6 +84,7 @@
       // Create a material for the mesh
       const material = new BABYLON.StandardMaterial("material", scene);
       material.diffuseColor = new BABYLON.Color3.FromHexString(color);
+      material.specularColor = new BABYLON.Color3(0.1, 0.1, 0.1);
 
       extrudedMesh.material = material;
       //   extrudedMesh.enableEdgesRendering();
@@ -163,7 +165,7 @@
   // Otherwise, you can pass in an options object with the following properties:
   const labSceneOptions = {
     useCamera: true,
-    useLight: true,
+    useLights: true,
     useRoom: false,
     useOverlay: false,
     useWebXRPlayer: false
