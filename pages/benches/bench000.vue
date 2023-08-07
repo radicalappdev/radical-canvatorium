@@ -10,6 +10,7 @@
 
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
+    scene.clearColor = new BABYLON.Color4(0.1, 0.1, 0.1, 1);
     // Lab 001 only. Move the camera to a better position for the initial scene.
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -4);
@@ -51,12 +52,24 @@
     });
 
     function extrudePath(data) {
+      const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
+
+      // Pick a number between 1 and 10
+      const num = Math.floor(Math.random() * 10) + 1;
+
+      // Use the number to pick a color from the array
+      const color = colors[num - 1];
+      console.log("num", num, color);
+
+      // Use the number to pick a depth
+      const depth = num / 5 + 1;
+      // console.log("scaleY", scaleY);
       // get the first path
-      const myPath = [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0.5, 0), new BABYLON.Vector3(0, 1, 0)];
+      const myPath = [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0.5, 0), new BABYLON.Vector3(0, depth, 0)];
       const options = {
         shape: data.points, //vec3 array with z = 0,
         path: myPath, //vec3 array
-        updatable: false,
+        updatable: true,
         cap: BABYLON.Mesh.CAP_ALL,
         sideOrientation: BABYLON.Mesh.DOUBLESIDE
       };
@@ -64,20 +77,21 @@
 
       let extrudedMesh = BABYLON.MeshBuilder.ExtrudeShape("ext", options, scene);
 
+      // Calculate the position along the y axis based on the depth
+      //   const positionY = scaleY / 2;
+
       // Create a material for the mesh
       const material = new BABYLON.StandardMaterial("material", scene);
-      // Generate a random color
-      const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-      console.log(randomColor);
-      material.diffuseColor = new BABYLON.Color3.FromHexString(`#${randomColor}`);
+      material.diffuseColor = new BABYLON.Color3.FromHexString(color);
 
-      // Apply the material to the mesh
       extrudedMesh.material = material;
       //   extrudedMesh.enableEdgesRendering();
       extrudedMesh.convertToFlatShadedMesh();
       //   extrudedMesh.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
       // scale in local space
       extrudedMesh.scalingDeterminant = 0.1;
+      //   extrudedMesh.position.y = positionY;
+      //   extrudedMesh.scaling.y = scaleY;
       return extrudedMesh;
     }
 
@@ -150,7 +164,7 @@
   const labSceneOptions = {
     useCamera: true,
     useLight: true,
-    useRoom: true,
+    useRoom: false,
     useOverlay: false,
     useWebXRPlayer: false
   };
