@@ -51,7 +51,7 @@
 
     function extrudePath(data) {
       // get the first path
-      const myPath = [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 5), new BABYLON.Vector3(0, 0, 10)];
+      const myPath = [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0.5, 0), new BABYLON.Vector3(0, 1, 0)];
       const options = {
         shape: data.points, //vec3 array with z = 0,
         path: myPath, //vec3 array
@@ -65,28 +65,47 @@
 
       // Create a material for the mesh
       const material = new BABYLON.StandardMaterial("material", scene);
-      material.diffuseColor = new BABYLON.Color3.FromHexString(labColors.slate3);
+      // Generate a random color
+      const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+      console.log(randomColor);
+      material.diffuseColor = new BABYLON.Color3.FromHexString(`#${randomColor}`);
 
       // Apply the material to the mesh
       extrudedMesh.material = material;
-      //show outline
-      extrudedMesh.enableEdgesRendering();
-      //   extrudedMesh.position = new BABYLON.Vector3(0, 0, 0);
-      scene.addMesh(extrudedMesh);
+      //   extrudedMesh.enableEdgesRendering();
+      extrudedMesh.convertToFlatShadedMesh();
+      //   extrudedMesh.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
+      // scale in local space
+      extrudedMesh.scalingDeterminant = 0.1;
+      return extrudedMesh;
     }
 
+    // Create a group to hold all the extruded paths
+    const extrudedPathsGroup = new BABYLON.Mesh("extrudedPathsGroup", scene);
+    extrudedPathsGroup.showBoundingBox = true;
+
     // loop through the paths array and extrude each path
+
     pathsArray.forEach((path) => {
-      extrudePath(path);
+      extrudedPathsGroup.addChild(extrudePath(path));
     });
+
+    extrudedPathsGroup.rotation.y = -Math.PI / 2;
+    // get the bounds of the extruded paths group
+    const bounds = extrudedPathsGroup.getHierarchyBoundingVectors();
+    console.log(bounds);
+    // Calculate an offset to center the group
+    const offsetX = (bounds.max.x - bounds.min.x) / 2 + bounds.min.x;
+    const offsetY = 0;
+    const offsetZ = (bounds.max.z - bounds.min.z) / 2 + bounds.min.z;
+
+    // Move the group to the center of the scene
+    extrudedPathsGroup.position = new BABYLON.Vector3(-offsetX, -offsetY, -offsetZ);
 
     // Now you have an array of objects, each containing an 'id' and an array of points.
     console.log(pathsArray);
   };
 
-  // Rest of the code remains the same...
-
-  // Function to parse path data and convert it into an array of points
   // Function to parse path data and convert it into an array of points
   function parsePathData(pathData) {
     // Regular expression pattern to find all commands and their coordinates
