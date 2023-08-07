@@ -1,6 +1,5 @@
 <script setup>
   import { Vector3 } from "babylonjs";
-  import { TextBlock } from "babylonjs-gui";
   import "babylonjs-loaders";
 
   definePageMeta({
@@ -17,6 +16,7 @@
 
     const ohioSVG = await fetch("/assets/usa-oh.svg").then((res) => res.text());
     // console.log("SVG", ohioSVG);
+
     // Create an array to store the objects
     const pathsArray = [];
 
@@ -27,15 +27,20 @@
 
     // Iterate through each path and convert it to an object
     pathElements.forEach((pathElement) => {
+      // Get the 'id' attribute of the path
+      const id = pathElement.getAttribute("id");
+
       // Get the 'd' attribute of the path, which contains the path data
       const pathData = pathElement.getAttribute("d");
-      console.log(pathData);
 
+      console.log(id, pathData);
       // Parse the path data to get an array of points
       const points = parsePathData(pathData);
+      console.log(points);
 
-      // Create an object containing the points array
+      // Create an object containing the 'id' and the points array
       const pathObject = {
+        id,
         points
         // Add any other properties you may want for extrusion, e.g., height, color, etc.
       };
@@ -44,10 +49,13 @@
       pathsArray.push(pathObject);
     });
 
-    // Now you have an array of objects, each containing an array of points.
+    // Now you have an array of objects, each containing an 'id' and an array of points.
     console.log(pathsArray);
   };
 
+  // Rest of the code remains the same...
+
+  // Function to parse path data and convert it into an array of points
   // Function to parse path data and convert it into an array of points
   function parsePathData(pathData) {
     // Regular expression pattern to find all commands and their coordinates
@@ -56,41 +64,31 @@
     // Array to store the points
     const points = [];
 
-    let currentPoint = new Vector3(0, 0, 0); // Starting point
-
     // Helper function to update the current point based on the command and its parameters
     function updateCurrentPoint(command, parameters) {
-      const [dx, dy] = parameters.split(",").map(parseFloat);
-      switch (command.toLowerCase()) {
-        case "m": // MoveTo
-          currentPoint.x += dx;
-          currentPoint.y += dy;
-          break;
-        case "l": // LineTo
-          currentPoint.x += dx;
-          currentPoint.y += dy;
-          break;
-        case "h": // Horizontal LineTo
-          currentPoint.x += dx;
-          break;
-        case "v": // Vertical LineTo
-          currentPoint.y += dy;
-          break;
-        case "z": // ClosePath (Z)
-          // For simplicity, we ignore 'z' commands (ClosePath) in this example.
-          // If you want to handle closed paths, you can add the necessary logic here.
-          break;
-        default:
-          break;
+      const coordinates = parameters.split(/[ ,]/).map(parseFloat);
+
+      let index = 0;
+      while (index < coordinates.length) {
+        const dx = coordinates[index];
+        const dy = coordinates[index + 1];
+        currentPoint.x += dx;
+        currentPoint.y += dy;
+        points.push(new Vector3(currentPoint.x, currentPoint.y, 0));
+        index += 2; // Move to the next set of coordinates (x, y)
       }
     }
+
+    let currentPoint = new Vector3(0, 0, 0); // Starting point
 
     let match;
     while ((match = regex.exec(pathData)) !== null) {
       const command = match[1];
       const parameters = match[2].trim();
+      console.log(match);
+      console.log(command);
+      console.log(parameters);
       updateCurrentPoint(command, parameters);
-      points.push(new Vector3(currentPoint.x, currentPoint.y, 0)); // We assume z=0 in this case, as it's a 2D SVG.
     }
 
     return points;
