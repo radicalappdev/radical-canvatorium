@@ -5,7 +5,7 @@
 
   definePageMeta({
     featured: false,
-    title: "Bench 003 – SVG map with picking",
+    title: "Bench 004 – SVG map that animates camera focus to a clicked county",
     description: "Loading an SVG file and converting it to 3D objects in Babylon JS."
   });
 
@@ -81,6 +81,45 @@
       extrudedMesh.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, (evt) => {
           console.log("Clicked on", id, value);
+          // Get the picked position in the scene
+          const pickedPosition = scene.pick(scene.pointerX, scene.pointerY);
+          console.log("Picked Position", pickedPosition);
+
+          // Define animation parameters
+          const animationDuration = 15; // in milliseconds
+          const easingFunction = new BABYLON.QuadraticEase(); // You can choose a different easing function if needed
+          easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+
+          // Create an animation to smoothly transition the camera's target position
+          const animation = new BABYLON.Animation(
+            "LookAtAnimation", // Animation name
+            "target", // Property to animate
+            30, // Frames per second
+            BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+          );
+
+          // Create keyframes for the animation
+          const keyFrames = [
+            {
+              frame: 0,
+              value: cam.target.clone() // Initial position of the camera's target
+            },
+            {
+              frame: animationDuration,
+              value: pickedPosition.pickedPoint // Desired target position
+            }
+          ];
+
+          // Assign the keyframes to the animation
+          animation.setKeys(keyFrames);
+          animation.setEasingFunction(easingFunction);
+
+          // Attach the animation to the camera
+          cam.animations.push(animation);
+
+          // Start the animation
+          scene.beginAnimation(cam, 0, animationDuration, false);
         })
       );
 
