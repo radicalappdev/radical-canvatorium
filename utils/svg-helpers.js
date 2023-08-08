@@ -125,3 +125,29 @@ export const extractSVG_babylon = (svg) => {
 
   return pathsArray;
 };
+
+export class ChoroplethSegmenter {
+  constructor(data, segments) {
+    this.data = data;
+    this.segments = segments;
+    this.min_value = Math.min(...data.map((entry) => entry.value));
+    this.max_value = Math.max(...data.map((entry) => entry.value));
+    this.segment_width = (this.max_value - this.min_value) / segments;
+  }
+
+  getSegment(value) {
+    if (value < this.min_value || value > this.max_value) {
+      return null; // Value is outside the data range
+    }
+
+    // Calculate the segment index
+    const segment_index = Math.floor((value - this.min_value) / this.segment_width);
+
+    // Adjust for the last segment to include the maximum value
+    if (segment_index === this.segments) {
+      return this.segments;
+    }
+
+    return segment_index + 1; // Return 1-indexed segment number
+  }
+}
