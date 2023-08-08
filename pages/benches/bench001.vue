@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3, HemisphericLight } from "babylonjs";
+  import { Vector3, HemisphericLight, Mesh, StandardMaterial, Color3, Color4, MeshBuilder } from "babylonjs";
   import "babylonjs-loaders";
   import sampleData from "@/data/ohio-demo-02.json";
 
@@ -53,16 +53,6 @@
       return null; // Return null if value doesn't fall within any segment
     }
 
-    // Loop through the sample data and log the segment for each entry
-    // sampleData.forEach((entry) => {
-    //   const segment = getSegment(entry.value);
-    //   console.log(entry.countyName, entry.value, segment);
-    // });
-
-    // Get the value from Franklin and log the segment
-    const franklin = sampleData.find((entry) => entry.countyName === "Franklin");
-    console.log(franklin.value, getSegment(franklin.value));
-
     // This SVG contains a list of separate paths, each with its own id and path data
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
@@ -90,26 +80,26 @@
 
       // Use the number to pick a depth
       const depth = num / 3 + 1;
-      const myPath = [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0.5, 0), new BABYLON.Vector3(0, depth, 0)];
+      const myPath = [new Vector3(0, 0, 0), new Vector3(0, 0.5, 0), new Vector3(0, depth, 0)];
       const options = {
         shape: data.points,
         path: myPath,
         updatable: true,
-        cap: BABYLON.Mesh.CAP_ALL
+        cap: Mesh.CAP_ALL
         // sideOrientation: BABYLON.Mesh.DOUBLESIDE
       };
 
-      let extrudedMesh = BABYLON.MeshBuilder.ExtrudeShape("ext", options, scene);
+      let extrudedMesh = MeshBuilder.ExtrudeShape("ext", options, scene);
 
       // Create a material for the mesh
-      const material = new BABYLON.StandardMaterial("material", scene);
-      material.diffuseColor = new BABYLON.Color3.FromHexString(color);
-      material.specularColor = new BABYLON.Color3(0.1, 0.1, 0.1);
+      const material = new StandardMaterial("material", scene);
+      material.diffuseColor = new Color3.FromHexString(color);
+      material.specularColor = new Color3(0.1, 0.1, 0.1);
 
       extrudedMesh.material = material;
       extrudedMesh.convertToFlatShadedMesh();
       extrudedMesh.scalingDeterminant = 0.1;
-      //   extrudedMesh.visibility = 0.8;
+
       return extrudedMesh;
     }
 
@@ -173,7 +163,7 @@
     });
 
     // Create a group to hold all the extruded paths
-    const extrudedPathsGroup = new BABYLON.Mesh("extrudedPathsGroup", scene);
+    const extrudedPathsGroup = new Mesh("extrudedPathsGroup", scene);
 
     // loop through the paths array and extrude each path
     pathsArray.forEach((path) => {
@@ -184,14 +174,13 @@
     extrudedPathsGroup.rotation.y = -Math.PI / 2;
     // get the bounds of the extruded paths group
     const bounds = extrudedPathsGroup.getHierarchyBoundingVectors();
-    console.log(bounds);
     // Calculate an offset to center the group
     const offsetX = (bounds.max.x - bounds.min.x) / 2 + bounds.min.x;
     const offsetY = 0;
     const offsetZ = (bounds.max.z - bounds.min.z) / 2 + bounds.min.z;
 
     // Move the group to the center of the scene
-    extrudedPathsGroup.position = new BABYLON.Vector3(-offsetX, -offsetY, -offsetZ);
+    extrudedPathsGroup.position = new Vector3(-offsetX, -offsetY, -offsetZ);
 
     // Customize the scene lighting and background color
     const ambientLight1 = new HemisphericLight("light-01", new Vector3(10, 10, 10), scene);
