@@ -20,6 +20,9 @@
 
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
+    const pathsArray = extractSVG_three(svg);
+    console.log("Paths Array", pathsArray);
+
     // Extract the width and height from the container
     const width = container.value.clientWidth;
     const height = container.value.clientHeight;

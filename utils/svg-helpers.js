@@ -48,6 +48,29 @@ export const renderSVG_three = (extrusion, svg) => {
   };
 };
 
+export const extractSVG_three = (svg) => {
+  const loader = new SVGLoader();
+  const svgData = loader.parse(svg);
+  const pathsArray = [];
+
+  svgData.paths.forEach((path) => {
+    const id = path.userData.node.id;
+    const shapes = SVGLoader.createShapes(path);
+
+    shapes.forEach((shape) => {
+      const points = shape.getPoints();
+      const pathObject = {
+        id,
+        points
+      };
+
+      pathsArray.push(pathObject);
+    });
+  });
+
+  return pathsArray;
+};
+
 // TODO: Refactor to make a bit more sense
 export const extractSVG_babylon = (svg) => {
   // Function to parse path data and convert it into an array of points
