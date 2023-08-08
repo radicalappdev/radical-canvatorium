@@ -18,6 +18,7 @@
 
     const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
     // const colors = ["#e1f5ff", "#a4dcff", "#68b6eb", "#1168a7", "#2d90d1"];
+    // const colors = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
     const numberOfSegments = colors.length;
     const heightFactor = 1;
 
@@ -65,6 +66,17 @@
       extrudedMesh.material = material;
       extrudedMesh.convertToFlatShadedMesh();
       extrudedMesh.scalingDeterminant = 0.1;
+
+      // Generate a line mesh from the path points and place it on top of the extruded mesh
+      // map the data points from XZ to XY
+      data.points = data.points.map((point) => new Vector3(point.x, 0, point.y));
+      const lineMesh = MeshBuilder.CreateLines("lines", { points: data.points }, scene);
+      lineMesh.color = new Color3(0.1, 0.1, 0.1);
+      // Rotate the line mesh so it's parallel to the extruded mesh
+      lineMesh.parent = extrudedMesh;
+      lineMesh.rotation.z = Math.PI;
+      lineMesh.rotation.y = -Math.PI / 2;
+      lineMesh.position.y = depth + 0.05;
 
       return extrudedMesh;
     }
