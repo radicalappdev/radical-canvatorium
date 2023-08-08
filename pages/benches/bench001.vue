@@ -16,29 +16,33 @@
     cam.setTarget(new Vector3(0, 0, 0));
     cam.position = new Vector3(0, 5, -6);
 
-    // Calculate the highest and lowest values
-    const min_value = Math.min(...sampleData.map((entry) => entry.value));
-    const max_value = Math.max(...sampleData.map((entry) => entry.value));
-
-    // Calculate the width of each segment
-    const segment_width = (max_value - min_value) / 10;
-
-    // Create a function to determine the segment for a given value
-    function getSegment(value) {
-      if (value < min_value || value > max_value) {
-        return null; // Value is outside the data range
+    class ChoroplethSegmenter {
+      constructor(data) {
+        this.data = data;
+        this.min_value = Math.min(...data.map((entry) => entry.value));
+        this.max_value = Math.max(...data.map((entry) => entry.value));
+        this.segment_width = (this.max_value - this.min_value) / 10;
       }
 
-      // Calculate the segment index
-      const segment_index = Math.floor((value - min_value) / segment_width);
+      getSegment(value) {
+        if (value < this.min_value || value > this.max_value) {
+          return null; // Value is outside the data range
+        }
 
-      // Adjust for the last segment to include the maximum value
-      if (segment_index === 10) {
-        return 10;
+        // Calculate the segment index
+        const segment_index = Math.floor((value - this.min_value) / this.segment_width);
+
+        // Adjust for the last segment to include the maximum value
+        if (segment_index === 10) {
+          return 10;
+        }
+
+        return segment_index + 1; // Return 1-indexed segment number
       }
-
-      return segment_index + 1; // Return 1-indexed segment number
     }
+
+    // Create an instance of the ChoroplethSegmenter class
+    const choroplethSegmenter = new ChoroplethSegmenter(sampleData);
 
     // This SVG contains a list of separate paths, each with its own id and path data
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
@@ -57,7 +61,7 @@
 
       // get the value from the entry
       // const num = entry.value;
-      const num = getSegment(value);
+      const num = choroplethSegmenter.getSegment(value);
       console.log(id, entry, num);
 
       // Use the number to pick a color from the array
