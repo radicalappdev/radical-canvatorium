@@ -1,27 +1,24 @@
 <script setup>
   import * as THREE from "three";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-  //   import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
-  // import renderSVG_three
+  import sampleData from "@/data/ohio-demo-01.json";
 
   definePageMeta({
     featured: false,
-    title: "Bench 502 – Ohio SVG to Three JS",
+    title: "Bench 504 – Ohio SVG to Three JS + Loading Data",
     description: "Loading an SVG file and converting it to 3D objects in Three JS."
   });
 
-  // A reference to the container element
-  const sceneContainer = ref(null);
-
   // Create the Three JS scene
   const createThreeScene = async (container) => {
-    // Load the SVG data from the file: @/data/usa-oh.svg
-    const ohioSVG = await fetch("/assets/usa-oh.svg").then((res) => res.text());
-    // console.log("SVG", ohioSVG);
+    const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
+    const numberOfSegments = colors.length;
+    const heightFactor = 1;
 
-    // const loader = new SVGLoader();
-    // const svgData = loader.parse(ohioSVG);
-    // console.log("SVG Data", svgData);
+    // Create an instance of the ChoroplethSegmenter class
+    const choroplethSegmenter = new ChoroplethSegmenter(sampleData, numberOfSegments);
+
+    const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
     // Extract the width and height from the container
     const width = container.value.clientWidth;
@@ -58,7 +55,7 @@
     scene.add(gridHelper);
 
     const defaultExtrusion = 1;
-    const { object } = renderSVG_three(defaultExtrusion, ohioSVG);
+    const { object } = renderSVG_three(defaultExtrusion, svg);
     scene.add(object);
 
     // Create the renderer
@@ -79,7 +76,8 @@
     runScene();
   };
 
-  // Create the scene when the component is mounted
+  const sceneContainer = ref(null);
+
   onMounted(() => {
     if (sceneContainer.value) {
       createThreeScene(sceneContainer);

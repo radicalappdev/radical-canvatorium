@@ -44,21 +44,7 @@ export const renderSVG_three = (extrusion, svg) => {
   svgGroup.scale.multiplyScalar(0.2);
 
   return {
-    object: svgGroup,
-    update(extrusion) {
-      updateMap.forEach((updateDetails) => {
-        const meshGeometry = new THREE.ExtrudeGeometry(updateDetails.shape, {
-          depth: extrusion,
-          bevelEnabled: false
-        });
-        const linesGeometry = new THREE.EdgesGeometry(meshGeometry);
-
-        updateDetails.mesh.geometry.dispose();
-        updateDetails.lines.geometry.dispose();
-        updateDetails.mesh.geometry = meshGeometry;
-        updateDetails.lines.geometry = linesGeometry;
-      });
-    }
+    object: svgGroup
   };
 };
 
