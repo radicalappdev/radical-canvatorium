@@ -4,7 +4,7 @@
 
   definePageMeta({
     featured: false,
-    title: "Bench 000 – SVG to Babylon JS",
+    title: "Bench 000 – SVG to Babylon JS with random data",
     description: "Loading an SVG file and converting it to 3D objects in Babylon JS."
   });
 
@@ -35,8 +35,8 @@
         shape: data.points,
         path: myPath,
         updatable: true,
-        cap: BABYLON.Mesh.CAP_ALL,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
+        cap: BABYLON.Mesh.CAP_ALL
+        // sideOrientation: BABYLON.Mesh.DOUBLESIDE
       };
 
       let extrudedMesh = BABYLON.MeshBuilder.ExtrudeShape("ext", options, scene);
@@ -49,6 +49,7 @@
       extrudedMesh.material = material;
       extrudedMesh.convertToFlatShadedMesh();
       extrudedMesh.scalingDeterminant = 0.1;
+      //   extrudedMesh.visibility = 0.8;
       return extrudedMesh;
     }
 
