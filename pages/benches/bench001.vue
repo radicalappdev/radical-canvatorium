@@ -1,7 +1,7 @@
 <script setup>
-  import { Vector3 } from "babylonjs";
+  import { Vector3, HemisphericLight } from "babylonjs";
   import "babylonjs-loaders";
-  import sampleData from "@/data/ohio-demo-01.json";
+  import sampleData from "@/data/ohio-demo-02.json";
 
   definePageMeta({
     featured: false,
@@ -67,6 +67,7 @@
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
     function extrudePath(data) {
+      // const colors = ["#f1f5f9", "#e2e8f0", "#cbd5e1", "#94a3b8", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
       const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
 
       // Pick a number between 1 and 10
@@ -88,7 +89,7 @@
       console.log(data.id, num, color);
 
       // Use the number to pick a depth
-      const depth = num / 5 + 1;
+      const depth = num / 3 + 1;
       const myPath = [new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0.5, 0), new BABYLON.Vector3(0, depth, 0)];
       const options = {
         shape: data.points,
@@ -191,13 +192,19 @@
 
     // Move the group to the center of the scene
     extrudedPathsGroup.position = new BABYLON.Vector3(-offsetX, -offsetY, -offsetZ);
+
+    // Customize the scene lighting and background color
+    const ambientLight1 = new HemisphericLight("light-01", new Vector3(10, 10, 10), scene);
+    ambientLight1.intensity = 0.6;
+    const ambientLight2 = new HemisphericLight("light-02", new Vector3(-10, 10, -10), scene);
+    ambientLight2.intensity = 0.6;
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
   // Otherwise, you can pass in an options object with the following properties:
   const labSceneOptions = {
     useCamera: true,
-    useLights: true,
+    useLights: false,
     useRoom: false,
     useOverlay: false,
     useWebXRPlayer: false
