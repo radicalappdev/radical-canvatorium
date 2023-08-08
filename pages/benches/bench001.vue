@@ -16,17 +16,18 @@
     cam.setTarget(new Vector3(0, 0, 0));
     cam.position = new Vector3(0, 5, -6);
 
+    const numberOfSegments = 5;
+
     // Create an instance of the ChoroplethSegmenter class
-    const choroplethSegmenter = new ChoroplethSegmenter(sampleData, 10);
+    const choroplethSegmenter = new ChoroplethSegmenter(sampleData, numberOfSegments);
 
     // This SVG contains a list of separate paths, each with its own id and path data
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
     function extrudePath(data) {
-      const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
+      // const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
+      const colors = ["#e1f5ff", "#a4dcff", "#68b6eb", "#1168a7", "#2d90d1"];
 
-      // Pick a number between 1 and 10
-      // const num = Math.floor(Math.random() * 10) + 1;
       const id = data.id;
 
       // get the object from the sample data where countyName matches the id
