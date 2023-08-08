@@ -1,6 +1,7 @@
 <script setup>
   import { Vector3 } from "babylonjs";
   import "babylonjs-loaders";
+  import sampleData from "@/data/ohio-demo-01.json";
 
   definePageMeta({
     featured: false,
@@ -15,6 +16,53 @@
     cam.setTarget(new Vector3(0, 0, 0));
     cam.position = new Vector3(0, 5, -6);
 
+    // Calculate the highest and lowest values
+    const min_value = Math.min(...sampleData.map((entry) => entry.value));
+    const max_value = Math.max(...sampleData.map((entry) => entry.value));
+    console.log("Min", min_value);
+    console.log("Max", max_value);
+
+    // Calculate the width of each segment
+    const segment_width = (max_value - min_value) / 10;
+
+    // Segment the sampleData and assign each entry to a segment
+    const segments = new Array(10).fill().map((_, i) => {
+      const segment_start = min_value + i * segment_width;
+      const segment_end = min_value + (i + 1) * segment_width;
+
+      return sampleData.filter((entry) => entry.value >= segment_start && entry.value < segment_end);
+    });
+
+    // Create a function to determine the segment for a given value
+    function getSegment(value) {
+      for (let i = 0; i < segments.length; i++) {
+        const segment_start = min_value + i * segment_width;
+        const segment_end = min_value + (i + 1) * segment_width;
+
+        if (i === segments.length - 1) {
+          // Include the maximum value in the last segment
+          if (value >= segment_start && value <= segment_end) {
+            return i + 1; // Return 1-indexed segment number
+          }
+        } else {
+          if (value >= segment_start && value < segment_end) {
+            return i + 1; // Return 1-indexed segment number
+          }
+        }
+      }
+      return null; // Return null if value doesn't fall within any segment
+    }
+
+    // Loop through the sample data and log the segment for each entry
+    // sampleData.forEach((entry) => {
+    //   const segment = getSegment(entry.value);
+    //   console.log(entry.countyName, entry.value, segment);
+    // });
+
+    // Get the value from Franklin and log the segment
+    const franklin = sampleData.find((entry) => entry.countyName === "Franklin");
+    console.log(franklin.value, getSegment(franklin.value));
+
     // This SVG contains a list of separate paths, each with its own id and path data
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
@@ -22,11 +70,22 @@
       const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
 
       // Pick a number between 1 and 10
-      const num = Math.floor(Math.random() * 10) + 1;
+      // const num = Math.floor(Math.random() * 10) + 1;
+      const id = data.id;
+
+      // get the object from the sample data where countyName matches the id
+      const entry = sampleData.find((entry) => entry.countyName === id);
+
+      const value = entry.value;
+
+      // get the value from the entry
+      // const num = entry.value;
+      const num = getSegment(value);
+      console.log(id, entry, num);
 
       // Use the number to pick a color from the array
       const color = colors[num - 1];
-      console.log("num", num, color);
+      console.log(data.id, num, color);
 
       // Use the number to pick a depth
       const depth = num / 5 + 1;
