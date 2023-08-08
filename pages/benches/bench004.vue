@@ -169,6 +169,52 @@
     ambientLight1.intensity = 0.6;
     const ambientLight2 = new HemisphericLight("light-02", new Vector3(-10, 10, -10), scene);
     ambientLight2.intensity = 0.6;
+
+    // log a line when the user presses esc
+    // Define animation parameters
+    const animationDuration = 15; // in frames
+    const easingFunction = new BABYLON.QuadraticEase();
+    easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+
+    // Create an animation to smoothly transition the camera's target position
+    const animation = new BABYLON.Animation(
+      "LookAtAnimation", // Animation name
+      "target", // Property to animate
+      60, // Frames per second
+      BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+      BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+    );
+
+    // Register the onKeyboardObservable event to listen for the "Escape" key press
+    scene.onKeyboardObservable.add((kbInfo) => {
+      switch (kbInfo.type) {
+        case BABYLON.KeyboardEventTypes.KEYDOWN:
+          if (kbInfo.event.key === "Escape") {
+            // Create keyframes for the animation to reset the camera's target to (0, 0, 0)
+            const keyFrames = [
+              {
+                frame: 0,
+                value: cam.target.clone() // Initial position of the camera's target
+              },
+              {
+                frame: animationDuration,
+                value: new BABYLON.Vector3(0, 0, 0) // Desired target position
+              }
+            ];
+
+            // Assign the keyframes to the animation
+            animation.setKeys(keyFrames);
+            animation.setEasingFunction(easingFunction);
+
+            // Attach the animation to the camera
+            cam.animations.push(animation);
+
+            // Start the animation
+            scene.beginAnimation(cam, 0, animationDuration, false);
+          }
+          break;
+      }
+    });
   };
 
   // Configure the scene and pass it the createLabContent function
