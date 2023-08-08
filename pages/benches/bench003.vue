@@ -81,6 +81,10 @@
       extrudedMesh.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, (evt) => {
           console.log("Clicked on", id, value);
+          // focus the camera on the clicked mesh
+          //   cam.setTarget(extrudedMesh);
+          //   extrudedMesh.position.y = +0.5;
+          // show widget
         })
       );
 
@@ -88,6 +92,15 @@
       extrudedMesh.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, (evt) => {
           console.log("Mouse over", id, value);
+          extrudedMesh.position.y = +0.1;
+        })
+      );
+
+      //  on mouse out
+      extrudedMesh.actionManager.registerAction(
+        new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, (evt) => {
+          console.log("Mouse out", id, value);
+          extrudedMesh.position.y = 0;
         })
       );
 
