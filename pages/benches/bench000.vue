@@ -15,6 +15,7 @@
     cam.setTarget(new Vector3(0, 0, 0));
     cam.position = new Vector3(0, 5, -6);
 
+    // This SVG contains a list of separate paths, each with its own id and path data
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
     function extrudePath(data) {
@@ -101,33 +102,24 @@
 
       // Get the 'd' attribute of the path, which contains the path data
       const pathData = pathElement.getAttribute("d");
-
-      console.log(id, pathData);
-      // Parse the path data to get an array of points
       const points = parsePathData(pathData);
-      console.log(points);
-
-      // Create an object containing the 'id' and the points array
       const pathObject = {
         id,
         points
-        // Add any other properties you may want for extrusion, e.g., height, color, etc.
       };
 
-      // Push the object to the pathsArray
       pathsArray.push(pathObject);
     });
 
     // Create a group to hold all the extruded paths
     const extrudedPathsGroup = new BABYLON.Mesh("extrudedPathsGroup", scene);
-    extrudedPathsGroup.showBoundingBox = true;
 
     // loop through the paths array and extrude each path
-
     pathsArray.forEach((path) => {
       extrudedPathsGroup.addChild(extrudePath(path));
     });
 
+    // Rotate the group so it's facing the camera - important! This must be done before applying the bounding offsets
     extrudedPathsGroup.rotation.y = -Math.PI / 2;
     // get the bounds of the extruded paths group
     const bounds = extrudedPathsGroup.getHierarchyBoundingVectors();
