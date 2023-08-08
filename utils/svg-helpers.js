@@ -151,3 +151,42 @@ export class ChoroplethSegmenter {
     return segment_index + 1; // Return 1-indexed segment number
   }
 }
+
+// These function suck, but I'm leaving them here for now
+export function generateMonochromaticScale(startHex, numShades) {
+  const startColor = parseInt(startHex.slice(1), 16); // Convert hex to integer
+  const startR = (startColor >> 16) & 255; // Extract red component
+  const startG = (startColor >> 8) & 255; // Extract green component
+  const startB = startColor & 255; // Extract blue component
+  const darkerShades = [];
+
+  for (let i = 0; i < numShades; i++) {
+    const scale = 1 - (i * 0.2) / (numShades - 1); // Adjusted scale factor for lighter shades
+    const newR = Math.floor(startR * scale);
+    const newG = Math.floor(startG * scale);
+    const newB = Math.floor(startB * scale);
+    const newHex = `#${((newR << 16) | (newG << 8) | newB).toString(16).padStart(6, "0")}`;
+    darkerShades.push(newHex);
+  }
+
+  return darkerShades;
+}
+
+function generateMonochromaticShades(startHex, numShades) {
+  const startColor = parseInt(startHex.slice(1), 16); // Convert hex to integer
+  const startR = (startColor >> 16) & 255; // Extract red component
+  const startG = (startColor >> 8) & 255; // Extract green component
+  const startB = startColor & 255; // Extract blue component
+  const shades = [];
+
+  for (let i = 0; i < numShades; i++) {
+    const scale = i / (numShades - 1); // Calculate scale factor
+    const newR = Math.floor(startR * (1 - scale));
+    const newG = Math.floor(startG * (1 - scale));
+    const newB = Math.floor(startB * (1 - scale));
+    const newHex = `#${((newR << 16) | (newG << 8) | newB).toString(16).padStart(6, "0")}`;
+    shades.push(newHex);
+  }
+
+  return shades;
+}

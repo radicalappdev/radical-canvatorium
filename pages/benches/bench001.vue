@@ -10,13 +10,16 @@
   });
 
   const createLabContent = async (scene) => {
-    scene.clearColor = new BABYLON.Color4.FromHexString(labColors.slate3 + "ff");
+    scene.clearColor = new BABYLON.Color4.FromHexString(labColors.slate6 + "ff");
 
     const cam = scene.getCameraByName("camera");
     cam.setTarget(new Vector3(0, 0, 0));
     cam.position = new Vector3(0, 5, -6);
 
-    const numberOfSegments = 5;
+    const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
+    // const colors = ["#e1f5ff", "#a4dcff", "#68b6eb", "#1168a7", "#2d90d1"];
+    const numberOfSegments = colors.length;
+    const heightFactor = 1;
 
     // Create an instance of the ChoroplethSegmenter class
     const choroplethSegmenter = new ChoroplethSegmenter(sampleData, numberOfSegments);
@@ -25,9 +28,6 @@
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
     function extrudePath(data) {
-      // const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
-      const colors = ["#e1f5ff", "#a4dcff", "#68b6eb", "#1168a7", "#2d90d1"];
-
       const id = data.id;
 
       // get the object from the sample data where countyName matches the id
@@ -45,7 +45,7 @@
       console.log(data.id, num, color);
 
       // Use the number to pick a depth
-      const depth = num / 3 + 1;
+      const depth = num / heightFactor + 1;
       const myPath = [new Vector3(0, 0, 0), new Vector3(0, 0.5, 0), new Vector3(0, depth, 0)];
       const options = {
         shape: data.points,
