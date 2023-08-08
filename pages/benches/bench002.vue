@@ -5,7 +5,7 @@
 
   definePageMeta({
     featured: false,
-    title: "Bench 001 – SVG to Babylon JS with sample data",
+    title: "Bench 002 – SVG to Babylon JS with sample data + lines",
     description: "Loading an SVG file and converting it to 3D objects in Babylon JS."
   });
 
@@ -17,8 +17,6 @@
     cam.position = new Vector3(0, 5, -6);
 
     const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
-    // const colors = ["#e1f5ff", "#a4dcff", "#68b6eb", "#1168a7", "#2d90d1"];
-    // const colors = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
     const numberOfSegments = colors.length;
     const heightFactor = 1;
 
@@ -37,7 +35,6 @@
       const value = entry.value;
 
       // get the value from the entry
-      // const num = entry.value;
       const num = choroplethSegmenter.getSegment(value);
       console.log(id, entry, num);
 
@@ -52,8 +49,8 @@
         shape: data.points,
         path: myPath,
         updatable: true,
-        cap: Mesh.CAP_ALL
-        // sideOrientation: BABYLON.Mesh.DOUBLESIDE
+        cap: Mesh.CAP_ALL,
+        sideOrientation: BABYLON.Mesh.DOUBLESIDE
       };
 
       let extrudedMesh = MeshBuilder.ExtrudeShape("ext", options, scene);
@@ -66,6 +63,17 @@
       extrudedMesh.material = material;
       extrudedMesh.convertToFlatShadedMesh();
       extrudedMesh.scalingDeterminant = 0.1;
+
+      // Generate a line mesh from the path points and place it on top of the extruded mesh
+      // map the data points from XZ to XY
+      data.points = data.points.map((point) => new Vector3(point.x, 0, point.y));
+      const lineMesh = MeshBuilder.CreateLines("lines", { points: data.points }, scene);
+      lineMesh.color = new Color3(0.1, 0.1, 0.1);
+      // Rotate the line mesh so it's parallel to the extruded mesh
+      lineMesh.parent = extrudedMesh;
+      lineMesh.rotation.z = Math.PI;
+      lineMesh.rotation.y = -Math.PI / 2;
+      lineMesh.position.y = depth + 0.01;
 
       return extrudedMesh;
     }
@@ -99,8 +107,8 @@
     ambientLight2.intensity = 0.6;
   };
 
-  // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
-  // Otherwise, you can pass in an options object with the following properties:
+  // Configure the scene and pass it the createLabContent function
+  const bjsCanvas = ref(null);
   const labSceneOptions = {
     useCamera: true,
     useLights: false,
@@ -108,13 +116,7 @@
     useOverlay: false,
     useWebXRPlayer: false
   };
-
-  const bjsCanvas = ref(null);
-  // With scene options
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
-
-  // Without scene options (see lab001 for an example)
-  // useCanvatoriumScene(bjsCanvas, createLabContent);
 </script>
 <template>
   <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
