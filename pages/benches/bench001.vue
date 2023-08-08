@@ -19,45 +19,31 @@
     // Calculate the highest and lowest values
     const min_value = Math.min(...sampleData.map((entry) => entry.value));
     const max_value = Math.max(...sampleData.map((entry) => entry.value));
-    console.log("Min", min_value);
-    console.log("Max", max_value);
 
     // Calculate the width of each segment
     const segment_width = (max_value - min_value) / 10;
 
-    // Segment the sampleData and assign each entry to a segment
-    const segments = new Array(10).fill().map((_, i) => {
-      const segment_start = min_value + i * segment_width;
-      const segment_end = min_value + (i + 1) * segment_width;
-
-      return sampleData.filter((entry) => entry.value >= segment_start && entry.value < segment_end);
-    });
-
     // Create a function to determine the segment for a given value
     function getSegment(value) {
-      for (let i = 0; i < segments.length; i++) {
-        const segment_start = min_value + i * segment_width;
-        const segment_end = min_value + (i + 1) * segment_width;
-
-        if (i === segments.length - 1) {
-          // Include the maximum value in the last segment
-          if (value >= segment_start && value <= segment_end) {
-            return i + 1; // Return 1-indexed segment number
-          }
-        } else {
-          if (value >= segment_start && value < segment_end) {
-            return i + 1; // Return 1-indexed segment number
-          }
-        }
+      if (value < min_value || value > max_value) {
+        return null; // Value is outside the data range
       }
-      return null; // Return null if value doesn't fall within any segment
+
+      // Calculate the segment index
+      const segment_index = Math.floor((value - min_value) / segment_width);
+
+      // Adjust for the last segment to include the maximum value
+      if (segment_index === 10) {
+        return 10;
+      }
+
+      return segment_index + 1; // Return 1-indexed segment number
     }
 
     // This SVG contains a list of separate paths, each with its own id and path data
     const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
 
     function extrudePath(data) {
-      // const colors = ["#f1f5f9", "#e2e8f0", "#cbd5e1", "#94a3b8", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
       const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
 
       // Pick a number between 1 and 10
