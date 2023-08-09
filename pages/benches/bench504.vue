@@ -63,10 +63,23 @@
 
     // TODO: add a parent object to group these
     const svgGroup = new THREE.Group();
+    svgGroup.scale.y *= -1;
     pathsArray.forEach((path) => {
       const { mesh, lines } = extrudePath(path);
       svgGroup.add(mesh, lines);
     });
+    const box = new THREE.Box3().setFromObject(svgGroup);
+    const size = box.getSize(new THREE.Vector3());
+    const yOffset = size.y / -2;
+    const xOffset = size.x / -2;
+
+    // Offset all of group's elements, to center them
+    svgGroup.children.forEach((item) => {
+      item.position.x = xOffset;
+      item.position.y = yOffset;
+    });
+    svgGroup.rotateX(-Math.PI / 2);
+    svgGroup.scale.multiplyScalar(0.2);
 
     // -----------------------------
     // Create the Three JS scene
