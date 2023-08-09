@@ -3,7 +3,7 @@
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
   definePageMeta({
     featured: false,
-    title: "Bench 500 – Hello Canvatorium + Three JS",
+    title: "Bench 503 – Notning to see here",
     description: "A basic Three JS scene with lights, orbit controls, and a cube."
   });
 

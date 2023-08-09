@@ -3,8 +3,8 @@
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
   definePageMeta({
     featured: false,
-    title: "Bench 500 – Hello Canvatorium + Three JS",
-    description: "A basic Three JS scene with lights, orbit controls, and a cube."
+    title: "Bench 501 – Three JS Lines",
+    description: "A basic Three JS scene with lights, orbit controls, and a lines."
   });
 
   // A reference to the container element
@@ -46,12 +46,17 @@
     const gridHelper = new THREE.GridHelper(5, 5);
     scene.add(gridHelper);
 
-    // Create a cube
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({ color: labColors.slate3 });
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 1, 0);
-    scene.add(cube);
+    //  Create a line
+    const material = new THREE.LineBasicMaterial({ color: labColors.red, linecap: "round", linejoin: "round" });
+
+    const points = [];
+    points.push(new THREE.Vector3(-1, 0, 0));
+    points.push(new THREE.Vector3(0, 1, 0));
+    points.push(new THREE.Vector3(1, 0, 0));
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const line = new THREE.Line(geometry, material);
+    line.position.set(0, 1, 0);
+    scene.add(line);
 
     // Create the renderer
     const renderer = new THREE.WebGLRenderer();
@@ -65,7 +70,11 @@
     const runScene = () => {
       requestAnimationFrame(runScene);
 
-      cube.rotation.y += 0.01;
+      // Create an animation to move the first and last points of the line
+      const time = Date.now() * 0.001;
+      line.geometry.attributes.position.setXYZ(0, Math.sin(time) * 1, Math.cos(time) * 1, 0);
+      line.geometry.attributes.position.setXYZ(2, Math.sin(time + 1) * 1, Math.cos(time + 1) * 1, 0);
+      line.geometry.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };

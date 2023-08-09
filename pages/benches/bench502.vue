@@ -1,17 +1,28 @@
 <script setup>
   import * as THREE from "three";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+  //   import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
+  // import renderSVG_three
+
   definePageMeta({
     featured: false,
-    title: "Bench 500 – Hello Canvatorium + Three JS",
-    description: "A basic Three JS scene with lights, orbit controls, and a cube."
+    title: "Bench 502 – Ohio SVG to Three JS",
+    description: "Loading an SVG file and converting it to 3D objects in Three JS."
   });
 
   // A reference to the container element
   const sceneContainer = ref(null);
 
   // Create the Three JS scene
-  const createThreeScene = (container) => {
+  const createThreeScene = async (container) => {
+    // Load the SVG data from the file: @/data/usa-oh.svg
+    const ohioSVG = await fetch("/assets/maps/usa-oh.svg").then((res) => res.text());
+    // console.log("SVG", ohioSVG);
+
+    // const loader = new SVGLoader();
+    // const svgData = loader.parse(ohioSVG);
+    // console.log("SVG Data", svgData);
+
     // Extract the width and height from the container
     const width = container.value.clientWidth;
     const height = container.value.clientHeight;
@@ -22,7 +33,7 @@
 
     // Create a camera
     const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
-    camera.position.set(0, 5, 10);
+    camera.position.set(0, 15, 10);
 
     // Add ambient light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -46,12 +57,9 @@
     const gridHelper = new THREE.GridHelper(5, 5);
     scene.add(gridHelper);
 
-    // Create a cube
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({ color: labColors.slate3 });
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 1, 0);
-    scene.add(cube);
+    const defaultExtrusion = 1;
+    const { object } = renderSVG_three(defaultExtrusion, ohioSVG);
+    scene.add(object);
 
     // Create the renderer
     const renderer = new THREE.WebGLRenderer();
@@ -64,8 +72,6 @@
     // Render the scene
     const runScene = () => {
       requestAnimationFrame(runScene);
-
-      cube.rotation.y += 0.01;
 
       renderer.render(scene, camera);
     };
