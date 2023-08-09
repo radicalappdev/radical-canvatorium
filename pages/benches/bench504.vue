@@ -43,7 +43,7 @@
 
       const points = path.points;
       console.log("points", points);
-      const fillMaterial = new THREE.MeshBasicMaterial({ color: labColors.slate6 });
+      const fillMaterial = new THREE.MeshBasicMaterial({ color: color });
       const stokeMaterial = new THREE.LineBasicMaterial({
         color: labColors.slate3
       });
