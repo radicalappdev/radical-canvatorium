@@ -58,7 +58,8 @@ export const extractSVG_three = (svg) => {
     const shapes = SVGLoader.createShapes(path);
 
     shapes.forEach((shape) => {
-      const points = shape.getPoints();
+      const points = shape;
+      // const points = shape.getPoints();
       const pathObject = {
         id,
         points

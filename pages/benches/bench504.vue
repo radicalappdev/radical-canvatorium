@@ -1,6 +1,5 @@
 <script setup>
   import * as THREE from "three";
-  import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
   import sampleData from "@/data/ohio-demo-01.json";
 
@@ -24,8 +23,8 @@
     const pathsArray = extractSVG_three(svg);
     console.log("Paths Array", pathsArray);
 
-    function extrudePath(element) {
-      const id = element.id;
+    function extrudePath(path) {
+      const id = path.id;
 
       // get the object from the sample data where countyName matches the id
       const entry = sampleData.find((entry) => entry.countyName === id);
@@ -38,19 +37,35 @@
 
       // Use the number to pick a color from the array
       const color = colors[num - 1];
-      console.log(element.id, num, color);
+      console.log(path.id, num, color);
 
       const depth = num / heightFactor + 1;
 
-      const points = element.points;
+      const points = path.points;
       console.log("points", points);
+      const fillMaterial = new THREE.MeshBasicMaterial({ color: labColors.slate6 });
+      const stokeMaterial = new THREE.LineBasicMaterial({
+        color: labColors.slate3
+      });
+
+      const meshGeometry = new THREE.ExtrudeGeometry(points, {
+        depth: depth,
+        bevelEnabled: false
+      });
+      const linesGeometry = new THREE.EdgesGeometry(meshGeometry);
+      const mesh = new THREE.Mesh(meshGeometry, fillMaterial);
+      const lines = new THREE.LineSegments(linesGeometry, stokeMaterial);
+
+      return { mesh, lines };
     }
 
     // loop through the paths array and extrude each path
 
     // TODO: add a parent object to group these
+    const svgGroup = new THREE.Group();
     pathsArray.forEach((path) => {
-      extrudePath(path);
+      const { mesh, lines } = extrudePath(path);
+      svgGroup.add(mesh, lines);
     });
 
     // -----------------------------
@@ -64,6 +79,7 @@
     // Create a scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(labColors.slate1);
+    scene.add(svgGroup);
 
     // Create a camera
     const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
@@ -83,7 +99,7 @@
     controls.target.set(0, 0, 0);
     controls.maxPolarAngle = Math.PI / 2;
     controls.minPolarAngle = 0;
-    controls.maxDistance = 20;
+    controls.maxDistance = 200;
     controls.minDistance = 5;
     controls.update();
 
