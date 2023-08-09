@@ -1,11 +1,14 @@
 <script setup>
   import * as THREE from "three";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+  import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
+  import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
+  import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
   import sampleData from "@/data/ohio-demo-01.json";
 
   definePageMeta({
     featured: false,
-    title: "Bench 505 – SVG to Three JS with interaction",
+    title: "Bench 505 – SVG to Three JS with better lines",
     description: "Loading an SVG file and converting it to 3D objects in Three JS."
   });
 
@@ -14,6 +17,8 @@
     const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
     const numberOfSegments = colors.length;
     const heightFactor = 1;
+
+    const lineMaterial2 = new LineMaterial({ color: "aqua", linewidth: 4 });
 
     // Create an instance of the ChoroplethSegmenter class
     const choroplethSegmenter = new ChoroplethSegmenter(sampleData, numberOfSegments);
@@ -45,17 +50,21 @@
       const fillMaterial = new THREE.MeshStandardMaterial({ color: color });
       fillMaterial.emissive = new THREE.Color(color);
       fillMaterial.emissiveIntensity = 0.4;
-      const stokeMaterial = new THREE.LineBasicMaterial({
-        color: labColors.slate6
-      });
 
+      // Create extrude mesh
       const meshGeometry = new THREE.ExtrudeGeometry(points, {
         depth: depth,
         bevelEnabled: false
       });
-      const linesGeometry = new THREE.EdgesGeometry(meshGeometry);
       const mesh = new THREE.Mesh(meshGeometry, fillMaterial);
-      const lines = new THREE.LineSegments(linesGeometry, stokeMaterial);
+
+      const edges = new THREE.EdgesGeometry(meshGeometry);
+
+      const lineGeometry = new LineSegmentsGeometry().fromEdgesGeometry(edges);
+      const lines = new LineSegments2(lineGeometry, lineMaterial2);
+
+      console.log("lines", lines);
+      //   console.log("lines2", lines2);
 
       return { mesh, lines };
     }
@@ -114,7 +123,7 @@
     controls.target.set(0, 0, 0);
     controls.maxPolarAngle = Math.PI / 2;
     controls.minPolarAngle = 0;
-    controls.maxDistance = 20;
+    controls.maxDistance = 90;
     controls.minDistance = 5;
     controls.update();
 
@@ -134,6 +143,7 @@
     const runScene = () => {
       requestAnimationFrame(runScene);
 
+      lineMaterial2.resolution.set(innerWidth, innerHeight);
       renderer.render(scene, camera);
     };
 
