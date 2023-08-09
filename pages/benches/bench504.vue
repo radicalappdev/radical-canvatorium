@@ -1,5 +1,6 @@
 <script setup>
   import * as THREE from "three";
+  import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
   import sampleData from "@/data/ohio-demo-01.json";
 
@@ -22,6 +23,39 @@
 
     const pathsArray = extractSVG_three(svg);
     console.log("Paths Array", pathsArray);
+
+    function extrudePath(element) {
+      const id = element.id;
+
+      // get the object from the sample data where countyName matches the id
+      const entry = sampleData.find((entry) => entry.countyName === id);
+
+      const value = entry.value;
+
+      // get the value from the entry
+      const num = choroplethSegmenter.getSegment(value);
+      console.log(id, entry, num);
+
+      // Use the number to pick a color from the array
+      const color = colors[num - 1];
+      console.log(element.id, num, color);
+
+      const depth = num / heightFactor + 1;
+
+      const points = element.points;
+      console.log("points", points);
+    }
+
+    // loop through the paths array and extrude each path
+
+    // TODO: add a parent object to group these
+    pathsArray.forEach((path) => {
+      extrudePath(path);
+    });
+
+    // -----------------------------
+    // Create the Three JS scene
+    // -----------------------------
 
     // Extract the width and height from the container
     const width = container.value.clientWidth;
@@ -56,10 +90,6 @@
     // Add a grid to the scene
     const gridHelper = new THREE.GridHelper(5, 5);
     scene.add(gridHelper);
-
-    const defaultExtrusion = 1;
-    const { object } = renderSVG_three(defaultExtrusion, svg);
-    scene.add(object);
 
     // Create the renderer
     const renderer = new THREE.WebGLRenderer();
