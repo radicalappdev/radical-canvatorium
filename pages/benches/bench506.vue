@@ -7,7 +7,7 @@
   definePageMeta({
     featured: false,
     title: "Bench 506 – LineSegments2",
-    description: "A basic Three JS scene with lights, orbit controls, and a cube."
+    description: "A basic Three JS scene with a cube and extruded shape. Lines added with LineSegments2."
   });
 
   // A reference to the container element

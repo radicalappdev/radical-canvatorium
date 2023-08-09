@@ -16,7 +16,7 @@
     cam.position = new Vector3(0, 5, -6);
 
     // This SVG contains a list of separate paths, each with its own id and path data
-    const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
+    const svg = await fetch("/assets/maps/usa-oh.svg").then((res) => res.text());
 
     function extrudePath(data) {
       const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];

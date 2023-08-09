@@ -24,7 +24,7 @@
     const choroplethSegmenter = new ChoroplethSegmenter(sampleData, numberOfSegments);
 
     // This SVG contains a list of separate paths, each with its own id and path data
-    const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
+    const svg = await fetch("/assets/maps/usa-oh.svg").then((res) => res.text());
 
     function extrudePath(data) {
       const id = data.id;

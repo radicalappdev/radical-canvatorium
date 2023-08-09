@@ -16,7 +16,7 @@
   // Create the Three JS scene
   const createThreeScene = async (container) => {
     // Load the SVG data from the file: @/data/usa-oh.svg
-    const ohioSVG = await fetch("/assets/usa-oh.svg").then((res) => res.text());
+    const ohioSVG = await fetch("/assets/maps/usa-oh.svg").then((res) => res.text());
     // console.log("SVG", ohioSVG);
 
     // const loader = new SVGLoader();

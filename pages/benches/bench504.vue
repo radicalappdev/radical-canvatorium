@@ -18,7 +18,7 @@
     // Create an instance of the ChoroplethSegmenter class
     const choroplethSegmenter = new ChoroplethSegmenter(sampleData, numberOfSegments);
 
-    const svg = await fetch("/assets/usa-oh.svg").then((res) => res.text());
+    const svg = await fetch("/assets/maps/usa-oh.svg").then((res) => res.text());
 
     const pathsArray = extractSVG_three(svg);
     console.log("Paths Array", pathsArray);
