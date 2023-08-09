@@ -33,19 +33,18 @@
 
       // get the value from the entry
       const num = choroplethSegmenter.getSegment(value);
-      console.log(id, entry, num);
+      // console.log(id, entry, num);
 
       // Use the number to pick a color from the array
       const color = colors[num - 1];
-      console.log(path.id, num, color);
+      // console.log(path.id, num, color);
 
       const depth = num / heightFactor + 1;
 
       const points = path.points;
-      console.log("points", points);
       const fillMaterial = new THREE.MeshStandardMaterial({ color: color });
       fillMaterial.emissive = new THREE.Color(color);
-      fillMaterial.emissiveIntensity = 0.5;
+      fillMaterial.emissiveIntensity = 0.4;
       const stokeMaterial = new THREE.LineBasicMaterial({
         color: labColors.slate6
       });
@@ -98,7 +97,7 @@
 
     // Create a camera
     const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
-    camera.position.set(0, 15, 10);
+    camera.position.set(2.5, 15, 18);
 
     // Add ambient light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -115,7 +114,7 @@
     controls.target.set(0, 0, 0);
     controls.maxPolarAngle = Math.PI / 2;
     controls.minPolarAngle = 0;
-    controls.maxDistance = 200;
+    controls.maxDistance = 20;
     controls.minDistance = 5;
     controls.update();
 
