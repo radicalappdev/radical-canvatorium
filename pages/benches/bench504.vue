@@ -96,7 +96,7 @@
     scene.add(svgGroup);
 
     // Create a camera
-    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
     camera.position.set(2.5, 15, 18);
 
     // Add ambient light
