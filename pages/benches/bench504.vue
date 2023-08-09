@@ -43,9 +43,11 @@
 
       const points = path.points;
       console.log("points", points);
-      const fillMaterial = new THREE.MeshBasicMaterial({ color: color });
+      const fillMaterial = new THREE.MeshStandardMaterial({ color: color });
+      fillMaterial.emissive = new THREE.Color(color);
+      fillMaterial.emissiveIntensity = 0.5;
       const stokeMaterial = new THREE.LineBasicMaterial({
-        color: labColors.slate3
+        color: labColors.slate6
       });
 
       const meshGeometry = new THREE.ExtrudeGeometry(points, {
@@ -91,7 +93,7 @@
 
     // Create a scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(labColors.slate1);
+    scene.background = new THREE.Color(labColors.slate6);
     scene.add(svgGroup);
 
     // Create a camera
@@ -105,6 +107,7 @@
     // Add directional light
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(10, 10, 10);
+    directionalLight.intensity = 0.5;
     scene.add(directionalLight);
 
     // Add orbit controls

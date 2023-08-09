@@ -57,8 +57,11 @@
 
       // Create a material for the mesh
       const material = new StandardMaterial("material", scene);
+
       material.diffuseColor = new Color3.FromHexString(color);
       material.specularColor = new Color3(0.1, 0.1, 0.1);
+      material.emissiveColor = new Color3(0.1, 0.1, 0.1);
+      // material.emissiveIntensity = 0.01;
 
       extrudedMesh.material = material;
       extrudedMesh.convertToFlatShadedMesh();
@@ -68,7 +71,7 @@
       // map the data points from XZ to XY
       data.points = data.points.map((point) => new Vector3(point.x, 0, point.y));
       const lineMesh = MeshBuilder.CreateLines("lines", { points: data.points }, scene);
-      lineMesh.color = new Color3(0.1, 0.1, 0.1);
+      lineMesh.color = new Color3.FromHexString(labColors.slate6);
       // Rotate the line mesh so it's parallel to the extruded mesh
       lineMesh.parent = extrudedMesh;
       lineMesh.rotation.z = Math.PI;
