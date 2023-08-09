@@ -63,6 +63,35 @@
     const edgesLines = new LineSegments2(lineGeometry, lineMaterial);
     cube.add(edgesLines);
 
+    // Create a simple shape with extrude geometry
+    const shape = new THREE.Shape();
+    shape.moveTo(0, 0);
+    shape.lineTo(0, 1);
+    shape.lineTo(0, 1.5);
+    shape.lineTo(1, 1);
+    shape.lineTo(1.5, 1);
+    shape.lineTo(1, 0);
+    shape.lineTo(0, 0);
+
+    const extrudeSettings = {
+      steps: 1,
+      depth: 1,
+      bevelEnabled: false
+    };
+
+    const extrudeGeometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    const extrudeMaterial = new THREE.MeshStandardMaterial({ color: labColors.slate3 });
+    const extrudeMesh = new THREE.Mesh(extrudeGeometry, extrudeMaterial);
+    extrudeMesh.position.set(1, 0, 0);
+    scene.add(extrudeMesh);
+
+    // Create a line using LineSegments2
+    const extrudeEdges = new THREE.EdgesGeometry(extrudeGeometry);
+    const extrudeLineGeometry = new LineSegmentsGeometry().fromEdgesGeometry(extrudeEdges);
+    const extrudeLineMaterial = new LineMaterial({ color: "aqua", linewidth: 4 });
+    const extrudeEdgesLines = new LineSegments2(extrudeLineGeometry, extrudeLineMaterial);
+    extrudeMesh.add(extrudeEdgesLines);
+
     // Create the renderer
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height); // TODO: This isn't working!
@@ -77,6 +106,7 @@
 
       //   cube.rotation.y += 0.01;
       lineMaterial.resolution.set(innerWidth, innerHeight);
+      extrudeLineMaterial.resolution.set(innerWidth, innerHeight);
       //   console.log(innerWidth, innerHeight);
 
       renderer.render(scene, camera);
