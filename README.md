@@ -144,7 +144,7 @@ export default defineNuxtConfig({
 ## Licenses
 
 - SVG Maps in `public/assets/maps/` are licensed under the [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
-- I made the following change to the ohio map (`usa-oh.svg`) to make it work with the project:
+- I made the following change to the [Ohio map](https://mapsvg.com/maps/usa-oh) (`usa-oh.svg`) to make it work with the project:
 
 Error: L command and subsequent coordinates.
 
