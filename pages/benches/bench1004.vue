@@ -1,15 +1,12 @@
 <script setup>
   import * as THREE from "three";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-  import { LineSegments2 } from "three/examples/jsm/lines/LineSegments2.js";
-  import { LineMaterial } from "three/examples/jsm/lines/LineMaterial.js";
-  import { LineSegmentsGeometry } from "three/examples/jsm/lines/LineSegmentsGeometry.js";
   import sampleData from "@/data/ohio-demo-01.json";
 
   definePageMeta({
     featured: false,
-    title: "Bench 505 – SVG to Three JS with LineSegments2",
-    description: "I haven't been able to get LineSegments2 to work with extruded geometry in this file, but it works in bench506"
+    title: "Bench 1004 – Ohio SVG to Three JS + Loading Data",
+    description: "Loading an SVG file and converting it to 3D objects in Three JS."
   });
 
   // Create the Three JS scene
@@ -17,8 +14,6 @@
     const colors = ["#ffffff", "#e1f5ff", "#c8ecff", "#a4dcff", "#8fd4ff", "#68b6eb", "#40a8e0", "#1168a7", "#1b75bc", "#2d90d1"];
     const numberOfSegments = colors.length;
     const heightFactor = 1;
-
-    const lineMaterial2 = new LineMaterial({ color: "aqua", linewidth: 4 });
 
     // Create an instance of the ChoroplethSegmenter class
     const choroplethSegmenter = new ChoroplethSegmenter(sampleData, numberOfSegments);
@@ -30,34 +25,44 @@
 
     function extrudePath(path) {
       const id = path.id;
+
+      // get the object from the sample data where countyName matches the id
       const entry = sampleData.find((entry) => entry.countyName === id);
+
       const value = entry.value;
+
+      // get the value from the entry
       const num = choroplethSegmenter.getSegment(value);
+      // console.log(id, entry, num);
+
+      // Use the number to pick a color from the array
       const color = colors[num - 1];
+      // console.log(path.id, num, color);
+
       const depth = num / heightFactor + 1;
 
       const points = path.points;
       const fillMaterial = new THREE.MeshStandardMaterial({ color: color });
       fillMaterial.emissive = new THREE.Color(color);
       fillMaterial.emissiveIntensity = 0.4;
+      const stokeMaterial = new THREE.LineBasicMaterial({
+        color: labColors.slate6
+      });
 
-      // Create extrude mesh
       const meshGeometry = new THREE.ExtrudeGeometry(points, {
         depth: depth,
         bevelEnabled: false
       });
+      const linesGeometry = new THREE.EdgesGeometry(meshGeometry);
       const mesh = new THREE.Mesh(meshGeometry, fillMaterial);
-
-      // Create lines - this isn't rendering
-      const edges = new THREE.EdgesGeometry(meshGeometry);
-      const lineGeometry = new LineSegmentsGeometry().fromEdgesGeometry(edges);
-      const lines = new LineSegments2(lineGeometry, lineMaterial2);
-
-      console.log("lines", lines); // I can see lines in the console, but they aren't rendering
+      const lines = new THREE.LineSegments(linesGeometry, stokeMaterial);
 
       return { mesh, lines };
     }
 
+    // loop through the paths array and extrude each path
+
+    // TODO: add a parent object to group these
     const svgGroup = new THREE.Group();
     svgGroup.scale.y *= -1;
     pathsArray.forEach((path) => {
@@ -109,7 +114,7 @@
     controls.target.set(0, 0, 0);
     controls.maxPolarAngle = Math.PI / 2;
     controls.minPolarAngle = 0;
-    controls.maxDistance = 90;
+    controls.maxDistance = 20;
     controls.minDistance = 5;
     controls.update();
 
@@ -128,8 +133,6 @@
     // Render the scene
     const runScene = () => {
       requestAnimationFrame(runScene);
-
-      lineMaterial2.resolution.set(innerWidth, innerHeight);
 
       renderer.render(scene, camera);
     };

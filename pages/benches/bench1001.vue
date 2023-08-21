@@ -3,7 +3,7 @@
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
   definePageMeta({
     featured: false,
-    title: "Bench 501 – Three JS Lines",
+    title: "Bench 1001 – Three JS Lines",
     description: "A basic Three JS scene with lights, orbit controls, and a lines."
   });
 
