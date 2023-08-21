@@ -6,7 +6,7 @@
 
   definePageMeta({
     featured: false,
-    title: "Bench 502 – Ohio SVG to Three JS",
+    title: "Bench 1002 – Ohio SVG to Three JS",
     description: "Loading an SVG file and converting it to 3D objects in Three JS."
   });
 
