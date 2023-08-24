@@ -30,7 +30,7 @@
     // add the camera to a group
     const cameraGroup = new THREE.Group();
     cameraGroup.add(camera);
-    cameraGroup.position.set(0, 0, 2); // position the camera group will impact the XR camera
+    cameraGroup.position.set(0, 0, 0); // position the camera group will impact the XR camera
     scene.add(cameraGroup);
 
     // Add orbit controls
@@ -51,7 +51,7 @@
     directionalLight.position.set(10, 10, 10);
     scene.add(directionalLight);
 
-    const room = new THREE.LineSegments(new BoxLineGeometry(20, 10, 20, 20, 10, 20).translate(0, 5, 0), new THREE.LineBasicMaterial({ color: 0xbcbcbc }));
+    const room = new THREE.LineSegments(new BoxLineGeometry(20, 10, 20, 20, 10, 20).translate(0, 5, 0), new THREE.LineBasicMaterial({ color: labColors.slate8 }));
     scene.add(room);
 
     // Create a cube
@@ -63,17 +63,27 @@
 
     // Create the renderer
     const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(width, height); // TODO: This isn't working!
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
     // Add the XR support and use setAnimationLoop to render the scene instead of requestAnimationFrame
     renderer.xr.enabled = true;
     renderer.setAnimationLoop(function () {
       renderer.render(scene, camera);
     });
 
+    // on xr session start
+    renderer.xr.addEventListener("sessionstart", () => {
+      cameraGroup.position.set(2, 0, 2);
+    });
+
+    renderer.xr.addEventListener("sessionend", () => {
+      // move the camera group back to the origin so orbit controls work as expected
+      cameraGroup.position.set(0, 0, 0);
+    });
+
     // Add the automatically created <canvas> element to the page
     container.value.append(renderer.domElement);
-    container.value.append(VRButton.createButton(renderer));
+    document.body.appendChild(VRButton.createButton(renderer));
   };
 
   // Create the scene when the component is mounted
