@@ -9,6 +9,9 @@ export default defineNuxtConfig({
     // ...
     "@/assets/fonts.css"
   ],
+  routeRules: {
+    "/labs/three/**": { ssr: false }
+  },
   server: {
     https: {
       key: options.key,
