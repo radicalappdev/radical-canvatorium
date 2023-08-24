@@ -84,6 +84,16 @@
     // Add the automatically created <canvas> element to the page
     container.value.append(renderer.domElement);
     document.body.appendChild(VRButton.createButton(renderer));
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+    }
+
+    window.addEventListener("resize", onWindowResize);
   };
 
   // Create the scene when the component is mounted
