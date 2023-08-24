@@ -1,11 +1,12 @@
 <script setup>
   import * as THREE from "three";
-  // import VRButton from "three/examples/jsm/webxr/VRButton.js";
+  import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+  import { Vector3 } from "babylonjs";
   definePageMeta({
     featured: false,
-    title: "Bench 1000 – Hello Canvatorium + Three JS",
+    title: "Lab 1000 – Hello Canvatorium + Three JS",
     description: "A basic Three JS scene with lights, orbit controls, and a cube."
   });
 
@@ -25,6 +26,12 @@
     // Create a camera
     const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
     camera.position.set(0, 5, 10);
+
+    // add the camera to a group
+    const cameraGroup = new THREE.Group();
+    cameraGroup.add(camera);
+    cameraGroup.position.set(0, 0, 2); // position the camera group will impact the XR camera
+    scene.add(cameraGroup);
 
     // Add ambient light
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -59,22 +66,17 @@
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height); // TODO: This isn't working!
     renderer.setPixelRatio(window.devicePixelRatio);
-
+    // Add the XR support
+    renderer.xr.enabled = true;
+    renderer.setAnimationLoop(function () {
+      renderer.render(scene, camera);
+    });
     document.body.appendChild(VRButton.createButton(renderer));
+
+    // position the XR player / camera 2 meters away from the origin
 
     // Add the automatically created <canvas> element to the page
     container.value.append(renderer.domElement);
-
-    // Render the scene
-    const runScene = () => {
-      requestAnimationFrame(runScene);
-
-      cube.rotation.y += 0.01;
-
-      renderer.render(scene, camera);
-    };
-
-    runScene();
   };
 
   // Create the scene when the component is mounted
