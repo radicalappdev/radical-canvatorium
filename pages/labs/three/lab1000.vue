@@ -36,8 +36,22 @@
     renderer.setPixelRatio(window.devicePixelRatio);
     // Add the XR support and use setAnimationLoop to render the scene instead of requestAnimationFrame
     renderer.xr.enabled = true;
+    console.log(renderer.xr.getFoveation());
+    renderer.xr.setFoveation(0);
+    console.log(renderer.xr.getFoveation());
     renderer.setAnimationLoop(function () {
       renderer.render(scene, camera);
+    });
+
+    // on session enter
+    renderer.xr.addEventListener("sessionstart", () => {
+      console.log("sessionstart");
+      renderer.xr.setFoveation(0); // this was being set to 1 for some reason
+    });
+
+    // on session end
+    renderer.xr.addEventListener("sessionend", () => {
+      console.log("sessionend");
     });
 
     // Add the automatically created <canvas> element to the page
