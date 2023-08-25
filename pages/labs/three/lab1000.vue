@@ -53,7 +53,7 @@
     const material = new THREE.MeshStandardMaterial({ color: labColors.purple });
     const cube = new THREE.Mesh(geometry, material);
     cube.position.set(0, 0.005, 0);
-    cube.scale.set(1.42, 0.01, 1.42);
+    cube.scale.set(0.5, 0.01, 0.5);
     cube.rotateY(Math.PI / 4);
     scene.add(cube);
 
@@ -85,11 +85,6 @@
     // Add the automatically created <canvas> element to the page
     container.value.append(renderer.domElement);
     document.body.appendChild(VRButton.createButton(renderer));
-
-    console.log(scene);
-    // query the scene for the camera and the camera group
-    const mainCamera = scene.getObjectByName("mainCamera");
-    console.log(mainCamera);
 
     const resize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;

@@ -102,8 +102,9 @@ const labCreateCamera = (canvas: HTMLCanvasElement, scene: Scene) => {
   const camera = new ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 3, new Vector3(0, 0, 0), scene);
   camera.wheelDeltaPercentage = 0.01;
   camera.upperBetaLimit = Math.PI / 1.5;
+  // camera.lowerBetaLimit = Math.PI;
   camera.lowerRadiusLimit = 2;
-  camera.upperRadiusLimit = 128;
+  camera.upperRadiusLimit = 10;
   camera.setPosition(new Vector3(0, 1.5, -6));
   camera.setTarget(new Vector3(0, 1, 0));
   camera.attachControl(canvas, true);
