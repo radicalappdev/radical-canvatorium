@@ -19,10 +19,12 @@
     scene.background = new THREE.Color(labColors.slate1);
 
     const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.name = "mainCamera";
     camera.position.set(0, 1.4, 4);
 
     // add the camera to a group
     const cameraGroup = new THREE.Group();
+    cameraGroup.name = "cameraGroup";
     cameraGroup.add(camera);
     cameraGroup.position.set(0, 0, 0); // position the camera group will impact the XR camera
     scene.add(cameraGroup);
@@ -40,7 +42,7 @@
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(10, 10, 10);
+    directionalLight.position.set(5, 10, -10);
     scene.add(directionalLight);
 
     const room = new THREE.LineSegments(new BoxLineGeometry(20, 10, 20, 20, 10, 20).translate(0, 5, 0), new THREE.LineBasicMaterial({ color: labColors.slate8 }));
@@ -48,10 +50,11 @@
 
     // Create a cube
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({ color: labColors.slate3 });
+    const material = new THREE.MeshStandardMaterial({ color: labColors.purple });
     const cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 0.25, 0);
-    cube.scale.set(0.5, 0.5, 0.5);
+    cube.position.set(0, 0.005, 0);
+    cube.scale.set(1.42, 0.01, 1.42);
+    cube.rotateY(Math.PI / 4);
     scene.add(cube);
 
     // Create the renderer
@@ -82,6 +85,11 @@
     // Add the automatically created <canvas> element to the page
     container.value.append(renderer.domElement);
     document.body.appendChild(VRButton.createButton(renderer));
+
+    console.log(scene);
+    // query the scene for the camera and the camera group
+    const mainCamera = scene.getObjectByName("mainCamera");
+    console.log(mainCamera);
 
     const resize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
