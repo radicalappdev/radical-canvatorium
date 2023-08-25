@@ -24,7 +24,7 @@
     scene.background = new THREE.Color(labColors.slate1);
 
     // Create a camera
-    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+    const camera = new THREE.PerspectiveCamera();
     camera.position.set(0, 1.4, 4);
 
     // add the camera to a group
@@ -62,10 +62,8 @@
     scene.add(cube);
 
     // Create the renderer
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
     // Add the XR support and use setAnimationLoop to render the scene instead of requestAnimationFrame
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.xr.enabled = true;
     renderer.setAnimationLoop(function () {
       renderer.render(scene, camera);
@@ -86,13 +84,13 @@
     document.body.appendChild(VRButton.createButton(renderer));
 
     function onWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
+      camera.aspect = innerWidth / innerHeight;
 
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(innerWidth, innerHeight);
       renderer.setPixelRatio(window.devicePixelRatio);
+      camera.updateProjectionMatrix();
     }
-
+    onWindowResize();
     window.addEventListener("resize", onWindowResize);
   };
 
