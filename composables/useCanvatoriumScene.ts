@@ -157,7 +157,7 @@ const labCreateLights = (scene: Scene) => {
   const ambientLight2 = new HemisphericLight("light-02", new Vector3(-5, 5, -5), scene);
   ambientLight2.intensity = 0.8;
   // set the scene color to
-  scene.clearColor = Color4.FromHexString("#000000");
+  scene.clearColor = Color4.FromHexString(labColors.slate1);
 };
 
 const labCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) => {
