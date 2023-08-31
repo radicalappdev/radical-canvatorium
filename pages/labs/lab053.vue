@@ -1,5 +1,5 @@
 <script setup>
-  import { TransformNode, Vector3, Animation } from "babylonjs";
+  import { TransformNode, Vector3, Animation, Color4 } from "babylonjs";
   import { TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
@@ -19,9 +19,11 @@
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
     cam.position = new Vector3(0, 1.4, -2);
+    scene.clearColor = Color4.FromHexString("#000000");
 
     // Create a window group object
     const windowGroupMesh = canLabWindowGroup(scene);
+    windowGroupMesh.scaling = new Vector3(0.1, 0.1, 0.1);
 
     // Create the main window and hide it
     const { contentMesh } = exampleContent(activeRecord, scene);
@@ -153,6 +155,8 @@
 
     const cardTextureName = "content-texture-" + record.id;
     cellTexture.name = cardTextureName;
+
+    cellTexture.getControlByName("rect").background = "#ffffff";
 
     const imageContainer = new Rectangle("masker");
     imageContainer.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
