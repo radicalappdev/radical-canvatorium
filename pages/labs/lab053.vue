@@ -106,6 +106,15 @@
     anchor.parent = windowGroupMesh;
     anchor.position = new Vector3(0, 2.7, 0);
 
+    // Add  a custom XR player for AR/MR
+    const xr = await scene.createDefaultXRExperienceAsync({
+      uiOptions: {
+        sessionMode: "immersive-ar"
+      }
+    });
+
+    console.log("xr player created by lab 053", xr);
+
     // END Collection View
     // ---------------------------
 
@@ -208,7 +217,13 @@
   };
 
   const bjsCanvas = ref(null);
-  useCanvatoriumScene(bjsCanvas, createLabContent);
+
+  const labSceneOptions = {
+    useRoom: false,
+    useWebXRPlayer: false
+  };
+
+  useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 </script>
 
 <template>
