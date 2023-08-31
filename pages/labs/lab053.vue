@@ -23,7 +23,7 @@
 
     // Create a window group object
     const windowGroupMesh = canLabWindowGroup(scene);
-    windowGroupMesh.scaling = new Vector3(0.1, 0.1, 0.1);
+    windowGroupMesh.scaling = new Vector3(0.06, 0.06, 0.06);
 
     // Create the main window and hide it
     const { contentMesh } = exampleContent(activeRecord, scene);
@@ -116,6 +116,42 @@
     });
 
     console.log("xr player created by lab 053", xr);
+
+    xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
+      console.log("Entering Immersive Mode with camera", xrCamera.position, windowGroupMesh);
+      // Reposition the window group to be in front of the camera - hard coded for now
+      windowGroupMesh.position = new Vector3(0, 1.1, 0.5);
+    });
+
+    //controller input
+    xr.input.onControllerAddedObservable.add((controller) => {
+      controller.onMotionControllerInitObservable.add((motionController) => {
+        if (motionController.handness === "left") {
+          const xr_ids = motionController.getComponentIds();
+          let yButtonComponent = motionController.getComponent(xr_ids[4]); //y-button
+          yButtonComponent?.onButtonStateChangedObservable.add(() => {
+            if (yButtonComponent.pressed) {
+              console.log("Y Button Pressed");
+              // toggleMenu(controller);
+              windowGroupMesh.isVisible = !windowGroupMesh.isVisible;
+              // toggle visibility of any child meshes
+              windowGroupMesh.getChildMeshes().forEach((mesh) => {
+                mesh.isVisible = !mesh.isVisible;
+              });
+            }
+          });
+        }
+        if (motionController.handness === "right") {
+          const xr_ids = motionController.getComponentIds();
+          let bButtonComponent = motionController.getComponent(xr_ids[4]); //b-button
+          bButtonComponent?.onButtonStateChangedObservable.add(() => {
+            if (bButtonComponent.pressed) {
+              console.log("B Button Pressed");
+            }
+          });
+        }
+      });
+    });
 
     // END Collection View
     // ---------------------------
