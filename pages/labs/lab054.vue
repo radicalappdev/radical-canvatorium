@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector2, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial } from "babylonjs";
+  import { Vector2, Vector3, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial } from "babylonjs";
   import earcut from "earcut";
   window.earcut = earcut;
 
@@ -9,7 +9,24 @@
     description: "Based on this Playground: https://playground.babylonjs.com/#98TM63"
   });
 
+  const title = "Lab 054 - MR Plane Detection";
+  const description = `When entering AR mode, the app will detect surfaces in the environment and render them as planes.
+
+On Meta Quest devices this works based on your "Room Setup" data.
+
+Press Y on the controller to toggle the planes.`;
+
   const createLabContent = async (scene) => {
+    // Create a window group object
+    const windowGroupMesh = canLabWindowGroup(scene);
+    windowGroupMesh.scaling = new Vector3(0.6, 0.6, 0.6);
+
+    // Create the main window and hide it
+    const { contentMesh } = exampleLabCard(title, description, scene);
+    contentMesh.parent = windowGroupMesh;
+    contentMesh.position = new Vector3(0, 1.8, 0);
+    contentMesh.isPickable = false;
+
     // Add a custom XR player for AR/MR
     const xr = await scene.createDefaultXRExperienceAsync({
       uiOptions: {
@@ -106,6 +123,13 @@
           });
         }
       });
+    });
+
+    xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
+      console.log("Entering Immersive Mode with camera", xrCamera.position, windowGroupMesh);
+      // Reposition the window group to be in front of the camera - hard coded for now
+      windowGroupMesh.position = new Vector3(0, 1.1, 0.5);
+      windowGroupMesh.scaling = new Vector3(0.06, 0.06, 0.06);
     });
   };
 
