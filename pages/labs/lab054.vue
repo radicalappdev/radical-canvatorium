@@ -1,6 +1,6 @@
 <script setup>
-  import { TransformNode, Vector3, Animation, Color4 } from "babylonjs";
-  import { TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel } from "babylonjs-gui";
+  import { Vector3, Vector2, Color4, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial, SixDofDragBehavior, SurfaceMagnetismBehavior } from "babylonjs";
+  import * as earcut from "earcut";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -37,7 +37,77 @@
     const xr = await scene.createDefaultXRExperienceAsync({
       uiOptions: {
         sessionMode: "immersive-ar"
+      },
+      optionalFeatures: true
+    });
+
+    // WebXR Plane Detection: https://playground.babylonjs.com/#98TM63
+
+    const fm = xr.baseExperience.featuresManager;
+
+    const xrPlanes = fm.enableFeature(BABYLON.WebXRPlaneDetector.Name, "latest");
+
+    const planes = [];
+
+    xrPlanes.onPlaneAddedObservable.add((plane) => {
+      console.log("plane added", plane);
+      plane.polygonDefinition.push(plane.polygonDefinition[0]);
+      var polygon_triangulation = new PolygonMeshBuilder(
+        "name",
+        plane.polygonDefinition.map((p) => new Vector2(p.x, p.z)),
+        scene,
+        earcut
+      );
+      var polygon = polygon_triangulation.build(false, 0.01);
+      plane.mesh = polygon;
+      planes[plane.id] = plane.mesh;
+      const mat = new StandardMaterial("mat", scene);
+      mat.alpha = 0.8;
+      // pick a random color
+      mat.diffuseColor = Color3.Random();
+      polygon.createNormals();
+      plane.mesh.material = mat;
+
+      plane.mesh.rotationQuaternion = new Quaternion();
+      plane.transformationMatrix.decompose(plane.mesh.scaling, plane.mesh.rotationQuaternion, plane.mesh.position);
+    });
+
+    xrPlanes.onPlaneUpdatedObservable.add((plane) => {
+      let mat;
+      if (plane.mesh) {
+        // keep the material, dispose the old polygon
+        mat = plane.mesh.material;
+        plane.mesh.dispose(false, false);
       }
+      const some = plane.polygonDefinition.some((p) => !p);
+      if (some) {
+        return;
+      }
+      plane.polygonDefinition.push(plane.polygonDefinition[0]);
+      var polygon_triangulation = new PolygonMeshBuilder(
+        "name",
+        plane.polygonDefinition.map((p) => new Vector2(p.x, p.z)),
+        scene,
+        earcut
+      );
+      var polygon = polygon_triangulation.build(false, 0.01);
+      polygon.createNormals();
+      plane.mesh = polygon;
+      planes[plane.id] = plane.mesh;
+      plane.mesh.material = mat;
+      plane.mesh.rotationQuaternion = new Quaternion();
+      plane.transformationMatrix.decompose(plane.mesh.scaling, plane.mesh.rotationQuaternion, plane.mesh.position);
+    });
+
+    xrPlanes.onPlaneRemovedObservable.add((plane) => {
+      if (plane && planes[plane.id]) {
+        planes[plane.id].dispose();
+      }
+    });
+
+    xr.baseExperience.sessionManager.onXRSessionInit.add(() => {
+      planes.forEach((plane) => plane.dispose());
+      while (planes.pop()) {}
     });
 
     console.log("xr player created by lab 053", xr);
