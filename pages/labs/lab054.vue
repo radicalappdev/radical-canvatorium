@@ -23,6 +23,10 @@
     const xrPlanes = fm.enableFeature(BABYLON.WebXRPlaneDetector.Name, "latest");
     const planes = [];
 
+    const detectedMat = new StandardMaterial("mat", scene);
+    detectedMat.diffuseColor = Color3.FromHexString(labColors.slate1);
+    detectedMat.alpha = 0.5;
+
     xrPlanes.onPlaneAddedObservable.add((plane) => {
       plane.polygonDefinition.push(plane.polygonDefinition[0]);
       var polygon_triangulation = new PolygonMeshBuilder(
@@ -35,21 +39,16 @@
       plane.mesh = polygon;
       planes[plane.id] = plane.mesh;
 
-      const mat = new StandardMaterial("mat", scene);
-      mat.diffuseColor = Color3.FromHexString(labColors.slate1);
       polygon.createNormals();
 
-      plane.mesh.material = mat;
-      plane.mesh.visibility = 0.2;
+      plane.mesh.material = detectedMat;
+      // plane.mesh.visibility = 0.2;
       plane.mesh.rotationQuaternion = new Quaternion();
       plane.transformationMatrix.decompose(plane.mesh.scaling, plane.mesh.rotationQuaternion, plane.mesh.position);
     });
 
     xrPlanes.onPlaneUpdatedObservable.add((plane) => {
-      let mat;
       if (plane.mesh) {
-        // keep the material, dispose the old polygon
-        mat = plane.mesh.material;
         plane.mesh.dispose(false, false);
       }
       const some = plane.polygonDefinition.some((p) => !p);
@@ -69,8 +68,8 @@
 
       planes[plane.id] = plane.mesh;
 
-      plane.mesh.material = mat;
-      plane.mesh.visibility = 0.2;
+      plane.mesh.material = detectedMat;
+      // plane.mesh.visibility = 0.2;
       plane.mesh.rotationQuaternion = new Quaternion();
       plane.transformationMatrix.decompose(plane.mesh.scaling, plane.mesh.rotationQuaternion, plane.mesh.position);
     });
@@ -87,6 +86,26 @@
     });
 
     console.log("xr player created by lab 053", xr);
+
+    //controller input
+    xr.input.onControllerAddedObservable.add((controller) => {
+      controller.onMotionControllerInitObservable.add((motionController) => {
+        if (motionController.handness === "left") {
+          const xr_ids = motionController.getComponentIds();
+          let yButtonComponent = motionController.getComponent(xr_ids[4]); //y-button
+          yButtonComponent?.onButtonStateChangedObservable.add(() => {
+            if (yButtonComponent.pressed) {
+              console.log("Y Button Pressed");
+              if (detectedMat.alpha === 0.5) {
+                detectedMat.alpha = 0;
+              } else {
+                detectedMat.alpha = 0.5;
+              }
+            }
+          });
+        }
+      });
+    });
   };
 
   const bjsCanvas = ref(null);
