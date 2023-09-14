@@ -365,3 +365,37 @@ export const exampleContent = (activeRecord, scene) => {
 
   return { contentMesh, contentTexture };
 };
+
+export const exampleLabCard = (title, description, scene) => {
+  const { plane: contentMesh, advancedTexture: contentTexture } = canLabCardSimple(6, 3.2, scene);
+  contentMesh.name = "content-mesh";
+  // Just a hack to give the texture a unique name
+  const cardTextureName = "content-texture-" + Date.now();
+  contentTexture.name = cardTextureName;
+
+  const cardText = new TextBlock("name");
+  cardText.text = title;
+  cardText.color = labColors.slate8;
+  cardText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  cardText.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  cardText.top = 30;
+  cardText.left = 30;
+  cardText.fontSize = 36;
+
+  contentTexture.addControl(cardText);
+
+  const shortDescription = new TextBlock("short-description-text");
+  shortDescription.text = description;
+  shortDescription.textWrapping = true;
+  shortDescription.color = labColors.slate8;
+  shortDescription.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  shortDescription.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+  shortDescription.fontSize = 18;
+  shortDescription.paddingLeft = "30px";
+  shortDescription.paddingRight = "30px";
+  shortDescription.paddingTop = "80px";
+  shortDescription.paddingBottom = "30px";
+  contentTexture.addControl(shortDescription);
+
+  return { contentMesh, contentTexture };
+};
