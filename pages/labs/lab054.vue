@@ -1,6 +1,7 @@
 <script setup>
-  import { Vector3, Vector2, MeshBuilder, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial, SixDofDragBehavior, SurfaceMagnetismBehavior } from "babylonjs";
+  import { Vector2, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial } from "babylonjs";
   import * as earcut from "earcut";
+  window.earcut = earcut;
 
   definePageMeta({
     featured: false,
