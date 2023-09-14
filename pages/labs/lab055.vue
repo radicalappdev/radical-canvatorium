@@ -39,6 +39,7 @@
     subject.scaling = new Vector3(0.4, 0.4, 0.4);
 
     const surfaceMagnetismBehavior = new SurfaceMagnetismBehavior();
+    surfaceMagnetismBehavior.keepOrientationVertical = false;
     subject.addBehavior(surfaceMagnetismBehavior);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
@@ -60,7 +61,7 @@
     // Create utility layer the positionGizmo will be rendered on
     const utilLayer = new UtilityLayerRenderer(scene);
 
-    // Attach a Z axis drag gizmo to the box, just to show the oritentation
+    // Attach a Z axis drag gizmo to the box, just to show the orientation
     var gizmo = new AxisDragGizmo(new Vector3(0, 0, -1), Color3.FromHexString("#8854d0"), utilLayer);
     gizmo.scaleRatio = 1;
     gizmo.updateGizmoRotationToMatchAttachedMesh = true;
