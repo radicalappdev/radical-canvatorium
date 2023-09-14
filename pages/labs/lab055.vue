@@ -1,5 +1,17 @@
 <script setup>
-  import { Vector3, Vector2, MeshBuilder, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial, SixDofDragBehavior, SurfaceMagnetismBehavior } from "babylonjs";
+  import {
+    Vector3,
+    Vector2,
+    MeshBuilder,
+    Quaternion,
+    Color3,
+    PolygonMeshBuilder,
+    StandardMaterial,
+    SixDofDragBehavior,
+    SurfaceMagnetismBehavior,
+    AxisDragGizmo,
+    UtilityLayerRenderer
+  } from "babylonjs";
   import * as earcut from "earcut";
 
   definePageMeta({
@@ -44,6 +56,17 @@
     });
 
     subject.addBehavior(sixDofDragBehavior);
+
+    // Create utility layer the positionGizmo will be rendered on
+    const utilLayer = new UtilityLayerRenderer(scene);
+
+    // Attach a Z axis drag gizmo to the box, just to show the oritentation
+    var gizmo = new AxisDragGizmo(new Vector3(0, 0, -1), Color3.FromHexString("#8854d0"), utilLayer);
+    gizmo.scaleRatio = 1;
+    gizmo.updateGizmoRotationToMatchAttachedMesh = true;
+    gizmo.updateGizmoPositionToMatchAttachedMesh = true;
+    gizmo.attachedMesh = subject;
+    gizmo.snapDistance = 0.1;
 
     // Add  a custom XR player for AR/MR
     const xr = await scene.createDefaultXRExperienceAsync({
