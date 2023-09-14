@@ -9,13 +9,17 @@
   });
 
   const createLabContent = async (scene) => {
+    const detectedMat = new StandardMaterial("mat", scene);
+    detectedMat.diffuseColor = Color3.FromHexString(labColors.slate1);
+    detectedMat.alpha = 0;
+
     // Create the subject of the lab - the object that will be dragged around
     const subjectMat = new StandardMaterial("grab-mat4", scene);
     subjectMat.diffuseColor = new Color3.FromHexString(labColors.purple);
     subjectMat.specularColor = new Color3(0.2, 0.2, 0.2);
     const subject = MeshBuilder.CreateBox("subject", {
       height: 0.6,
-      width: 0.6,
+      width: 1,
       depth: 0.05
     });
     subject.material = subjectMat;
@@ -23,7 +27,6 @@
     subject.scaling = new Vector3(0.4, 0.4, 0.4);
 
     const surfaceMagnetismBehavior = new SurfaceMagnetismBehavior();
-    // surfaceMagnetismBehavior.meshes = [card, card2, card3];
     subject.addBehavior(surfaceMagnetismBehavior);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
@@ -33,9 +36,11 @@
 
     sixDofDragBehavior.onDragStartObservable.add(() => {
       surfaceMagnetismBehavior.enabled = true;
+      detectedMat.alpha = 0.5;
     });
     sixDofDragBehavior.onDragEndObservable.add(() => {
       surfaceMagnetismBehavior.enabled = false;
+      detectedMat.alpha = 0;
     });
 
     subject.addBehavior(sixDofDragBehavior);
@@ -51,13 +56,10 @@
     // WebXR Plane Detection: https://playground.babylonjs.com/#98TM63
 
     const fm = xr.baseExperience.featuresManager;
-
     const xrPlanes = fm.enableFeature(BABYLON.WebXRPlaneDetector.Name, "latest");
-
     const planes = [];
 
     xrPlanes.onPlaneAddedObservable.add((plane) => {
-      console.log("plane added", plane);
       plane.polygonDefinition.push(plane.polygonDefinition[0]);
       var polygon_triangulation = new PolygonMeshBuilder(
         "name",
@@ -68,23 +70,18 @@
       var polygon = polygon_triangulation.build(false, 0.01);
       plane.mesh = polygon;
       planes[plane.id] = plane.mesh;
-      const mat = new StandardMaterial("mat", scene);
-      mat.alpha = 0.8;
-      // pick a random color
-      mat.diffuseColor = Color3.Random();
-      polygon.createNormals();
-      plane.mesh.material = mat;
 
+      polygon.createNormals();
+
+      plane.mesh.material = detectedMat;
+      // plane.mesh.visibility = 0.2;
       plane.mesh.rotationQuaternion = new Quaternion();
       plane.transformationMatrix.decompose(plane.mesh.scaling, plane.mesh.rotationQuaternion, plane.mesh.position);
       surfaceMagnetismBehavior.meshes.push(plane.mesh);
     });
 
     xrPlanes.onPlaneUpdatedObservable.add((plane) => {
-      let mat;
       if (plane.mesh) {
-        // keep the material, dispose the old polygon
-        mat = plane.mesh.material;
         plane.mesh.dispose(false, false);
       }
       const some = plane.polygonDefinition.some((p) => !p);
@@ -101,8 +98,10 @@
       var polygon = polygon_triangulation.build(false, 0.01);
       polygon.createNormals();
       plane.mesh = polygon;
+
       planes[plane.id] = plane.mesh;
-      plane.mesh.material = mat;
+
+      plane.mesh.material = detectedMat;
       plane.mesh.rotationQuaternion = new Quaternion();
       plane.transformationMatrix.decompose(plane.mesh.scaling, plane.mesh.rotationQuaternion, plane.mesh.position);
       surfaceMagnetismBehavior.meshes.push(plane.mesh);
@@ -122,9 +121,7 @@
     console.log("xr player created by lab 053", xr);
 
     xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
-      console.log("Entering Immersive Mode with camera", xrCamera.position, windowGroupMesh);
-      windowGroupMesh.position = new Vector3(0, 1.1, 0.5);
-      windowGroupMesh.scaling = new Vector3(0.06, 0.06, 0.06);
+      subject.position = new Vector3(0, 1.15, 0.5);
     });
   };
 

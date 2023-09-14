@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   routeRules: {
     "/labs/three/**": { ssr: false },
     "/sidequests/passion": { ssr: false },
-    "/labs/lab054": { ssr: false }
+    "/labs/lab054": { ssr: false },
+    "/labs/lab055": { ssr: false }
   }
 });
