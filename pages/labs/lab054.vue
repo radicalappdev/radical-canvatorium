@@ -1,7 +1,6 @@
 <script setup>
   import { Vector2, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial } from "babylonjs";
   import earcut from "earcut";
-  // import * as earcut from "earcut";
   window.earcut = earcut;
 
   definePageMeta({

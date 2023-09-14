@@ -24,6 +24,6 @@
     "babylonjs-materials": "^6.12.1",
     "babylonjs-procedural-textures": "^6.12.1",
     "three": "^0.155.0",
-    "earcut": "^2.1.1"
+    "earcut": "^2.2.4"
   }
 }
