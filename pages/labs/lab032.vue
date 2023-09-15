@@ -1,6 +1,6 @@
 <script setup>
-  import { Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, ExecuteCodeAction, ActionManager } from "babylonjs";
-  import { TextBlock } from "babylonjs-gui";
+  import { Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, ExecuteCodeAction, ActionManager, FollowBehavior } from "babylonjs";
+  import { Button, Control, ScrollViewer, AdvancedDynamicTexture, Grid } from "babylonjs-gui";
   import { useStorage } from "@vueuse/core";
 
   definePageMeta({
@@ -10,42 +10,42 @@
     labNotes: ``
   });
 
+  // Default settings for the lathe data
+  const defaultLatheSettings = {
+    numberOfPoints: 12,
+    tessellation: 12,
+    isFlat: true,
+    arc: 1,
+    cap: "NO_CAP"
+  };
+
+  // Spread the default settings into the stored settings
+  // This will only be set if the local storage value is not found, else it will use the local storage value
+  let storedLatheSettings = useStorage("lab-lathe-settings", {
+    ...defaultLatheSettings
+  });
+
+  // Map the stored settings to the reactive settings object
+  // I could not find a way to get Watch working with useStorage
+  let actualLatheSettings = reactive({
+    numberOfPoints: storedLatheSettings.value.numberOfPoints,
+    tessellation: storedLatheSettings.value.tessellation,
+    isFlat: storedLatheSettings.value.isFlat,
+    arc: storedLatheSettings.value.arc,
+    cap: storedLatheSettings.value.cap
+  });
+
+  watch(actualLatheSettings, (newValue) => {
+    storedLatheSettings.value = newValue;
+  });
+
+  let grabbersRef;
+  let latheMatRef;
+
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
     const cam = scene.getCameraByName("camera");
     // cam.position = new Vector3(0, 1.4, -4);
-
-    // Default settings for the lathe data
-    const defaultLatheSettings = {
-      numberOfPoints: 12,
-      tessellation: 12,
-      isFlat: true,
-      arc: 1,
-      cap: "NO_CAP"
-    };
-
-    // Spread the default settings into the stored settings
-    // This will only be set if the local storage value is not found, else it will use the local storage value
-    let storedLatheSettings = useStorage("lab-lathe-settings", {
-      ...defaultLatheSettings
-    });
-
-    // Map the stored settings to the reactive settings object
-    // I could not find a way to get Watch working with useStorage
-    let actualLatheSettings = reactive({
-      numberOfPoints: storedLatheSettings.value.numberOfPoints,
-      tessellation: storedLatheSettings.value.tessellation,
-      isFlat: storedLatheSettings.value.isFlat,
-      arc: storedLatheSettings.value.arc,
-      cap: storedLatheSettings.value.cap
-    });
-
-    watch(actualLatheSettings, (newValue) => {
-      storedLatheSettings.value = newValue;
-    });
-
-    let grabbersRef;
-    let latheMatRef;
 
     const cardMat = new StandardMaterial("card-mat", scene);
     cardMat.diffuseColor = Color3.FromHexString(labColors.slate1);
@@ -152,6 +152,8 @@
         );
       })
     );
+
+    createUICard(scene);
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
@@ -165,6 +167,155 @@
   const bjsCanvas = ref(null);
   // With scene options
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
+
+  const createUICard = (scene) => {
+    const cardMaterial = new StandardMaterial("menu-card-material", scene);
+    cardMaterial.diffuseColor = new Color3.FromHexString(labColors.slate1);
+
+    const card = MeshBuilder.CreateBox("menu-card", {
+      width: 1,
+      height: 1,
+      depth: 0.1
+    });
+    card.material = cardMaterial;
+    card.position = new Vector3(0, 1, 0);
+    card.scaling = new Vector3(0.6, 0.6, 0.6);
+
+    const followBehavior = new FollowBehavior();
+    followBehavior.defaultDistance = 0.8;
+    followBehavior.minimumDistance = 0.7;
+    followBehavior.maximumDistance = 1.25;
+    followBehavior.ignoreCameraPitchAndRoll = true;
+    followBehavior.pitchOffset = -10;
+    followBehavior.lerpTime = 250;
+    followBehavior.attach(card);
+
+    // UI Plane
+    const plane = MeshBuilder.CreatePlane(
+      "menu-plane",
+      {
+        width: 1,
+        height: 1
+      },
+      scene
+    );
+    plane.position.z = -0.055;
+    plane.parent = card;
+
+    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, 1 * 1024, 1 * 1024);
+    advancedTexture.name = "menu-texture";
+
+    const sv = new ScrollViewer("lab-info-scroll");
+    sv.thickness = 12;
+    sv.color = "#3e4a5d";
+    sv.background = "#3e4a5d";
+    sv.opacity = 1;
+    sv.height = `${1024}px`;
+    sv.width = `${1024}px`;
+    sv.barSize = 30;
+    sv.barColor = "#53637b";
+    sv.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    advancedTexture.addControl(sv);
+
+    const numberOfPointsLabel = createGridMenuLabel(`Number of points: ${actualLatheSettings.numberOfPoints}`);
+    const numberOfPointsSlider = createGridMenuSlider({
+      min: 0.1,
+      max: 24,
+      step: 1,
+      value: 6
+    });
+    numberOfPointsSlider.value = actualLatheSettings.numberOfPoints;
+    numberOfPointsSlider.onValueChangedObservable.add(function (value) {
+      actualLatheSettings.numberOfPoints = value;
+      numberOfPointsLabel.text = `Number of points: ${value}`;
+    });
+
+    const tessellationLabel = createGridMenuLabel(`Tessellation: ${actualLatheSettings.tessellation}`);
+    const tessellationSlider = createGridMenuSlider({
+      min: 6,
+      max: 46,
+      step: 1,
+      value: 12
+    });
+    tessellationSlider.value = actualLatheSettings.tessellation;
+    tessellationSlider.onValueChangedObservable.add(function (value) {
+      actualLatheSettings.tessellation = value;
+      tessellationLabel.text = `Tessellation: ${value}`;
+    });
+
+    const isFlatLabel = createGridMenuLabel("Is Flat Shaded?");
+    const isFlatToggle = createGridMenuCheckbox();
+    isFlatToggle.isChecked = actualLatheSettings.isFlat;
+    isFlatToggle.onIsCheckedChangedObservable.add(function (value) {
+      actualLatheSettings.isFlat = value;
+    });
+
+    const arcLabel = createGridMenuLabel(`Arc: ${actualLatheSettings.arc.toFixed(2)}`);
+    const arcSlider = createGridMenuSlider({
+      min: 0.1,
+      max: 1,
+      step: 0.1,
+      value: 1
+    });
+    arcSlider.value = actualLatheSettings.arc;
+    arcSlider.onValueChangedObservable.add(function (value) {
+      actualLatheSettings.arc = value;
+      arcLabel.text = `Rotation Speed: ${value.toFixed(2)}`;
+    });
+
+    const resetButton = Button.CreateSimpleButton("reset-button", "Reset Settings");
+    resetButton.width = 1;
+    resetButton.height = "60px";
+    resetButton.fontSize = "40px";
+    resetButton.color = "white";
+    resetButton.background = "#53637b";
+
+    resetButton.onPointerUpObservable.add(function () {
+      actualLatheSettings.numberOfPoints = 6;
+      actualLatheSettings.tessellation = 12;
+      actualLatheSettings.isFlat = true;
+      actualLatheSettings.arc = 1;
+
+      numberOfPointsSlider.value = actualLatheSettings.numberOfPoints;
+      tessellationSlider.value = actualLatheSettings.tessellation;
+      isFlatToggle.isChecked = actualLatheSettings.isFlat;
+      arcSlider.value = actualLatheSettings.arc;
+    });
+
+    const buildButton = Button.CreateSimpleButton("reset-button", "Build Shape");
+    buildButton.width = 1;
+    buildButton.height = "60px";
+    buildButton.fontSize = "40px";
+    buildButton.color = "white";
+    buildButton.background = "#53637b";
+
+    buildButton.onPointerUpObservable.add(function () {
+      buildLathe();
+    });
+
+    const grid = new Grid();
+    grid.addColumnDefinition(40, true);
+    grid.addColumnDefinition(0.5);
+    grid.addColumnDefinition(0.5);
+    grid.addColumnDefinition(40, true);
+
+    // Layout the grid content
+    // Add rows to the grid and attach controls to the rows, using the current row count.
+    // This makes it easy to reorder these in code without having to reindex the grid content.
+    grid.addRowDefinition(36, true); // empty row
+    grid.addRowDefinition(72, true).addControl(numberOfPointsLabel, grid.rowCount, 1).addControl(numberOfPointsSlider, grid.rowCount, 2);
+    grid.addRowDefinition(72, true).addControl(tessellationLabel, grid.rowCount, 1).addControl(tessellationSlider, grid.rowCount, 2);
+    grid.addRowDefinition(72, true).addControl(isFlatLabel, grid.rowCount, 1).addControl(isFlatToggle, grid.rowCount, 2);
+    grid.addRowDefinition(72, true).addControl(arcLabel, grid.rowCount, 1).addControl(arcSlider, grid.rowCount, 2);
+
+    grid.addRowDefinition(36, true); // empty row
+    grid.addRowDefinition(72, true).addControl(resetButton, grid.rowCount, 2);
+    grid.addRowDefinition(72, true).addControl(buildButton, grid.rowCount, 2);
+
+    sv.addControl(grid);
+
+    return;
+  };
 
   // Without scene options (see lab001 for an example)
   // useCanvatoriumScene(bjsCanvas, createLabContent);
