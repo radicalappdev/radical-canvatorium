@@ -17,13 +17,14 @@
     "nuxt": "^3.3.2"
   },
   "dependencies": {
+    "@vueuse/core": "^10.4.1",
     "babylonjs": "^6.12.1",
     "babylonjs-gui": "^6.12.1",
     "babylonjs-inspector": "^6.12.1",
     "babylonjs-loaders": "^6.12.1",
     "babylonjs-materials": "^6.12.1",
     "babylonjs-procedural-textures": "^6.12.1",
-    "three": "^0.155.0",
-    "earcut": "^2.2.4"
+    "earcut": "^2.2.4",
+    "three": "^0.155.0"
   }
 }
