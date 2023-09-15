@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, ExecuteCodeAction, ActionManager, FollowBehavior } from "babylonjs";
+  import { Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, SixDofDragBehavior } from "babylonjs";
   import { Button, Grid } from "babylonjs-gui";
   import { useStorage } from "@vueuse/core";
 
@@ -45,7 +45,7 @@
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -4);
+    cam.position = new Vector3(0, 1.4, -3);
 
     const cardMat = new StandardMaterial("card-mat", scene);
     cardMat.diffuseColor = Color3.FromHexString(labColors.slate2);
@@ -138,13 +138,20 @@
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 
   const createUICard = (scene) => {
+    // Create a window group object
+    const windowGroupMesh = canLabWindowGroup(scene);
+    windowGroupMesh.scaling = new Vector3(0.1, 0.1, 0.1);
+    windowGroupMesh.position = new Vector3(1.5, 1.1, -0.2);
+    windowGroupMesh.rotation = new Vector3(0, 0.4, 0);
+
     const cardMaterial = new StandardMaterial("menu-card-material", scene);
     cardMaterial.diffuseColor = new Color3.FromHexString(labColors.slate1);
 
     const { plane, advancedTexture } = canLabCardSimple(9, 5.4, scene);
     advancedTexture.name = "menu-texture";
-    plane.scaling = new Vector3(0.15, 0.15, 0.15);
-    plane.position = new Vector3(1.8, 1.2, 0);
+
+    plane.parent = windowGroupMesh;
+    plane.position.y = 3;
 
     const numberOfPointsLabel = createGridMenuLabel(`Number of points: ${actualLatheSettings.numberOfPoints}`);
     const numberOfPointsSlider = createGridMenuSlider({
@@ -201,6 +208,7 @@
 
     resetButton.onPointerUpObservable.add(function () {
       scene.getMeshByName("lathe")?.dispose();
+      actualLatheSettings.numberOfPoints = 0;
       actualLatheSettings.numberOfPoints = 10;
       actualLatheSettings.tessellation = 12;
       actualLatheSettings.isFlat = true;
@@ -262,17 +270,15 @@
       cap: actualLatheSettings.cap
     });
     lathe.material = latheMatRef;
-    lathe.visibility = 0.6;
+    // lathe.visibility = 0.6;
     // lathe.closed = true;
     if (actualLatheSettings.isFlat) {
       lathe.convertToFlatShadedMesh();
     }
 
-    lathe.addBehavior(
-      new PointerDragBehavior({
-        dragPlaneNormal: lathe.upVector
-      })
-    );
+    const sixDofDragBehavior = new SixDofDragBehavior();
+    sixDofDragBehavior.allowMultiPointers = true;
+    lathe.addBehavior(sixDofDragBehavior);
   };
 
   // Without scene options (see lab001 for an example)
