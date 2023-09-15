@@ -48,16 +48,16 @@
     let latheMatRef;
 
     const cardMat = new StandardMaterial("card-mat", scene);
-    cardMat.diffuseColor = Color3.FromHexString(labColors.slate6);
-    cardMat.specularColor = new Color3(0.2, 0.2, 0.2);
+    cardMat.diffuseColor = Color3.FromHexString(labColors.slate1);
+    cardMat.alpha = 0.5;
 
-    const cardWidth = 2;
+    const cardWidth = 1;
     const cardHeight = 2;
     const cardThickness = 0.01;
     const card = MeshBuilder.CreateBox("card", { width: cardWidth, height: cardHeight, depth: cardThickness }, scene);
     card.isPickable = false;
     card.material = cardMat;
-    card.position = new Vector3(1, 1, 0);
+    card.position = new Vector3(0.5, 1, 0);
 
     // create plane in front of card for bounds checking
     const boundsWidth = 0;
@@ -111,7 +111,12 @@
       width: 0.2,
       depth: 0.2
     });
-    subject1.material = cardMat;
+
+    const subject1Map = new StandardMaterial("grab-mat1", scene);
+    subject1Map.diffuseColor = Color3.FromHexString(labColors.green);
+    subject1Map.specularColor = new Color3(0.2, 0.2, 0.2);
+
+    subject1.material = subject1Map;
     subject1.position = new Vector3(2.2, 1, 0);
 
     // Subject 1 Action: ExecuteCodeAction -> OnPickTrigger
