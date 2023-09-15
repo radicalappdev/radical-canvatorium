@@ -45,11 +45,11 @@
   // Add lab-specific content here using the provided 'scene' instance
   const createLabContent = async (scene) => {
     const cam = scene.getCameraByName("camera");
-    // cam.position = new Vector3(0, 1.4, -4);
+    cam.position = new Vector3(0, 1.4, -4);
 
     const cardMat = new StandardMaterial("card-mat", scene);
-    cardMat.diffuseColor = Color3.FromHexString(labColors.slate1);
-    cardMat.alpha = 0.5;
+    cardMat.diffuseColor = Color3.FromHexString(labColors.slate2);
+    cardMat.alpha = 0.3;
 
     const cardWidth = 1;
     const cardHeight = 2;
@@ -172,50 +172,9 @@
     const cardMaterial = new StandardMaterial("menu-card-material", scene);
     cardMaterial.diffuseColor = new Color3.FromHexString(labColors.slate1);
 
-    const card = MeshBuilder.CreateBox("menu-card", {
-      width: 1,
-      height: 0.55,
-      depth: 0.1
-    });
-    card.material = cardMaterial;
-    card.position = new Vector3(0, 1, 0);
-    card.scaling = new Vector3(0.6, 0.6, 0.6);
-
-    const followBehavior = new FollowBehavior();
-    followBehavior.defaultDistance = 0.9;
-    followBehavior.minimumDistance = 0.8;
-    followBehavior.maximumDistance = 1.3;
-    followBehavior.ignoreCameraPitchAndRoll = true;
-    followBehavior.pitchOffset = -10;
-    followBehavior.lerpTime = 250;
-    followBehavior.attach(card);
-
-    // UI Plane
-    const plane = MeshBuilder.CreatePlane(
-      "menu-plane",
-      {
-        width: 1,
-        height: 0.55
-      },
-      scene
-    );
-    plane.position.z = -0.055;
-    plane.parent = card;
-
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, 1 * 1024, 0.55 * 1024);
+    const { plane, advancedTexture } = canLabCardSimple(9, 5.4, scene);
     advancedTexture.name = "menu-texture";
-
-    const sv = new ScrollViewer("lab-info-scroll");
-    sv.thickness = 12;
-    sv.color = "#3e4a5d";
-    sv.background = "#3e4a5d";
-    sv.opacity = 1;
-    sv.height = `${1024}px`;
-    sv.width = `${1024}px`;
-    sv.barSize = 30;
-    sv.barColor = "#53637b";
-    sv.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    advancedTexture.addControl(sv);
+    plane.scaling = new Vector3(0.3, 0.3, 0.3);
 
     const numberOfPointsLabel = createGridMenuLabel(`Number of points: ${actualLatheSettings.numberOfPoints}`);
     const numberOfPointsSlider = createGridMenuSlider({
@@ -312,7 +271,7 @@
     grid.addRowDefinition(72, true).addControl(resetButton, grid.rowCount, 2);
     grid.addRowDefinition(72, true).addControl(buildButton, grid.rowCount, 2);
 
-    sv.addControl(grid);
+    advancedTexture.addControl(grid);
 
     return;
   };

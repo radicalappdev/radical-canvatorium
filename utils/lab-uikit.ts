@@ -78,7 +78,7 @@ export const createGridMenuLabel = (text: string) => {
   label.text = text;
   label.height = "60px";
   label.fontSize = "40px";
-  label.color = "white";
+  label.color = labColors.slate8;
   label.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   return label;
 };
