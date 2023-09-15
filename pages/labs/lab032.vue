@@ -174,7 +174,7 @@
 
     const card = MeshBuilder.CreateBox("menu-card", {
       width: 1,
-      height: 1,
+      height: 0.55,
       depth: 0.1
     });
     card.material = cardMaterial;
@@ -182,9 +182,9 @@
     card.scaling = new Vector3(0.6, 0.6, 0.6);
 
     const followBehavior = new FollowBehavior();
-    followBehavior.defaultDistance = 0.8;
-    followBehavior.minimumDistance = 0.7;
-    followBehavior.maximumDistance = 1.25;
+    followBehavior.defaultDistance = 0.9;
+    followBehavior.minimumDistance = 0.8;
+    followBehavior.maximumDistance = 1.3;
     followBehavior.ignoreCameraPitchAndRoll = true;
     followBehavior.pitchOffset = -10;
     followBehavior.lerpTime = 250;
@@ -195,14 +195,14 @@
       "menu-plane",
       {
         width: 1,
-        height: 1
+        height: 0.55
       },
       scene
     );
     plane.position.z = -0.055;
     plane.parent = card;
 
-    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, 1 * 1024, 1 * 1024);
+    const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane, 1 * 1024, 0.55 * 1024);
     advancedTexture.name = "menu-texture";
 
     const sv = new ScrollViewer("lab-info-scroll");
@@ -315,6 +315,35 @@
     sv.addControl(grid);
 
     return;
+  };
+
+  const buildLathe = () => {
+    //   console.log("Subject 1: ExecuteCodeAction -> OnPickTrigger");
+    //   scene.getMeshByName("lathe")?.dispose();
+    let latheArray = [];
+    for (let i = 0; i < grabbersRef.length; i++) {
+      latheArray.push(grabbersRef[i].position);
+    }
+
+    const lathe = MeshBuilder.CreateLathe("lathe", {
+      shape: latheArray,
+      sideOrientation: Mesh.DOUBLESIDE,
+      tessellation: actualLatheSettings.tessellation,
+      arc: actualLatheSettings.arc,
+      cap: actualLatheSettings.cap
+    });
+    lathe.material = latheMatRef;
+    lathe.visibility = 0.6;
+    // lathe.closed = true;
+    if (actualLatheSettings.isFlat) {
+      lathe.convertToFlatShadedMesh();
+    }
+
+    lathe.addBehavior(
+      new PointerDragBehavior({
+        dragPlaneNormal: lathe.upVector
+      })
+    );
   };
 
   // Without scene options (see lab001 for an example)
