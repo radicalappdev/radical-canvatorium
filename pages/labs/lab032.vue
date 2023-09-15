@@ -1,6 +1,6 @@
 <script setup>
   import { Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, ExecuteCodeAction, ActionManager, FollowBehavior } from "babylonjs";
-  import { Button, Control, ScrollViewer, AdvancedDynamicTexture, Grid } from "babylonjs-gui";
+  import { Button, Grid } from "babylonjs-gui";
   import { useStorage } from "@vueuse/core";
 
   definePageMeta({
@@ -12,7 +12,7 @@
 
   // Default settings for the lathe data
   const defaultLatheSettings = {
-    numberOfPoints: 12,
+    numberOfPoints: 10,
     tessellation: 12,
     isFlat: true,
     arc: 1,
@@ -72,35 +72,6 @@
     const grabMat = new StandardMaterial("grab-mat6", scene);
     grabMat.diffuseColor = Color3.FromHexString(labColors.purple);
     grabMat.specularColor = new Color3(0.2, 0.2, 0.2);
-
-    // let i;
-    // let grabbers = [];
-
-    // for (i = 0; i < actualLatheSettings.numberOfPoints; i++) {
-    //   var planeDragBehavior = new PointerDragBehavior({
-    //     dragPlaneNormal: boundsPlane.forward
-    //   });
-    //   planeDragBehavior.useObjectOrientationForDragging = true;
-
-    //   planeDragBehavior.validateDrag = (targetPosition) => {
-    //     const bounds = boundsPlane.getBoundingInfo().boundingBox;
-    //     targetPosition.x = Scalar.Clamp(targetPosition.x, bounds.minimum.x + boundsPlane.position.x, bounds.maximum.x + boundsPlane.position.x);
-    //     targetPosition.y = Scalar.Clamp(targetPosition.y, bounds.minimum.y + boundsPlane.position.y, bounds.maximum.y + boundsPlane.position.y);
-    //     return true;
-    //   };
-    //   const grabber = MeshBuilder.CreateSphere("grabber", {
-    //     diameter: 0.05
-    //   });
-    //   const yoffset = i * 0.1;
-    //   grabber.material = grabMat;
-    //   grabber.position = new Vector3(0 + yoffset / 2, 2 - yoffset, 0);
-    //   grabber.addBehavior(planeDragBehavior);
-    //   grabbers.push(grabber);
-    // }
-
-    // grabbersRef = grabbers;
-
-    // console.log(grabbers);
 
     const latheMat = new StandardMaterial("grab-mat1", scene);
     latheMat.diffuseColor = Color3.FromHexString(labColors.purple);
@@ -221,15 +192,16 @@
       arcLabel.text = `Rotation Speed: ${value.toFixed(2)}`;
     });
 
-    const resetButton = Button.CreateSimpleButton("reset-button", "Reset Settings");
+    const resetButton = canLabButtonSimple("reset-button", "Reset Settings");
     resetButton.width = 1;
-    resetButton.height = "60px";
+    resetButton.height = "72px";
     resetButton.fontSize = "40px";
     resetButton.color = "white";
-    resetButton.background = "#53637b";
+    resetButton.background = labColors.red;
 
     resetButton.onPointerUpObservable.add(function () {
-      actualLatheSettings.numberOfPoints = 6;
+      scene.getMeshByName("lathe")?.dispose();
+      actualLatheSettings.numberOfPoints = 10;
       actualLatheSettings.tessellation = 12;
       actualLatheSettings.isFlat = true;
       actualLatheSettings.arc = 1;
@@ -240,15 +212,15 @@
       arcSlider.value = actualLatheSettings.arc;
     });
 
-    const buildButton = Button.CreateSimpleButton("reset-button", "Build Shape");
+    const buildButton = canLabButtonSimple("build-button", "Build Shape");
+    buildButton.height = "72px";
     buildButton.width = 1;
-    buildButton.height = "60px";
     buildButton.fontSize = "40px";
+    buildButton.background = labColors.green;
     buildButton.color = "white";
-    buildButton.background = "#53637b";
 
     buildButton.onPointerUpObservable.add(function () {
-      buildLathe();
+      buildLathe(scene);
     });
 
     const grid = new Grid();
@@ -267,17 +239,16 @@
     grid.addRowDefinition(72, true).addControl(arcLabel, grid.rowCount, 1).addControl(arcSlider, grid.rowCount, 2);
 
     grid.addRowDefinition(36, true); // empty row
-    grid.addRowDefinition(72, true).addControl(resetButton, grid.rowCount, 2);
-    grid.addRowDefinition(72, true).addControl(buildButton, grid.rowCount, 2);
+    grid.addRowDefinition(84, true).addControl(resetButton, grid.rowCount, 2);
+    grid.addRowDefinition(84, true).addControl(buildButton, grid.rowCount, 2);
 
     advancedTexture.addControl(grid);
 
     return;
   };
 
-  const buildLathe = () => {
-    //   console.log("Subject 1: ExecuteCodeAction -> OnPickTrigger");
-    //   scene.getMeshByName("lathe")?.dispose();
+  const buildLathe = (scene) => {
+    scene.getMeshByName("lathe")?.dispose();
     let latheArray = [];
     for (let i = 0; i < grabbersRef.length; i++) {
       latheArray.push(grabbersRef[i].position);

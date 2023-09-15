@@ -92,16 +92,11 @@ export const createGridMenuSlider = (options: any) => {
   slider.value = value;
   slider.height = "60px";
   slider.width = "100%";
-  slider.color = "#8854d0";
-  slider.background = "#53637b";
+  slider.color = labColors.purple;
+  slider.background = labColors.slate4;
   slider.thumbWidth = "60px";
-  // slider.thumbHeight = "60px";
-  // slider.thumbBackground = "#8854d0";
-  // slider.thumbBorderColor = "#8854d0";
-  // slider.thumbBorderWidth = "2px";
   slider.isThumbCircle = true;
   slider.isThumbClamped = true;
-  // slider.isThumbClampedY = true;
 
   return slider;
 };
@@ -110,11 +105,9 @@ export const createGridMenuCheckbox = () => {
   const checkbox = new Checkbox();
   checkbox.isChecked = true;
   checkbox.height = "60px";
-  // checkbox does not have a margin, so add some extra width, then use it in padding
   checkbox.width = "70px";
-  // checkbox.paddingLeftInPixels = "10";
-  checkbox.color = "#8854d0";
-  checkbox.background = "#53637b";
+  checkbox.color = labColors.purple;
+  checkbox.background = labColors.slate4;
   checkbox.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
   return checkbox;
 };
