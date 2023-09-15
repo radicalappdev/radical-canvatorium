@@ -73,41 +73,85 @@
     grabMat.diffuseColor = Color3.FromHexString(labColors.purple);
     grabMat.specularColor = new Color3(0.2, 0.2, 0.2);
 
-    let i;
-    let grabbers = [];
+    // let i;
+    // let grabbers = [];
 
-    for (i = 0; i < actualLatheSettings.numberOfPoints; i++) {
-      var planeDragBehavior = new PointerDragBehavior({
-        dragPlaneNormal: boundsPlane.forward
-      });
-      planeDragBehavior.useObjectOrientationForDragging = true;
+    // for (i = 0; i < actualLatheSettings.numberOfPoints; i++) {
+    //   var planeDragBehavior = new PointerDragBehavior({
+    //     dragPlaneNormal: boundsPlane.forward
+    //   });
+    //   planeDragBehavior.useObjectOrientationForDragging = true;
 
-      planeDragBehavior.validateDrag = (targetPosition) => {
-        const bounds = boundsPlane.getBoundingInfo().boundingBox;
-        targetPosition.x = Scalar.Clamp(targetPosition.x, bounds.minimum.x + boundsPlane.position.x, bounds.maximum.x + boundsPlane.position.x);
-        targetPosition.y = Scalar.Clamp(targetPosition.y, bounds.minimum.y + boundsPlane.position.y, bounds.maximum.y + boundsPlane.position.y);
-        return true;
-      };
-      const grabber = MeshBuilder.CreateSphere("grabber", {
-        diameter: 0.05
-      });
-      const yoffset = i * 0.1;
-      grabber.material = grabMat;
-      grabber.position = new Vector3(0 + yoffset / 2, 2 - yoffset, 0);
-      grabber.addBehavior(planeDragBehavior);
-      grabbers.push(grabber);
-    }
+    //   planeDragBehavior.validateDrag = (targetPosition) => {
+    //     const bounds = boundsPlane.getBoundingInfo().boundingBox;
+    //     targetPosition.x = Scalar.Clamp(targetPosition.x, bounds.minimum.x + boundsPlane.position.x, bounds.maximum.x + boundsPlane.position.x);
+    //     targetPosition.y = Scalar.Clamp(targetPosition.y, bounds.minimum.y + boundsPlane.position.y, bounds.maximum.y + boundsPlane.position.y);
+    //     return true;
+    //   };
+    //   const grabber = MeshBuilder.CreateSphere("grabber", {
+    //     diameter: 0.05
+    //   });
+    //   const yoffset = i * 0.1;
+    //   grabber.material = grabMat;
+    //   grabber.position = new Vector3(0 + yoffset / 2, 2 - yoffset, 0);
+    //   grabber.addBehavior(planeDragBehavior);
+    //   grabbers.push(grabber);
+    // }
 
-    grabbersRef = grabbers;
+    // grabbersRef = grabbers;
 
-    console.log(grabbers);
+    // console.log(grabbers);
 
     const latheMat = new StandardMaterial("grab-mat1", scene);
     latheMat.diffuseColor = Color3.FromHexString(labColors.purple);
     latheMat.specularColor = new Color3(0.2, 0.2, 0.2);
     latheMatRef = latheMat;
 
+    const createGrabbers = () => {
+      // dispose of old grabbers
+      if (grabbersRef) {
+        for (let i = 0; i < grabbersRef.length; i++) {
+          grabbersRef[i].dispose();
+        }
+      }
+      let i;
+      let grabbers = [];
+
+      for (i = 0; i < actualLatheSettings.numberOfPoints; i++) {
+        var planeDragBehavior = new PointerDragBehavior({
+          dragPlaneNormal: boundsPlane.forward
+        });
+        planeDragBehavior.useObjectOrientationForDragging = true;
+
+        planeDragBehavior.validateDrag = (targetPosition) => {
+          const bounds = boundsPlane.getBoundingInfo().boundingBox;
+          targetPosition.x = Scalar.Clamp(targetPosition.x, bounds.minimum.x + boundsPlane.position.x, bounds.maximum.x + boundsPlane.position.x);
+          targetPosition.y = Scalar.Clamp(targetPosition.y, bounds.minimum.y + boundsPlane.position.y, bounds.maximum.y + boundsPlane.position.y);
+          return true;
+        };
+        const grabber = MeshBuilder.CreateSphere("grabber", {
+          diameter: 0.05
+        });
+        const yoffset = i * 0.1;
+        grabber.material = grabMat;
+        grabber.position = new Vector3(0 + yoffset / 2, 2 - yoffset, 0);
+        grabber.addBehavior(planeDragBehavior);
+        grabbers.push(grabber);
+      }
+
+      grabbersRef = grabbers;
+
+      console.log(grabbers);
+    };
+
     createUICard(scene);
+    createGrabbers();
+
+    watch(actualLatheSettings, (newValue) => {
+      console.log("actualLatheSettings changed");
+      console.log(newValue);
+      createGrabbers();
+    });
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
