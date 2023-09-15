@@ -106,52 +106,6 @@
     latheMat.diffuseColor = Color3.FromHexString(labColors.purple);
     latheMat.specularColor = new Color3(0.2, 0.2, 0.2);
     latheMatRef = latheMat;
-    const subject1 = MeshBuilder.CreateBox("subject1", {
-      height: 0.2,
-      width: 0.2,
-      depth: 0.2
-    });
-
-    const subject1Map = new StandardMaterial("grab-mat1", scene);
-    subject1Map.diffuseColor = Color3.FromHexString(labColors.green);
-    subject1Map.specularColor = new Color3(0.2, 0.2, 0.2);
-
-    subject1.material = subject1Map;
-    subject1.position = new Vector3(2.2, 1, 0);
-
-    // Subject 1 Action: ExecuteCodeAction -> OnPickTrigger
-    // Run code when the trigger is activated
-    subject1.actionManager = new ActionManager(scene);
-    subject1.actionManager.registerAction(
-      new ExecuteCodeAction(ActionManager.OnPickTrigger, () => {
-        //   console.log("Subject 1: ExecuteCodeAction -> OnPickTrigger");
-        //   scene.getMeshByName("lathe")?.dispose();
-        let latheArray = [];
-        for (let i = 0; i < grabbers.length; i++) {
-          latheArray.push(grabbers[i].position);
-        }
-
-        const lathe = MeshBuilder.CreateLathe("lathe", {
-          shape: latheArray,
-          sideOrientation: Mesh.DOUBLESIDE,
-          tessellation: actualLatheSettings.tessellation,
-          arc: actualLatheSettings.arc,
-          cap: actualLatheSettings.cap
-        });
-        lathe.material = latheMat;
-        lathe.visibility = 0.6;
-        // lathe.closed = true;
-        if (actualLatheSettings.isFlat) {
-          lathe.convertToFlatShadedMesh();
-        }
-
-        lathe.addBehavior(
-          new BABYLON.PointerDragBehavior({
-            dragPlaneNormal: lathe.upVector
-          })
-        );
-      })
-    );
 
     createUICard(scene);
   };
@@ -174,7 +128,8 @@
 
     const { plane, advancedTexture } = canLabCardSimple(9, 5.4, scene);
     advancedTexture.name = "menu-texture";
-    plane.scaling = new Vector3(0.3, 0.3, 0.3);
+    plane.scaling = new Vector3(0.15, 0.15, 0.15);
+    plane.position = new Vector3(1.8, 1.2, 0);
 
     const numberOfPointsLabel = createGridMenuLabel(`Number of points: ${actualLatheSettings.numberOfPoints}`);
     const numberOfPointsSlider = createGridMenuSlider({
