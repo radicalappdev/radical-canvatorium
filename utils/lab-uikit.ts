@@ -1,5 +1,5 @@
 import { Scene, MeshBuilder, Vector3, SixDofDragBehavior } from "babylonjs";
-import { AdvancedDynamicTexture, Rectangle, Button, Control } from "babylonjs-gui";
+import { AdvancedDynamicTexture, Rectangle, Button, Control, TextBlock, Slider, Checkbox } from "babylonjs-gui";
 
 // A styled 2D GUI card with a plane and ADT
 export const canLabCardSimple = (width: number, height: number, scene: Scene) => {
@@ -71,4 +71,43 @@ export const canLabWindowGroup = (scene: Scene) => {
   windowGroupTexture.addControl(windowGroupDragIndicator);
 
   return windowGroupMesh;
+};
+
+export const createGridMenuLabel = (text: string) => {
+  const label = new TextBlock();
+  label.text = text;
+  label.height = "60px";
+  label.fontSize = "40px";
+  label.color = labColors.slate8;
+  label.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  return label;
+};
+
+export const createGridMenuSlider = (options: any) => {
+  const { min, max, step, value } = options;
+  const slider = new Slider();
+  slider.minimum = min;
+  slider.maximum = max;
+  slider.step = step;
+  slider.value = value;
+  slider.height = "60px";
+  slider.width = "100%";
+  slider.color = labColors.purple;
+  slider.background = labColors.slate4;
+  slider.thumbWidth = "60px";
+  slider.isThumbCircle = true;
+  slider.isThumbClamped = true;
+
+  return slider;
+};
+
+export const createGridMenuCheckbox = () => {
+  const checkbox = new Checkbox();
+  checkbox.isChecked = true;
+  checkbox.height = "60px";
+  checkbox.width = "70px";
+  checkbox.color = labColors.purple;
+  checkbox.background = labColors.slate4;
+  checkbox.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  return checkbox;
 };
