@@ -7,7 +7,7 @@
     featured: false,
     title: "Lab 053 - Basic MR Passthrough with 3D GUI",
     description:
-      "In this lab I want to explore the use of 3D GUI in a mixed reality environment. I used the example UI from Lab 50 and scaled it down a bit. When entering XR, the UI is positioned in front of the camera. I also added a button to toggle the UI on and off. (y-button on the left controller)."
+      "In this lab I want to explore the use of 3D GUI in a mixed reality environment. I used the example UI from Lab 50 and scaled it down a bit. Toggle the UI on and off. (y-button on the left controller)."
   });
 
   const createLabContent = async (scene) => {

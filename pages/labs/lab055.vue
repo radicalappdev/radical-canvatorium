@@ -17,7 +17,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 055 - MR Plane Detection + Surface Magnetism Behavior",
-    description: ""
+    description: "This lab expands on Lab 054 and Lab 017 to create a simple scene where I can drag an object around, snapping it to a wall when releasing it."
   });
 
   const createLabContent = async (scene) => {

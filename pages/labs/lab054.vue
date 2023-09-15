@@ -6,7 +6,7 @@
   definePageMeta({
     featured: false,
     title: "Lab 054 - MR Plane Detection",
-    description: "Based on this Playground: https://playground.babylonjs.com/#98TM63"
+    description: "Render any detected surface as a plane. Based on this Playground: https://playground.babylonjs.com/#98TM63"
   });
 
   const title = "Lab 054 - MR Plane Detection";
