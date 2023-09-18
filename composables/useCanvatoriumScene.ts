@@ -167,6 +167,15 @@ const labCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) 
 
   console.log("xr player created by useCanvatoriumScene composable", xr);
 
+  if (window) {
+    // could be undefined in SSR
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        xr.baseExperience.exitXRAsync();
+      }
+    });
+  }
+
   return xr;
 };
 
