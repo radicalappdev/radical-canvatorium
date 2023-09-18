@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3 } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3 } from "babylonjs";
   import { TextBlock } from "babylonjs-gui";
 
   definePageMeta({
@@ -25,19 +25,21 @@
   });
 
   // Add lab-specific content here using the provided 'scene' instance
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     // Lab 001 only. Move the camera to a better position for the initial scene.
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -4);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -4);
+    }
 
-    const { plane } = createLabCard();
+    const { plane } = createLabCard(scene);
 
     scene.registerBeforeRender(() => {
       plane.rotation.y += 0.005;
     });
   };
 
-  const createLabCard = (scene) => {
+  const createLabCard = (scene: Scene) => {
     const { plane, advancedTexture } = canLabCardSimple(6, 3.6, scene);
 
     plane.name = "can-plane";
@@ -47,7 +49,6 @@
 
     const cardText = new TextBlock("card-text");
     cardText.text = "Canvatorium";
-    // font sometimg modern and clean and sans
     cardText.fontFamily = "Verdana";
     cardText.color = labColors.slate8;
     cardText.fontSize = 70;
