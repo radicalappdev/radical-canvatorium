@@ -1,6 +1,6 @@
-<script setup>
-  import { Vector3, Color3, Color4, MeshBuilder, StandardMaterial, ActionManager, ExecuteCodeAction } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
+<script lang="ts" setup>
+  import { Scene, Vector3, ActionManager, ExecuteCodeAction } from "babylonjs";
+  import { TextBlock } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
@@ -8,9 +8,11 @@
     description: "Just a navigation test in Nuxt and WebXR"
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 2.6, -8);
+    if (cam) {
+      cam.position = new Vector3(0, 2.6, -8);
+    }
 
     const { plane, advancedTexture } = canLabCardSimple(9, 4, scene);
     plane.position = new Vector3(0, 2.4, 0);
