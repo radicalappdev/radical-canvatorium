@@ -37,7 +37,9 @@
 
       // Redefine console.log method with a custom function
       console.log = function (...args) {
-        conLogData.push(...args.map((arg) => arg.toString() as never));
+        const logString = args.map((arg) => arg.toString()).join(" | "); // Change the separator as needed
+
+        conLogData.push(logString as never);
         _privateLog.apply(console, args);
       };
     };
