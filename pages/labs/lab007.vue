@@ -31,16 +31,17 @@
     let conLogData = reactive([]);
 
     // Override console.log()
-    // Adapted from https://ourcodeworld.com/articles/read/104/how-to-override-the-console-methods-in-javascript
     const overrideConsole = () => {
       // Save the original method in a private variable
       let _privateLog = console.log;
+
       // Redefine console.log method with a custom function
-      console.log = function (message) {
-        conLogData.push(message.toString() as never);
-        _privateLog.apply(console, [arguments]);
+      console.log = function (...args) {
+        conLogData.push(...args.map((arg) => arg.toString() as never));
+        _privateLog.apply(console, args);
       };
     };
+
     // call once to override console.log()
     overrideConsole();
 
