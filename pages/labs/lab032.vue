@@ -1,6 +1,6 @@
-<script setup>
-  import { Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, SixDofDragBehavior } from "babylonjs";
-  import { Button, Grid } from "babylonjs-gui";
+<script lang="ts" setup>
+  import { Scene, Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, SixDofDragBehavior } from "babylonjs";
+  import { Grid } from "babylonjs-gui";
   import { useStorage } from "@vueuse/core";
 
   definePageMeta({
@@ -15,8 +15,7 @@
     numberOfPoints: 10,
     tessellation: 12,
     isFlat: true,
-    arc: 1,
-    cap: "NO_CAP"
+    arc: 1
   };
 
   // Spread the default settings into the stored settings
@@ -31,21 +30,22 @@
     numberOfPoints: storedLatheSettings.value.numberOfPoints,
     tessellation: storedLatheSettings.value.tessellation,
     isFlat: storedLatheSettings.value.isFlat,
-    arc: storedLatheSettings.value.arc,
-    cap: storedLatheSettings.value.cap
+    arc: storedLatheSettings.value.arc
   });
 
   watch(actualLatheSettings, (newValue) => {
     storedLatheSettings.value = newValue;
   });
 
-  let grabbersRef;
-  let latheMatRef;
+  let grabbersRef: Mesh[] = [];
+  let latheMatRef: StandardMaterial;
 
   // Add lab-specific content here using the provided 'scene' instance
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -3);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -3);
+    }
 
     const cardMat = new StandardMaterial("card-mat", scene);
     cardMat.diffuseColor = Color3.FromHexString(labColors.slate2);
@@ -137,7 +137,7 @@
   // With scene options
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 
-  const createUICard = (scene) => {
+  const createUICard = (scene: Scene) => {
     // Create a window group object
     const windowGroupMesh = canLabWindowGroup(scene);
     windowGroupMesh.scaling = new Vector3(0.1, 0.1, 0.1);
@@ -145,7 +145,7 @@
     windowGroupMesh.rotation = new Vector3(0, 0.4, 0);
 
     const cardMaterial = new StandardMaterial("menu-card-material", scene);
-    cardMaterial.diffuseColor = new Color3.FromHexString(labColors.slate1);
+    cardMaterial.diffuseColor = Color3.FromHexString(labColors.slate1);
 
     const { plane, advancedTexture } = canLabCardSimple(9, 5.4, scene);
     advancedTexture.name = "menu-texture";
@@ -255,7 +255,7 @@
     return;
   };
 
-  const buildLathe = (scene) => {
+  const buildLathe = (scene: Scene) => {
     scene.getMeshByName("lathe")?.dispose();
     let latheArray = [];
     for (let i = 0; i < grabbersRef.length; i++) {
@@ -267,17 +267,16 @@
       sideOrientation: Mesh.DOUBLESIDE,
       tessellation: actualLatheSettings.tessellation,
       arc: actualLatheSettings.arc,
-      cap: actualLatheSettings.cap
+      cap: Mesh.CAP_ALL
     });
     lathe.material = latheMatRef;
-    // lathe.visibility = 0.6;
-    // lathe.closed = true;
+
     if (actualLatheSettings.isFlat) {
       lathe.convertToFlatShadedMesh();
     }
 
     const sixDofDragBehavior = new SixDofDragBehavior();
-    sixDofDragBehavior.allowMultiPointers = true;
+    sixDofDragBehavior.allowMultiPointer = true;
     lathe.addBehavior(sixDofDragBehavior);
   };
 
