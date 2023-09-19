@@ -1,5 +1,5 @@
-<script setup>
-  import { StandardMaterial, Vector3, Color3, MeshBuilder, SixDofDragBehavior, SurfaceMagnetismBehavior } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, StandardMaterial, Vector3, Color3, MeshBuilder, SixDofDragBehavior, SurfaceMagnetismBehavior } from "babylonjs";
 
   definePageMeta({
     featured: true,
@@ -8,12 +8,15 @@
     labNotes: ``
   });
 
-  const createLabContent = async (scene) => {
-    scene.getCameraByName("camera").position = new Vector3(0, 1, -2);
+  const createLabContent = async (scene: Scene) => {
+    const cam = scene.getCameraByName("camera");
+    if (cam) {
+      cam.position = new Vector3(0, 1, -1);
+    }
 
     // Create the cards that we will snap the subject to
     const cardMat = new StandardMaterial("card-mat", scene);
-    cardMat.diffuseColor = new Color3.FromHexString(labColors.slate4);
+    cardMat.diffuseColor = Color3.FromHexString(labColors.slate4);
     cardMat.specularColor = new Color3(0.2, 0.2, 0.2);
 
     const cardWidth = 0.6;
@@ -28,14 +31,16 @@
     const card2 = card.clone("card2");
     card2.position = new Vector3(-0.6, 1.5, -0.2);
     card2.rotation.y = -0.7;
+
     const card3 = card.clone("card3");
     card3.position = new Vector3(0.6, 1.5, -0.2);
     card3.rotation.y = 0.7;
 
     // Create the subject of the lab - the object that will be dragged around
     const subjectMat = new StandardMaterial("grab-mat4", scene);
-    subjectMat.diffuseColor = new Color3.FromHexString(labColors.purple);
+    subjectMat.diffuseColor = Color3.FromHexString(labColors.purple);
     subjectMat.specularColor = new Color3(0.2, 0.2, 0.2);
+
     const subject = MeshBuilder.CreateBox("subject", {
       height: 0.6,
       width: 0.6,
@@ -50,7 +55,7 @@
     subject.addBehavior(surfaceMagnetismBehavior);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
-    sixDofDragBehavior.allowMultiPointers = true;
+    sixDofDragBehavior.allowMultiPointer = true;
     // When this is enabled, the subject will update based on pointer events
     surfaceMagnetismBehavior.enabled = false;
 
@@ -62,6 +67,7 @@
       card2.visibility = 0.8;
       card3.visibility = 0.8;
     });
+
     sixDofDragBehavior.onDragEndObservable.add(() => {
       surfaceMagnetismBehavior.enabled = false;
       card.visibility = 0.2;
