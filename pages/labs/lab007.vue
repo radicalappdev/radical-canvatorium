@@ -1,5 +1,5 @@
-<script setup>
-  import { MeshBuilder, Vector3, StandardMaterial, Color3 } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3, StandardMaterial, Color3 } from "babylonjs";
   import { AdvancedDynamicTexture, StackPanel, ScrollViewer, TextBlock, Control } from "babylonjs-gui";
 
   definePageMeta({
@@ -13,8 +13,11 @@
 - Limited to simple strings, no objects or arrays`
   });
 
-  const createLabContent = async (scene, xrPromise) => {
-    scene.getCameraByName("camera").position = new BABYLON.Vector3(0, 1, -2);
+  const createLabContent = async (scene: Scene, xrPromise: any) => {
+    const cam = scene.getCameraByName("camera");
+    if (cam) {
+      cam.position = new Vector3(0, 1, -1);
+    }
 
     console.log("Only logs after this point will be displayed in VR. This one won't.");
 
@@ -23,7 +26,7 @@
     customizeXRForLab(xrPromise);
   };
 
-  const createLabConsoleCard = (scene) => {
+  const createLabConsoleCard = (scene: Scene) => {
     // Reactive variable to hold the console log data
     let conLogData = reactive([]);
 
@@ -34,14 +37,16 @@
       let _privateLog = console.log;
       // Redefine console.log method with a custom function
       console.log = function (message) {
-        conLogData.push(message.toString());
-        _privateLog.apply(console, arguments);
+        conLogData.push(message.toString() as never);
+        _privateLog.apply(console, [arguments]);
       };
     };
-    overrideConsole(); // call once to override console.log()
+    // call once to override console.log()
+    overrideConsole();
 
     console.log("Lab 007 - Console logging in VR with Babylon JS");
     console.log("");
+    console.log("test", "another arg");
 
     const width = 6;
     const height = 3.6;
@@ -94,7 +99,7 @@
     return plane;
   };
 
-  async function customizeXRForLab(xrPromise) {
+  async function customizeXRForLab(xrPromise: any) {
     const xr = await xrPromise;
 
     console.log("Lab 007 applying customizations to the XR experience.");
@@ -104,8 +109,8 @@
     console.log(" • A and B buttons on the right controller");
     console.log("");
 
-    xr.input.onControllerAddedObservable.add((controller) => {
-      controller.onMotionControllerInitObservable.add((motionController) => {
+    xr.input.onControllerAddedObservable.add((controller: { onMotionControllerInitObservable: { add: (arg0: (motionController: any) => void) => void } }) => {
+      controller.onMotionControllerInitObservable.add((motionController: { handness: string; getComponentIds: () => any; getComponent: (arg0: any) => any }) => {
         if (motionController.handness === "left") {
           const xr_ids = motionController.getComponentIds();
 
