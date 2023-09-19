@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, StandardMaterial, Color3 } from "babylonjs";
-  import { AdvancedDynamicTexture, StackPanel, ScrollViewer, TextBlock, Control } from "babylonjs-gui";
+  import { Scene, Vector3 } from "babylonjs";
+  import { ScrollViewer, TextBlock, Control } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
@@ -49,7 +49,7 @@
 
     console.log("Lab 007 - Console logging in VR with Babylon JS");
     console.log("");
-    console.log("test", "another arg");
+    console.log("A string", "and another string", new Vector3(1, 2, 3));
 
     const width = 6;
     const height = 3.6;
