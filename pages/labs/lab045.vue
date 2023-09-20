@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3, Animation } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3, Animation } from "babylonjs";
   import { TextBlock, Image, Ellipse, Control } from "babylonjs-gui";
 
   definePageMeta({
@@ -8,18 +8,19 @@
     description: "In this lab I created a reusable card made from a plane and an AdvancedDynamicTexture."
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     const showModal = ref(false);
     const showReplace = ref(false);
     const showDetail = ref(false);
 
-    // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -2);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -2);
+    }
 
     // Examples of using the canLabCardSimple, defined in lab-cards.ts
     // Build a main / parent card
-    const lab045_example_1 = (scene) => {
+    const lab045_example_1 = (scene: Scene) => {
       const { plane, advancedTexture } = canLabCardSimple(8, 4.2, scene);
       plane.name = "parent-plane";
       plane.position = new Vector3(0, 1.2, 0);
@@ -52,7 +53,7 @@
       const paragraph = new TextBlock();
       paragraph.text = "Developer General working with a variety of technology to solve real problems. I focus on UI/UX, Workflow, and Spatial Computing.";
       paragraph.color = labColors.slate8;
-      paragraph.background = "white";
+      // paragraph.background = "white";
       paragraph.fontSize = 28;
       paragraph.textWrapping = true;
       paragraph.width = 0.9;
@@ -67,7 +68,9 @@
       button1.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
       button1.left = "50px";
       button1.top = "-40px";
-      button1.textBlock.fontSize = 26;
+      if (button1.textBlock) {
+        button1.textBlock.fontSize = 26;
+      }
       button1.onPointerUpObservable.add(() => {
         console.log("Modal Open");
         showModal.value = true;
@@ -133,7 +136,7 @@
       });
     };
 
-    const lab045_example_2 = (scene) => {
+    const lab045_example_2 = (scene: Scene) => {
       // a simple card with a paragraph of text and a button
 
       const { plane, advancedTexture } = canLabCardSimple(6, 3.2, scene);
@@ -171,7 +174,7 @@
     //   lab045_example_3 is another example of a card with a paragraph of text and a button
     // this time it will hide the card and show a new card in its place
 
-    const lab045_example_3 = (scene) => {
+    const lab045_example_3 = (scene: Scene) => {
       // a simple card with a paragraph of text and a button
 
       const { plane, advancedTexture } = canLabCardSimple(8, 5.2, scene);
@@ -209,7 +212,7 @@
     // lab045_example_4 should show a card next to the parent card
     // place it to the right and angle it slightly to face the camera
 
-    const lab045_example_4 = (scene) => {
+    const lab045_example_4 = (scene: Scene) => {
       // a simple card with a paragraph of text and a button
 
       const { plane, advancedTexture } = canLabCardSimple(3.4, 6, scene);
