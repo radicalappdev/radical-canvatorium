@@ -28,7 +28,7 @@
 
   const createLabConsoleCard = (scene: Scene) => {
     // Reactive variable to hold the console log data
-    let conLogData = reactive([]);
+    let conLogData = reactive([] as Array<string>);
 
     // Override console.log()
     const overrideConsole = () => {
@@ -39,7 +39,7 @@
       console.log = function (...args) {
         const logString = args.map((arg) => arg.toString()).join(" | "); // Change the separator as needed
 
-        conLogData.push(logString as never);
+        conLogData.push(logString);
         _privateLog.apply(console, args);
       };
     };
