@@ -4,9 +4,11 @@
 
   definePageMeta({
     featured: true,
-    title: "Lab 056 - ",
-    description: "",
-    labNotes: ``
+    title: "Lab 056 - Sphere Panel + Surface Magnetism Behavior",
+    description: "Can I snap a subject to objects in a Sphere Panel?",
+    labNotes: `This functions, but has some quirks.
+- There is not way to tell the surface magnetism behavior to attach to a given face of the mesh. It will always attach to the closest face.
+- If the subject overlaps the target too much, the behavior may not trigger.`
   });
 
   const createLabContent = async (scene: Scene) => {
