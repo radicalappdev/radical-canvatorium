@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3, Animation } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3, Animation } from "babylonjs";
   import { TextBlock, Control } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
@@ -9,15 +9,18 @@
     description: "Replace the main content with another window of the same size and shape. Useful for navigation stacks."
   });
 
-  const createLabContent = async (scene) => {
+  type ComputingRecord = (typeof computingData)[0];
+
+  const createLabContent = async (scene: Scene) => {
     // Data and state at parent scope
     const activeIndex = ref(2);
-    const activeRecord = computed(() => computingData[activeIndex.value]);
-
+    const activeRecord = computed(() => computingData[activeIndex.value] as ComputingRecord);
     const showReplace = ref(false);
 
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -2);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -2);
+    }
 
     // Use the window group from the lab uikit
     const windowGroupMesh = canLabWindowGroup(scene);
@@ -66,7 +69,7 @@
   };
 
   // Create a card with a long description
-  const lab048_example_1 = (activeRecord, showReplace, scene) => {
+  const lab048_example_1 = (activeRecord: Ref, showReplace: Ref, scene: Scene) => {
     const { plane: replaceMesh, advancedTexture: replaceTexture } = canLabCardSimple(8, 4.6, scene);
 
     const paragraph = new TextBlock();

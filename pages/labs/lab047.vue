@@ -9,12 +9,12 @@
     description: "This lab builds on Lab 046 by adding a modal window when the user clicks on the short description. "
   });
 
-  type Record = (typeof computingData)[0];
+  type ComputingRecord = (typeof computingData)[0];
 
   const createLabContent = async (scene: Scene) => {
     // Data and state at parent scope
     const activeIndex = ref(1);
-    const activeRecord = computed(() => computingData[activeIndex.value] as Record);
+    const activeRecord = computed(() => computingData[activeIndex.value] as ComputingRecord);
     const showModal = ref(false);
 
     const cam = scene.getCameraByName("camera");
