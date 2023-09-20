@@ -23,7 +23,7 @@
 
     const cardWidth = 0.1;
     const cardHeight = 0.1;
-    const cardThickness = 0.01;
+    const cardThickness = 0.1;
     const card = MeshBuilder.CreateBox("card", { width: cardWidth, height: cardHeight, depth: cardThickness }, scene);
     card.isPickable = false;
     card.material = cardMat;
@@ -32,11 +32,12 @@
     // Create the 3D UI manager
     var manager = new GUI3DManager(scene);
     var anchor = new TransformNode("");
-    anchor.position = new Vector3(0, 1.5, 0);
+    anchor.position = new Vector3(0, 1.5, 1);
 
     var panel = new SpherePanel();
-    panel.margin = 0.1;
-    panel.radius = 2;
+    panel.margin = 0.15;
+    panel.radius = 1.5;
+    panel.columns = 15;
 
     manager.addControl(panel);
     panel.linkToTransformNode(anchor);
@@ -71,6 +72,7 @@
 
     const surfaceMagnetismBehavior = new SurfaceMagnetismBehavior();
     surfaceMagnetismBehavior.meshes = cards;
+    surfaceMagnetismBehavior.hitNormalOffset = 0;
     surfaceMagnetismBehavior.keepOrientationVertical = false;
     surfaceMagnetismBehavior.maxStickingDistance = 0.5;
     subject.addBehavior(surfaceMagnetismBehavior);
