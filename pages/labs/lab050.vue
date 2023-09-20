@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Scene, TransformNode, Vector3, Animation } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel, Container3D } from "babylonjs-gui";
+  import { AdvancedDynamicTexture, TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel, Container3D, Control3D } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -56,7 +56,8 @@
 
     // This is a hack to reorder the plane panel
     // https://forum.babylonjs.com/t/change-layout-order-of-plane-panel/42709
-    plainPanel._mapGridNode = function (control, nodePosition) {
+    // Ignore the type error for this hack by casting to any
+    (plainPanel as any)._mapGridNode = function (control: Control3D, nodePosition: Vector3) {
       const mesh = control.mesh;
 
       if (!mesh) {
