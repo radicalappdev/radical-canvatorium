@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3 } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3, SixDofDragBehavior } from "babylonjs";
   import { TextBlock } from "babylonjs-gui";
 
   definePageMeta({
@@ -9,7 +9,7 @@
     labNotes: `How many AdvancedDynamicTextures can I load in a WebXR scene on an Meta Quest 2? It seems like 30 to 50 is a safe bet for now. These cards only have a single text block and a SixDofDragBehavior. When I make more advanced cards with more controls, I may have to reduce the number of cards in a scene.`
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     for (let i = 0; i < 50; i++) {
       const card = generateCard(scene);
       card.position.x = Math.random() * 10 - 5;
@@ -18,7 +18,7 @@
     }
   };
 
-  const generateCard = (scene) => {
+  const generateCard = (scene: Scene) => {
     const { plane, advancedTexture } = canLabCardSimple(7.4, 3, scene);
     plane.name = "plane";
     plane.position = new Vector3(0, 1.2, 0);
@@ -31,8 +31,8 @@
     titleText.fontSize = 84;
     advancedTexture.addControl(titleText);
 
-    const sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
-    sixDofDragBehavior.allowMultiPointers = true;
+    const sixDofDragBehavior = new SixDofDragBehavior();
+    sixDofDragBehavior.allowMultiPointer = true;
     plane.addBehavior(sixDofDragBehavior);
 
     return plane;
