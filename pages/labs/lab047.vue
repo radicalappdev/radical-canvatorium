@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3, Animation } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3, Animation } from "babylonjs";
   import { TextBlock, Control } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
@@ -9,15 +9,18 @@
     description: "This lab builds on Lab 046 by adding a modal window when the user clicks on the short description. "
   });
 
-  const createLabContent = async (scene) => {
+  type Record = (typeof computingData)[0];
+
+  const createLabContent = async (scene: Scene) => {
     // Data and state at parent scope
     const activeIndex = ref(1);
-    const activeRecord = computed(() => computingData[activeIndex.value]);
-
+    const activeRecord = computed(() => computingData[activeIndex.value] as Record);
     const showModal = ref(false);
 
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -2);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -2);
+    }
 
     // Use the window group from the lab uikit
     const windowGroupMesh = canLabWindowGroup(scene);
@@ -65,7 +68,7 @@
   };
 
   // Create a card with a long description
-  const lab047_example_1 = (activeRecord, showModal, scene) => {
+  const lab047_example_1 = (activeRecord: Ref, showModal: Ref, scene: Scene) => {
     const { plane: modalMesh, advancedTexture: modalTexture } = canLabCardSimple(7.2, 3.4, scene);
 
     const paragraph = new TextBlock();
