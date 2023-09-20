@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3 } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3 } from "babylonjs";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -8,14 +8,16 @@
     description: "Building a main window that will be used across a series of labs."
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     // Data and state at parent scope
     const activeIndex = ref(0);
     const activeRecord = computed(() => computingData[activeIndex.value]);
 
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -2);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -2);
+    }
 
     // Create a window group object. This is a parent object that will contain the window and toolbar planes, and any other objects we want to add to the window. This can be found in lab-uikit.ts
     const windowGroupMesh = canLabWindowGroup(scene);
