@@ -15,6 +15,7 @@
     WebXRPlaneDetector
   } from "babylonjs";
   import * as earcut from "earcut";
+  window.earcut = earcut;
 
   definePageMeta({
     featured: false,
