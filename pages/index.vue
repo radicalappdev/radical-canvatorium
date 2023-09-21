@@ -5,19 +5,15 @@
     <br />
     <p>All information about this project has moved to <a class="underline" href="https://vrhermit.com/canvatorium/">https://vrhermit.com/canvatorium/</a></p>
     <br />
-    <h2 class="text-lg font-bold my-4">All Labs</h2>
-    <div class="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4">
-      <nuxt-link v-for="route in labRoutes" :to="route.path" class="bg-slate-100 p-2 hover:bg-slate-200 drop-shadow-lg" :key="route.path">
-        <p class="font-bold">{{ route.meta.title }}</p>
-        <p>{{ route.meta.description }}</p>
-      </nuxt-link>
-    </div>
     <br />
-    <h2 class="text-lg font-bold my-4">All Benches</h2>
     <div class="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4">
-      <nuxt-link v-for="route in benchRoutes" :to="route.path" class="bg-slate-100 p-2 hover:bg-slate-200 drop-shadow-lg" :key="route.path">
-        <p class="font-bold">{{ route.meta.title }}</p>
-        <p>{{ route.meta.description }}</p>
+      <nuxt-link to="/labs" class="bg-slate-100 p-2 hover:bg-slate-200 drop-shadow-lg">
+        <p class="font-bold">Labs</p>
+        <p>Spatial Computing (WebXR, VR, AR, MR)</p>
+      </nuxt-link>
+      <nuxt-link to="/benches" class="bg-slate-100 p-2 hover:bg-slate-200 drop-shadow-lg">
+        <p class="font-bold">Benches</p>
+        <p>Exploring 3D concepts and Babylon JS features without WebXR</p>
       </nuxt-link>
     </div>
   </div>
@@ -26,15 +22,9 @@
 <script setup>
   definePageMeta({
     featured: false,
-    title: "Home",
-    description: "You are here"
+    title: "Canvatorium",
+    description: "An experimental design lab for spatial computing"
   });
 
-  const router = useRouter();
-
-  const allRoutes = router.options.routes;
-
-  const labRoutes = allRoutes.filter((route) => route.path.startsWith("/labs") && route.path !== "/labs");
-
-  const benchRoutes = allRoutes.filter((route) => route.path.startsWith("/benches") && route.path !== "/benches");
+  window.document.title = "Canvatorium";
 </script>

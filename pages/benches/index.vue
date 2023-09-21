@@ -29,4 +29,6 @@
     }
     return 0;
   });
+
+  window.document.title = "Benches - Canvatorium";
 </script>
