@@ -182,7 +182,7 @@ const labCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) 
 const labCreateOverlay = (scene: Scene, engine: Engine) => {
   const route = useRoute();
   // Force these to be strings
-  const titleText: string = (route.meta.title ?? "Lab Title").toString();
+  const titleText: string = (route.meta.title ?? "Canvatorium").toString();
 
   // Create a BABYLON GUI AdvancedDynamicTexture
   const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("lab-overlay", true, scene);
@@ -237,6 +237,9 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
     const target = baseURL + labPath;
     window.open(target, "_blank");
   });
+
+  // set window title
+  window.document.title = titleText;
 
   const buttonScreenshotLabel = new TextBlock();
   buttonScreenshotLabel.text = "Screenshot";
