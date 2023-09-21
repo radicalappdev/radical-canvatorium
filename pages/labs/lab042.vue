@@ -1,5 +1,5 @@
-<script setup>
-  import { MeshBuilder, PointerDragBehavior } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Mesh, MeshBuilder, PointerDragBehavior } from "babylonjs";
 
   definePageMeta({
     featured: false,
@@ -7,8 +7,8 @@
     description: "Lay out 3D objects in a line"
   });
 
-  const createLabContent = async (scene) => {
-    const addBoxesToLayout = (numBoxes, layout, scene) => {
+  const createLabContent = async (scene: Scene) => {
+    const addBoxesToLayout = (numBoxes: number, layout: Mesh, scene: Scene) => {
       // Add the layout box
       layout.position.y = 0.5;
 

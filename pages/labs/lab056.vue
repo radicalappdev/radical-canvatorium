@@ -1,46 +1,68 @@
 <script lang="ts" setup>
-  import { Scene, StandardMaterial, Vector3, Color3, MeshBuilder, SixDofDragBehavior, SurfaceMagnetismBehavior } from "babylonjs";
+  import { Scene, StandardMaterial, Vector3, Color3, MeshBuilder, SixDofDragBehavior, SurfaceMagnetismBehavior, TransformNode, BoundingBox } from "babylonjs";
+  import { MeshButton3D, GUI3DManager, SpherePanel } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
-    title: "Lab 017 - Surface Magnetism Behavior",
-    description: "Revamped version of Lab 017, playing the Surface Magnetism Behavior.",
-    labNotes: ``
+    title: "Lab 056 - Sphere Panel + Surface Magnetism Behavior",
+    description: "Can I snap a subject to objects in a Sphere Panel?",
+    labNotes: `This functions, but has some quirks.
+- There is not way to tell the surface magnetism behavior to attach to a given face of the mesh. It will always attach to the closest face.
+- If the subject overlaps the target too much, the behavior may not trigger.`
   });
 
   const createLabContent = async (scene: Scene) => {
     const cam = scene.getCameraByName("camera");
     if (cam) {
-      cam.position = new Vector3(0, 1, -1);
+      cam.position = new Vector3(0, 1, -2);
     }
 
     // Create the cards that we will snap the subject to
     const cardMat = new StandardMaterial("card-mat", scene);
     cardMat.diffuseColor = Color3.FromHexString(labColors.slate4);
     cardMat.specularColor = new Color3(0.2, 0.2, 0.2);
+    cardMat.alpha = 0.2;
 
-    const cardWidth = 0.6;
-    const cardHeight = 0.4;
-    const cardThickness = 0.01;
+    const cardWidth = 0.1;
+    const cardHeight = 0.1;
+    const cardThickness = 0.1;
     const card = MeshBuilder.CreateBox("card", { width: cardWidth, height: cardHeight, depth: cardThickness }, scene);
     card.isPickable = false;
     card.material = cardMat;
     card.position = new Vector3(0, 1.5, 0);
-    card.visibility = 0.2;
 
-    const card2 = card.clone("card2");
-    card2.position = new Vector3(-0.6, 1.5, -0.2);
-    card2.rotation.y = -0.7;
+    // Create the 3D UI manager
+    var manager = new GUI3DManager(scene);
+    var anchor = new TransformNode("");
+    anchor.position = new Vector3(0, 1.5, 1);
 
-    const card3 = card.clone("card3");
-    card3.position = new Vector3(0.6, 1.5, -0.2);
-    card3.rotation.y = 0.7;
+    var panel = new SpherePanel();
+    panel.margin = 0.15;
+    panel.radius = 1.5;
+    panel.columns = 15;
+
+    manager.addControl(panel);
+    panel.linkToTransformNode(anchor);
+    panel.position.z = -1.5;
+
+    let cards = [];
+
+    panel.blockLayout = true;
+    for (var index = 0; index < 60; index++) {
+      const newCard = card.clone("card" + index);
+      const meshButton3D = new MeshButton3D(newCard, "button" + index);
+
+      panel.addControl(meshButton3D);
+      cards.push(newCard);
+    }
+    panel.blockLayout = false;
+
+    card.dispose();
 
     // Create the subject of the lab - the object that will be dragged around
     const subjectMat = new StandardMaterial("grab-mat4", scene);
     subjectMat.diffuseColor = Color3.FromHexString(labColors.purple);
     subjectMat.specularColor = new Color3(0.2, 0.2, 0.2);
-
     const subject = MeshBuilder.CreateBox("subject", {
       height: 0.6,
       width: 0.6,
@@ -51,7 +73,10 @@
     subject.scaling = new Vector3(0.4, 0.4, 0.4);
 
     const surfaceMagnetismBehavior = new SurfaceMagnetismBehavior();
-    surfaceMagnetismBehavior.meshes = [card, card2, card3];
+    surfaceMagnetismBehavior.meshes = cards;
+    surfaceMagnetismBehavior.hitNormalOffset = 0;
+    surfaceMagnetismBehavior.keepOrientationVertical = false;
+    surfaceMagnetismBehavior.maxStickingDistance = 0.5;
     subject.addBehavior(surfaceMagnetismBehavior);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
@@ -63,16 +88,12 @@
     // It will stop respnding to the pointer events and only snap to the surface during the drag
     sixDofDragBehavior.onDragStartObservable.add(() => {
       surfaceMagnetismBehavior.enabled = true;
-      card.visibility = 0.8;
-      card2.visibility = 0.8;
-      card3.visibility = 0.8;
+      cardMat.alpha = 0.8;
     });
 
     sixDofDragBehavior.onDragEndObservable.add(() => {
       surfaceMagnetismBehavior.enabled = false;
-      card.visibility = 0.2;
-      card2.visibility = 0.2;
-      card3.visibility = 0.2;
+      cardMat.alpha = 0.2;
     });
 
     subject.addBehavior(sixDofDragBehavior);

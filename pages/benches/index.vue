@@ -1,10 +1,9 @@
 <template>
   <div class="max-w-screen-md h-[calc(100%_-_2rem)] overflow-y-auto container mx-auto">
-    <h2 class="text-lg font-bold my-4">Canvatorium Labs</h2>
+    <h2 class="text-lg font-bold my-4">All Benches</h2>
     <nuxt-link to="/">
       <p class="p-2 hover:bg-slate-100 drop-shadow-lg rounded">← back</p>
     </nuxt-link>
-
     <nuxt-link v-for="route in labRoutes" :to="route.path" :key="route.path">
       <p class="p-2 hover:bg-slate-100 drop-shadow-lg rounded">{{ route.meta.title }}</p>
     </nuxt-link>
@@ -16,14 +15,14 @@
 
   definePageMeta({
     featured: false,
-    title: "All Labs",
-    description: "A list of all labs in the project. For now, these are just `nuxt-link` components, but I'll might convert this page to a Babylon JS scene."
+    title: "All Benches",
+    description: "A list of all benches in the project. For now, these are just `nuxt-link` components, but I'll might convert this page to a Babylon JS scene."
   });
 
   const allRoutes = router.options.routes;
 
   // Create a new array that only includes routes that begon with /labs and exlude the index page
-  let labRoutes = allRoutes.filter((route) => route.path.startsWith("/labs") && route.path !== "/labs");
+  let labRoutes = allRoutes.filter((route) => route.path.startsWith("/benches") && route.path !== "/benches");
   labRoutes = labRoutes.sort((a, b) => {
     if (a.meta.title > b.meta.title) {
       return -1;
@@ -35,6 +34,6 @@
   });
 
   onMounted(() => {
-    window.document.title = "Labs - Canvatorium";
+    window.document.title = "Benches - Canvatorium";
   });
 </script>

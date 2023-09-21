@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3 } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3, SixDofDragBehavior } from "babylonjs";
   import { TextBlock, Button } from "babylonjs-gui";
 
   definePageMeta({
@@ -9,12 +9,18 @@
     labNotes: `Expanding on the previous lab, I want to see if I coucanld make each AdvancedDynamicTexture an independent reactive element. I expored several ways of doing this incuding a simple local ref(), a reactive array of titles, and a reactive array of objects.`
   });
 
-  const createLabContent = async (scene) => {
+  type Item = {
+    title?: string;
+    index?: number;
+  };
+
+  const createLabContent = async (scene: Scene) => {
     const numberOfCards = 50;
 
-    const data = reactive([]);
+    const data = reactive([] as Array<Item>);
     for (let i = 0; i < numberOfCards; i++) {
-      data.push({ title: `I'm Sparticus! (${i})`, index: i });
+      const newItem: Item = { title: `I'm Sparticus! (${i})`, index: i };
+      data.push(newItem as Item);
     }
 
     // Create a card for each title object
@@ -27,7 +33,7 @@
     }
   };
 
-  const generateCard = (scene, item) => {
+  const generateCard = (scene: Scene, item: Item) => {
     // use the index to get the title from the reactive array
     const index = item.index; // just used for naming for now
 
@@ -52,24 +58,26 @@
     button.fontSize = "36px";
     button.color = labColors.slate8;
     button.background = labColors.slate8;
-    button.textBlock.color = labColors.slate1;
     button.cornerRadius = 20;
     button.thickness = 2;
     button.top = 70;
+    if (button.textBlock) {
+      button.textBlock.color = labColors.slate1;
+    }
 
     button.onPointerUpObservable.add(() => {
       item.title = item.title === `I'm Sparticus! (${index})` ? `I'm not Sparticus! (${index})` : `I'm Sparticus! (${index})`;
     });
     advancedTexture.addControl(button);
 
-    const sixDofDragBehavior = new BABYLON.SixDofDragBehavior();
-    sixDofDragBehavior.allowMultiPointers = true;
+    const sixDofDragBehavior = new SixDofDragBehavior();
+    sixDofDragBehavior.allowMultiPointer = true;
     plane.addBehavior(sixDofDragBehavior);
 
     // Watch the title value for changes and update the text block
     watch(item, (newValue, oldValue) => {
       console.log(`item ${index} changed from ${oldValue.title} to ${newValue.title}`);
-      titleText.text = newValue.title;
+      titleText.text = newValue.title || "";
     });
 
     return plane;

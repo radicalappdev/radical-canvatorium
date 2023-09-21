@@ -167,13 +167,22 @@ const labCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) 
 
   console.log("xr player created by useCanvatoriumScene composable", xr);
 
+  if (window) {
+    // could be undefined in SSR
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        xr.baseExperience.exitXRAsync();
+      }
+    });
+  }
+
   return xr;
 };
 
 const labCreateOverlay = (scene: Scene, engine: Engine) => {
   const route = useRoute();
   // Force these to be strings
-  const titleText: string = (route.meta.title ?? "Lab Title").toString();
+  const titleText: string = (route.meta.title ?? "Canvatorium").toString();
 
   // Create a BABYLON GUI AdvancedDynamicTexture
   const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("lab-overlay", true, scene);
@@ -181,7 +190,6 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   const title = new TextBlock();
   title.text = titleText;
   title.color = "white";
-
   title.fontSize = "16px";
   title.fontWeight = "bold";
   title.textWrapping = true;
@@ -198,6 +206,40 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   titleBackground.height = "40px";
   titleBackground.background = labColors.slate8;
   titleBackground.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+
+  const codeLinkLabel = new TextBlock();
+  codeLinkLabel.text = "<Code />";
+  codeLinkLabel.color = "white";
+  codeLinkLabel.fontSize = 14;
+  codeLinkLabel.paddingTop = "5px";
+
+  const codeLink = new Button();
+  codeLink.width = "120px";
+  codeLink.height = "60px";
+  codeLink.color = "white";
+  codeLink.background = labColors.slate8;
+  codeLink.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+  codeLink.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+  codeLink.left = "100px";
+  codeLink.paddingTop = "10px";
+  codeLink.paddingBottom = "10px";
+  codeLink.paddingLeft = "12px";
+  codeLink.paddingRight = "12px";
+  codeLink.cornerRadius = 5;
+  codeLink.thickness = 2;
+  codeLink.addControl(codeLinkLabel);
+
+  codeLink.onPointerClickObservable.add(() => {
+    // Open the code on GitHub in the main branch.
+    // This isn't perfect, but it's a start. It should work for everything in the pages directory.
+    const baseURL = "https://github.com/radicalappdev/radical-canvatorium/blob/main/pages";
+    const labPath = route.path + ".vue";
+    const target = baseURL + labPath;
+    window.open(target, "_blank");
+  });
+
+  // set window title
+  window.document.title = titleText;
 
   const buttonScreenshotLabel = new TextBlock();
   buttonScreenshotLabel.text = "Screenshot";
@@ -224,6 +266,7 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
     buttonScreenshot.isVisible = false;
     titleBackground.isVisible = false;
     title.isVisible = false;
+    codeLink.isVisible = false;
 
     const size = {
       width: engine.getRenderWidth() * 2,
@@ -239,11 +282,13 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
       buttonScreenshot.isVisible = true;
       titleBackground.isVisible = true;
       title.isVisible = true;
+      codeLink.isVisible = true;
     }, 100);
   });
 
   // Populate the advanced texture
   advancedTexture.addControl(titleBackground);
   advancedTexture.addControl(title);
+  advancedTexture.addControl(codeLink);
   advancedTexture.addControl(buttonScreenshot);
 };

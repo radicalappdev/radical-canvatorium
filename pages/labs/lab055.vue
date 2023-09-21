@@ -1,5 +1,6 @@
-<script setup>
+<script lang="ts" setup>
   import {
+    Scene,
     Vector3,
     Vector2,
     MeshBuilder,
@@ -10,9 +11,11 @@
     SixDofDragBehavior,
     SurfaceMagnetismBehavior,
     AxisDragGizmo,
-    UtilityLayerRenderer
+    UtilityLayerRenderer,
+    WebXRPlaneDetector
   } from "babylonjs";
   import * as earcut from "earcut";
+  window.earcut = earcut;
 
   definePageMeta({
     featured: false,
@@ -20,14 +23,14 @@
     description: "This lab expands on Lab 054 and Lab 017 to create a simple scene where I can drag an object around, snapping it to a wall when releasing it."
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     const detectedMat = new StandardMaterial("mat", scene);
     detectedMat.diffuseColor = Color3.FromHexString(labColors.slate1);
     detectedMat.alpha = 0;
 
     // Create the subject of the lab - the object that will be dragged around
     const subjectMat = new StandardMaterial("grab-mat4", scene);
-    subjectMat.diffuseColor = new Color3.FromHexString(labColors.purple);
+    subjectMat.diffuseColor = Color3.FromHexString(labColors.purple);
     subjectMat.specularColor = new Color3(0.2, 0.2, 0.2);
     const subject = MeshBuilder.CreateBox("subject", {
       height: 0.6,
@@ -43,7 +46,7 @@
     subject.addBehavior(surfaceMagnetismBehavior);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
-    sixDofDragBehavior.allowMultiPointers = true;
+    sixDofDragBehavior.allowMultiPointer = true;
     // When this is enabled, the subject will update based on pointer events
     surfaceMagnetismBehavior.enabled = true;
 
@@ -80,14 +83,13 @@
     // WebXR Plane Detection: https://playground.babylonjs.com/#98TM63
 
     const fm = xr.baseExperience.featuresManager;
-    const xrPlanes = fm.enableFeature(BABYLON.WebXRPlaneDetector.Name, "latest");
-    const planes = [];
-
-    xrPlanes.onPlaneAddedObservable.add((plane) => {
+    const xrPlanes = fm.enableFeature(WebXRPlaneDetector.Name, "latest") as WebXRPlaneDetector;
+    const planes: any[] = [];
+    xrPlanes.onPlaneAddedObservable.add((plane: any) => {
       plane.polygonDefinition.push(plane.polygonDefinition[0]);
       var polygon_triangulation = new PolygonMeshBuilder(
         "name",
-        plane.polygonDefinition.map((p) => new Vector2(p.x, p.z)),
+        plane.polygonDefinition.map((p: Vector3) => new Vector2(p.x, p.z)),
         scene,
         earcut
       );
@@ -95,7 +97,7 @@
       plane.mesh = polygon;
       planes[plane.id] = plane.mesh;
 
-      polygon.createNormals();
+      polygon.createNormals(false);
 
       plane.mesh.material = detectedMat;
       // plane.mesh.visibility = 0.2;
@@ -104,23 +106,23 @@
       surfaceMagnetismBehavior.meshes.push(plane.mesh);
     });
 
-    xrPlanes.onPlaneUpdatedObservable.add((plane) => {
+    xrPlanes.onPlaneUpdatedObservable.add((plane: any) => {
       if (plane.mesh) {
         plane.mesh.dispose(false, false);
       }
-      const some = plane.polygonDefinition.some((p) => !p);
+      const some = plane.polygonDefinition.some((p: Vector3) => !p);
       if (some) {
         return;
       }
       plane.polygonDefinition.push(plane.polygonDefinition[0]);
       var polygon_triangulation = new PolygonMeshBuilder(
         "name",
-        plane.polygonDefinition.map((p) => new Vector2(p.x, p.z)),
+        plane.polygonDefinition.map((p: Vector3) => new Vector2(p.x, p.z)),
         scene,
         earcut
       );
       var polygon = polygon_triangulation.build(false, 0.01);
-      polygon.createNormals();
+      polygon.createNormals(false);
       plane.mesh = polygon;
 
       planes[plane.id] = plane.mesh;

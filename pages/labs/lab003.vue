@@ -1,5 +1,5 @@
-<script setup>
-  import { Color3, StandardMaterial, MeshBuilder, Vector3 } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Mesh, Color3, StandardMaterial, MeshBuilder, Vector3 } from "babylonjs";
 
   definePageMeta({
     featured: false,
@@ -10,18 +10,18 @@
 - Controller input example: scale boxes with triggers on the controllers`
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     // get mesh by name 'ground' to use for teleportation - this is created by the labCreateRoom function in useCanvatoriumScene
-    const ground = scene.getMeshByName("ground");
+    const ground = scene.getMeshByName("ground") as Mesh;
     console.log("ground", ground);
 
     const xr = await scene.createDefaultXRExperienceAsync({
-      floorMeshes: ground
+      floorMeshes: [ground]
     });
 
     // Demo 1: Move the player to the purple landing pad when they enter immersive mode
     const purple = new StandardMaterial("purple", scene);
-    purple.diffuseColor = new Color3.FromHexString(labColors.purple);
+    purple.diffuseColor = Color3.FromHexString(labColors.purple);
 
     const landing = MeshBuilder.CreateCylinder("cylinder", { diameter: 1, height: 0.2 }, scene);
     landing.position = new Vector3(2, 0.1, 3);
@@ -37,7 +37,7 @@
 
     // Demo 2: Controller input. Scale these boxes with the triggers on the controllers
     const cyan = new StandardMaterial("cyan", scene);
-    cyan.diffuseColor = new Color3.FromHexString(labColors.cyan);
+    cyan.diffuseColor = Color3.FromHexString(labColors.cyan);
     const box1 = MeshBuilder.CreateBox("box", { size: 0.8 }, scene);
     box1.position = new Vector3(1.5, 1, 5);
     box1.material = cyan;

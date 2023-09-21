@@ -1,4 +1,5 @@
-<script setup>
+<script lang="ts" setup>
+  import { Scene } from "babylonjs";
   import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Rectangle } from "babylonjs-gui";
 
   const route = useRoute();
@@ -10,7 +11,7 @@
   });
 
   // Add lab-specific content here using the provided 'scene' instance
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     // Create a BABYLON GUI AdvancedDynamicTexture
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
@@ -40,7 +41,7 @@
 
     // Add a header
     const title = new TextBlock();
-    title.text = route.meta.title;
+    title.text = route.meta.title as string;
     title.fontFamily = "Verdana";
     title.height = "60px";
     title.color = "black";
@@ -53,7 +54,7 @@
 
     // Add a description
     const description = new TextBlock();
-    description.text = route.meta.description;
+    description.text = route.meta.description as string;
     description.fontFamily = "Verdana";
     description.height = "100px";
     description.color = "black";
@@ -63,11 +64,6 @@
     description.fontSize = "14px";
     description.textWrapping = true;
     innerPanel.addControl(description);
-
-    // Add the panel to the outer panel
-    // outerPanel.addControl(innerPanel);
-
-    // advancedTexture.addControl(outerPanel);
   };
 
   const bjsCanvas = ref(null);

@@ -1,6 +1,6 @@
-<script setup>
-  import { Vector3, Animation } from "babylonjs";
-  import { TextBlock, Control } from "babylonjs-gui";
+<script lang="ts" setup>
+  import { Scene, Vector3, Animation } from "babylonjs";
+  import { TextBlock, Control, Rectangle } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -9,7 +9,9 @@
     description: "Adding a simple tooltip for the image on the main window. The tooltip will appear above the window on hover."
   });
 
-  const createLabContent = async (scene) => {
+  type ComputingRecord = (typeof computingData)[0];
+
+  const createLabContent = async (scene: Scene) => {
     // Data and state at parent scope
     const activeIndex = ref(4);
     const activeRecord = computed(() => computingData[activeIndex.value]);
@@ -17,7 +19,9 @@
     const showTip = ref(false);
 
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -2);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -2);
+    }
 
     // Use the window group from the lab uikit
     const windowGroupMesh = canLabWindowGroup(scene);
@@ -77,10 +81,10 @@
   };
 
   // Create a card with a long description
-  const lab051_example_1 = (activeRecord, scene) => {
+  const lab051_example_1 = (activeRecord: Ref, scene: Scene) => {
     const { plane: tipMesh, advancedTexture: tipTexture } = canLabCardSimple(6, 2, scene);
 
-    const rect = tipTexture.getControlByName("rect");
+    const rect = tipTexture.getControlByName("rect") as Rectangle;
     if (rect) {
       rect.background = labColors.slate8;
       rect.alpha = 1;

@@ -1,5 +1,5 @@
-<script setup>
-  import { AbstractMesh, Vector3 } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, AbstractMesh, Vector3 } from "babylonjs";
   import { GUI3DManager, NearMenu, TouchHolographicButton, ScrollViewer, TextBlock, Control } from "babylonjs-gui";
 
   definePageMeta({
@@ -9,8 +9,11 @@
     labNotes: ``
   });
 
-  const createLabContent = async (scene, xrPromise) => {
-    scene.getCameraByName("camera").position = new BABYLON.Vector3(0, 1, -2);
+  const createLabContent = async (scene: Scene, xrPromise: any) => {
+    const cam = scene.getCameraByName("camera");
+    if (cam) {
+      cam.position = new Vector3(0, 1, -1);
+    }
 
     // Create the 3D UI manager
     const anchor = new AbstractMesh("anchor", scene);
@@ -26,7 +29,7 @@
     var button0 = new TouchHolographicButton("button0");
     button0.text = "Oculus";
     button0.onPointerClickObservable.add(() => {
-      console.log("Oculus was a way better name...");
+      console.log("Meta Quest 3", "Oculus was a way better name...");
     });
     console.log("Button0", button0);
     near.addButton(button0);
@@ -34,7 +37,7 @@
     var button1 = new TouchHolographicButton("button1");
     button1.text = "Vision";
     button1.onPointerClickObservable.add(() => {
-      console.log("Silly name, but take my money!");
+      console.log("Apple Vision Pro", "Silly name, but take my money!");
     });
 
     near.addButton(button1);
@@ -42,7 +45,7 @@
     var button2 = new TouchHolographicButton("button2");
     button2.text = "Vive";
     button2.onPointerClickObservable.add(() => {
-      console.log("Lol what every happend to them?");
+      console.log("HTC Vive", "Lol what every happend to them?");
     });
     near.addButton(button2);
 
@@ -58,24 +61,28 @@
     customizeXRForLab(xrPromise);
   };
 
-  const createLabConsoleCard = (scene) => {
+  const createLabConsoleCard = (scene: Scene) => {
     // Reactive variable to hold the console log data
-    let conLogData = reactive([]);
+    let conLogData = reactive([] as Array<string>);
 
     // Override console.log()
-    // Adapted from https://ourcodeworld.com/articles/read/104/how-to-override-the-console-methods-in-javascript
     const overrideConsole = () => {
       // Save the original method in a private variable
       let _privateLog = console.log;
+
       // Redefine console.log method with a custom function
-      console.log = function (message) {
-        conLogData.push(message.toString());
-        _privateLog.apply(console, arguments);
+      console.log = function (...args) {
+        const logString = args.map((arg) => arg.toString()).join(" | "); // Change the separator as needed
+
+        conLogData.push(logString);
+        _privateLog.apply(console, args);
       };
     };
-    overrideConsole(); // call once to override console.log()
 
-    console.log("Lab 007 - Near Interactions");
+    // call once to override console.log()
+    overrideConsole();
+
+    console.log("Lab 008 - Near Interactions");
     console.log("");
 
     const width = 6;
@@ -127,7 +134,7 @@
     return plane;
   };
 
-  async function customizeXRForLab(xrPromise) {
+  async function customizeXRForLab(xrPromise: any) {
     const xr = await xrPromise;
 
     console.log("Lab 008 applying customizations to the XR experience.");

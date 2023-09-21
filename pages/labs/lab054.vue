@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector2, Vector3, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector2, Vector3, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial, WebXRPlaneDetector } from "babylonjs";
   import earcut from "earcut";
   window.earcut = earcut;
 
@@ -16,7 +16,7 @@ On Meta Quest devices this works based on your "Room Setup" data.
 
 Press Y on the controller to toggle the planes.`;
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     // Create a window group object
     const windowGroupMesh = canLabWindowGroup(scene);
     windowGroupMesh.scaling = new Vector3(0.6, 0.6, 0.6);
@@ -38,18 +38,18 @@ Press Y on the controller to toggle the planes.`;
     // WebXR Plane Detection: https://playground.babylonjs.com/#98TM63
 
     const fm = xr.baseExperience.featuresManager;
-    const xrPlanes = fm.enableFeature(BABYLON.WebXRPlaneDetector.Name, "latest");
-    const planes = [];
+    const xrPlanes = fm.enableFeature(WebXRPlaneDetector.Name, "latest") as WebXRPlaneDetector;
+    const planes: any[] = [];
 
     const detectedMat = new StandardMaterial("mat", scene);
     detectedMat.diffuseColor = Color3.FromHexString(labColors.slate1);
     detectedMat.alpha = 0.5;
 
-    xrPlanes.onPlaneAddedObservable.add((plane) => {
+    xrPlanes.onPlaneAddedObservable.add((plane: any) => {
       plane.polygonDefinition.push(plane.polygonDefinition[0]);
       var polygon_triangulation = new PolygonMeshBuilder(
         "name",
-        plane.polygonDefinition.map((p) => new Vector2(p.x, p.z)),
+        plane.polygonDefinition.map((p: Vector3) => new Vector2(p.x, p.z)),
         scene,
         earcut
       );
@@ -57,31 +57,30 @@ Press Y on the controller to toggle the planes.`;
       plane.mesh = polygon;
       planes[plane.id] = plane.mesh;
 
-      polygon.createNormals();
+      polygon.createNormals(false);
 
       plane.mesh.material = detectedMat;
-      // plane.mesh.visibility = 0.2;
       plane.mesh.rotationQuaternion = new Quaternion();
       plane.transformationMatrix.decompose(plane.mesh.scaling, plane.mesh.rotationQuaternion, plane.mesh.position);
     });
 
-    xrPlanes.onPlaneUpdatedObservable.add((plane) => {
+    xrPlanes.onPlaneUpdatedObservable.add((plane: any) => {
       if (plane.mesh) {
         plane.mesh.dispose(false, false);
       }
-      const some = plane.polygonDefinition.some((p) => !p);
+      const some = plane.polygonDefinition.some((p: Vector3) => !p);
       if (some) {
         return;
       }
       plane.polygonDefinition.push(plane.polygonDefinition[0]);
       var polygon_triangulation = new PolygonMeshBuilder(
         "name",
-        plane.polygonDefinition.map((p) => new Vector2(p.x, p.z)),
+        plane.polygonDefinition.map((p: Vector3) => new Vector2(p.x, p.z)),
         scene,
         earcut
       );
       var polygon = polygon_triangulation.build(false, 0.01);
-      polygon.createNormals();
+      polygon.createNormals(false);
       plane.mesh = polygon;
 
       planes[plane.id] = plane.mesh;

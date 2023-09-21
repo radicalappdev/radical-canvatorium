@@ -1,6 +1,6 @@
-<script setup>
-  import { TransformNode, Vector3, Animation, Color4 } from "babylonjs";
-  import { TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel } from "babylonjs-gui";
+<script lang="ts" setup>
+  import { Scene, TransformNode, Vector3, Animation, Color4 } from "babylonjs";
+  import { AdvancedDynamicTexture, TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel, Container3D, Control3D } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({
@@ -10,7 +10,9 @@
       "In this lab I want to explore the use of 3D GUI in a mixed reality environment. I used the example UI from Lab 50 and scaled it down a bit. Toggle the UI on and off. (y-button on the left controller)."
   });
 
-  const createLabContent = async (scene) => {
+  type ComputingRecord = (typeof computingData)[0];
+
+  const createLabContent = async (scene: Scene) => {
     // Data and state at parent scope
     const showMain = ref(false);
     const activeIndex = ref(0);
@@ -19,7 +21,9 @@
 
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -2);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -2);
+    }
     scene.clearColor = Color4.FromHexString("#000000");
 
     // Create a window group object
@@ -55,7 +59,8 @@
 
     // This is a hack to reorder the plane panel
     // https://forum.babylonjs.com/t/change-layout-order-of-plane-panel/42709
-    plainPanel._mapGridNode = function (control, nodePosition) {
+    // Ignore the type error for this hack by casting to any
+    (plainPanel as any)._mapGridNode = function (control: Control3D, nodePosition: Vector3) {
       const mesh = control.mesh;
 
       if (!mesh) {
@@ -63,21 +68,21 @@
       }
 
       // Invert the Y axis to force the plane to draw from top to bottom
-      let newPos = new BABYLON.Vector3(nodePosition.x, -nodePosition.y, nodePosition.z);
+      let newPos = new Vector3(nodePosition.x, -nodePosition.y, nodePosition.z);
 
       control.position = newPos;
 
       const target = newPos.clone();
 
       switch (this.orientation) {
-        case BABYLON.GUI.Container3D.FACEORIGIN_ORIENTATION:
-        case BABYLON.GUI.Container3D.FACEFORWARD_ORIENTATION:
-          target.addInPlace(new BABYLON.Vector3(0, 0, 1));
+        case Container3D.FACEORIGIN_ORIENTATION:
+        case Container3D.FACEFORWARD_ORIENTATION:
+          target.addInPlace(new Vector3(0, 0, 1));
           mesh.lookAt(target);
           break;
-        case BABYLON.GUI.Container3D.FACEFORWARDREVERSED_ORIENTATION:
-        case BABYLON.GUI.Container3D.FACEORIGINREVERSED_ORIENTATION:
-          target.addInPlace(new BABYLON.Vector3(0, 0, -1));
+        case Container3D.FACEFORWARDREVERSED_ORIENTATION:
+        case Container3D.FACEORIGINREVERSED_ORIENTATION:
+          target.addInPlace(new Vector3(0, 0, -1));
           mesh.lookAt(target);
           break;
       }
@@ -187,13 +192,16 @@
     });
   };
 
-  const lab050_example_1 = (record, scene) => {
+  const lab050_example_1 = (record: ComputingRecord, scene: Scene) => {
     const { plane: cellMesh, advancedTexture: cellTexture } = canLabCardSimple(4, 4.6, scene);
 
     const cardTextureName = "content-texture-" + record.id;
     cellTexture.name = cardTextureName;
 
-    cellTexture.getControlByName("rect").background = "#ffffff";
+    const rect = cellTexture.getControlByName("rect") as Rectangle;
+    if (rect) {
+      rect.background = "#ffffff";
+    }
 
     const imageContainer = new Rectangle("masker");
     imageContainer.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -226,9 +234,18 @@
     watch(
       record,
       (newValue) => {
-        const texture = scene.getTextureByName(cardTextureName);
-        texture.getControlByName("name").text = newValue.name;
-        texture.getControlByName("image").source = newValue.imageUrl;
+        const texture = scene.getTextureByName(cardTextureName) as AdvancedDynamicTexture;
+        if (!texture) {
+          return;
+        }
+        const text = texture.getControlByName("name") as TextBlock;
+        if (text) {
+          text.text = newValue.name;
+        }
+        const image = texture.getControlByName("image") as Image;
+        if (image) {
+          image.source = newValue.imageUrl;
+        }
       },
       { immediate: true }
     );
@@ -236,7 +253,7 @@
     return { cellMesh: cellMesh, cellTexture: cellTexture };
   };
 
-  const lab050_example_2 = (showDetail, scene) => {
+  const lab050_example_2 = (showDetail: Ref, scene: Scene) => {
     const toggleDetailWindow = () => {
       showDetail.value = !showDetail.value;
     };
@@ -244,14 +261,19 @@
     const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
     toolbarMesh.name = "toolbar-mesh";
     toolbarTexture.name = "toolbar-texture";
-    toolbarTexture.getControlByName("rect").alpha = 0; // just a hack to hide the card background
+    const rectControl = toolbarTexture.getControlByName("rect");
+    if (rectControl) {
+      rectControl.alpha = 0; // just a hack to hide the card background
+    }
 
     const toolbarButtonToggleDetail = canLabButtonSimple("toolbar-button-toggle-detail", "Back");
     toolbarButtonToggleDetail.width = "100px";
     toolbarButtonToggleDetail.height = "50px";
     toolbarButtonToggleDetail.left = "30px";
     toolbarButtonToggleDetail.onPointerUpObservable.add(toggleDetailWindow);
-    toolbarButtonToggleDetail.textBlock.fontSize = 22;
+    if (toolbarButtonToggleDetail.textBlock) {
+      toolbarButtonToggleDetail.textBlock.fontSize = 22;
+    }
     toolbarTexture.addControl(toolbarButtonToggleDetail);
 
     return toolbarMesh;

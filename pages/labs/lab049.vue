@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3, Animation } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3, Animation } from "babylonjs";
   import { TextBlock, Control } from "babylonjs-gui";
   import computingData from "@/data/computing.json";
 
@@ -9,7 +9,7 @@
     description: "Use a button to toggle a detail window to the side of the main window. Useful for inspectors, etc."
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     // Data and state at parent scope
     const activeIndex = ref(3);
     const activeRecord = computed(() => computingData[activeIndex.value]);
@@ -17,7 +17,9 @@
     const showDetail = ref(false);
 
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -2);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -2);
+    }
 
     // Use the window group from the lab uikit
     const windowGroupMesh = canLabWindowGroup(scene);
@@ -61,7 +63,7 @@
   };
 
   // Create a card with a long description
-  const lab049_example_1 = (activeRecord, scene) => {
+  const lab049_example_1 = (activeRecord: Ref, scene: Scene) => {
     const { plane: detailMesh, advancedTexture: detailTexture } = canLabCardSimple(3.8, 4.6, scene);
 
     const paragraph = new TextBlock();
@@ -78,7 +80,7 @@
     return { detailMesh: detailMesh, replaceTexture: detailTexture };
   };
 
-  const lab049_example_2 = (showDetail, scene) => {
+  const lab049_example_2 = (showDetail: Ref, scene: Scene) => {
     const toggleDetailWindow = () => {
       showDetail.value = !showDetail.value;
     };
@@ -86,14 +88,19 @@
     const { plane: toolbarMesh, advancedTexture: toolbarTexture } = canLabCardSimple(2, 0.8, scene);
     toolbarMesh.name = "toolbar-mesh";
     toolbarTexture.name = "toolbar-texture";
-    toolbarTexture.getControlByName("rect").alpha = 0; // just a hack to hide the card background
+    const rectControl = toolbarTexture.getControlByName("rect");
+    if (rectControl) {
+      rectControl.alpha = 0; // just a hack to hide the card background
+    }
 
     const toolbarButtonToggleDetail = canLabButtonSimple("toolbar-button-toggle-detail", "Details");
     toolbarButtonToggleDetail.width = "100px";
     toolbarButtonToggleDetail.height = "50px";
     toolbarButtonToggleDetail.left = "30px";
     toolbarButtonToggleDetail.onPointerUpObservable.add(toggleDetailWindow);
-    toolbarButtonToggleDetail.textBlock.fontSize = 22;
+    if (toolbarButtonToggleDetail.textBlock) {
+      toolbarButtonToggleDetail.textBlock.fontSize = 22;
+    }
     toolbarTexture.addControl(toolbarButtonToggleDetail);
 
     return toolbarMesh;

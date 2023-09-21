@@ -1,6 +1,6 @@
-<script setup>
-  import { MeshBuilder, Vector3 } from "babylonjs";
-  import { AdvancedDynamicTexture, Button, TextBlock } from "babylonjs-gui";
+<script lang="ts" setup>
+  import { Vector3, Scene } from "babylonjs";
+  import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
@@ -8,7 +8,7 @@
     description: "Using Vue Watch to increment a count with Babylon.js GUI."
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     // Set count as a reactive value
     const count = ref(0);
 
@@ -58,7 +58,13 @@
 
     // watch() the count value and update the counterText control
     watch(count, (newValue) => {
-      scene.getTextureByName("lab-card-rect-texture").getControlByName("couter-text").text = newValue;
+      const counterTexture = scene.getTextureByName("lab-card-rect-texture") as AdvancedDynamicTexture;
+      if (counterTexture) {
+        const counterControl = counterTexture.getControlByName("couter-text") as TextBlock;
+        if (counterControl) {
+          counterControl.text = newValue.toString();
+        }
+      }
     });
   };
 

@@ -1,5 +1,5 @@
-<script setup>
-  import { Vector3 } from "babylonjs";
+<script lang="ts" setup>
+  import { Scene, Vector3 } from "babylonjs";
   import { TextBlock, Image, Ellipse, Control } from "babylonjs-gui";
 
   definePageMeta({
@@ -11,12 +11,14 @@
     `
   });
 
-  const createLabContent = async (scene) => {
+  const createLabContent = async (scene: Scene) => {
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
-    cam.position = new Vector3(0, 1.4, -2);
+    if (cam) {
+      cam.position = new Vector3(0, 1.4, -2);
+    }
 
-    const lab052_example_1 = (scene, useCustom) => {
+    const lab052_example_1 = (scene: Scene, useCustom: boolean) => {
       const { plane, advancedTexture } = canLabCardSimple(8, 3.2, scene);
       plane.name = "parent-plane";
       plane.position = new Vector3(0, 1.2, 0);
@@ -44,26 +46,25 @@
       cardText.top = 40;
       cardText.left = 150;
       cardText.fontSize = 64;
-      if (useCustom) {
-        console.log("Using custom font", useCustom);
-        cardText.fontFamily = "NotoSans-Bold";
-      }
       advancedTexture.addControl(cardText);
 
       const paragraph = new TextBlock();
       paragraph.text = "Developer General working with a variety of technology to solve real problems. I focus on UI/UX, Workflow, and Spatial Computing.";
       paragraph.color = labColors.slate8;
-      paragraph.background = "white";
       paragraph.fontSize = 28;
-      if (useCustom) {
-        paragraph.fontFamily = "NotoSans-Medium";
-      }
       paragraph.textWrapping = true;
       paragraph.width = 0.9;
       paragraph.height = 0.36;
       paragraph.top = 60;
       paragraph.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
       paragraph.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+
+      if (useCustom) {
+        console.log("Using custom fonts", "NotoSans-Bold", "NotoSans-Medium");
+        cardText.fontFamily = "NotoSans-Bold";
+        paragraph.fontFamily = "NotoSans-Medium";
+      }
+
       advancedTexture.addControl(paragraph);
 
       return { plane, advancedTexture };
