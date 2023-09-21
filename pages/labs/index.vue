@@ -19,5 +19,14 @@
   const allRoutes = router.options.routes;
 
   // Create a new array that only includes routes that begon with /labs and exlude the index page
-  const labRoutes = allRoutes.filter((route) => route.path.startsWith("/labs") && route.path !== "/labs");
+  let labRoutes = allRoutes.filter((route) => route.path.startsWith("/labs") && route.path !== "/labs");
+  labRoutes = labRoutes.sort((a, b) => {
+    if (a.meta.title > b.meta.title) {
+      return -1;
+    }
+    if (a.meta.title < b.meta.title) {
+      return 1;
+    }
+    return 0;
+  });
 </script>
