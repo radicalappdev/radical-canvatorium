@@ -1,8 +1,11 @@
 <template>
   <div class="max-w-screen-md h-[calc(100%_-_2rem)] overflow-y-auto container mx-auto">
     <h2 class="text-lg font-bold my-4">All Benches</h2>
+    <nuxt-link to="/">
+      <p class="p-2 hover:bg-slate-100 drop-shadow-lg rounded">← back</p>
+    </nuxt-link>
     <nuxt-link v-for="route in labRoutes" :to="route.path" :key="route.path">
-      <p class="p-2 hover:bg-slate-100 drop-shadow-lg">{{ route.meta.title }}</p>
+      <p class="p-2 hover:bg-slate-100 drop-shadow-lg rounded">{{ route.meta.title }}</p>
     </nuxt-link>
   </div>
 </template>
@@ -30,5 +33,7 @@
     return 0;
   });
 
-  window.document.title = "Benches - Canvatorium";
+  onMounted(() => {
+    window.document.title = "Benches - Canvatorium";
+  });
 </script>
