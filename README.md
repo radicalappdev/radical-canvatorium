@@ -1,9 +1,13 @@
 # radical-canvatorium
 
+## Canvatorum - An experimental design lab for spatial computing
+
 This is the main codebase for the Radical Canvatorium project. It uses Nuxt and Vue JS to create labs and benches built with Babylon JS.
 
 - Labs are used to explore concepts for Spatial Computing, VR, AR, WebXR, etc. Labs will nearly always be intended to be viewed in VR or AR
 - Benches are used to explore simple 3D concepts that may be used in the labs. Benches will not have VR or AR support.
+
+Visit the [project landing](https://vrhermit.com/canvatorium/) page for the latest updates.
 
 ## Using this project
 
