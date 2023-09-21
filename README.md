@@ -1,21 +1,9 @@
 # radical-canvatorium
 
-This is the main codebase for the Radical Canvatorium project. It uses Nuxt and Vue JS to create labs and benches built with Babylon JS and Three JS
+This is the main codebase for the Radical Canvatorium project. It uses Nuxt and Vue JS to create labs and benches built with Babylon JS.
 
 - Labs are used to explore concepts for Spatial Computing, VR, AR, WebXR, etc. Labs will nearly always be intended to be viewed in VR or AR
 - Benches are used to explore simple 3D concepts that may be used in the labs. Benches will not have VR or AR support.
-
-Labs and benches are numbered by the 3D Framework they use.
-
-| Lab Numbers | 3D Framework      |
-| ----------- | ----------------- |
-| 0000 – 0999 | Babylon JS        |
-| 1000 – 1999 | Three JS          |
-| 2000 – 2999 | React-Three-Fiber |
-| 3000 – 3999 | A-Frame           |
-| 4000 – 4999 | PlayCanvas        |
-
-The React-Three-Fiber version of Canvatorium can be found [here](https://github.com/radicalappdev/radical-canvatorium-alius)
 
 ## Using this project
 
