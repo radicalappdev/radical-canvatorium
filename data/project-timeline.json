@@ -1,0 +1,87 @@
+[
+  {
+    "date": "2020-01-01",
+    "title": "Project Start",
+    "type": "milestone"
+  },
+  {
+    "date": "2020-03-15",
+    "title": "Initial Requirements Gathering",
+    "type": "milestone"
+  },
+  {
+    "date": "2020-04-10",
+    "title": "Design Phase Begins",
+    "type": "milestone"
+  },
+  {
+    "date": "2020-06-20",
+    "title": "Prototype Development",
+    "type": "milestone"
+  },
+  {
+    "date": "2020-08-01",
+    "title": "Beta Version Release",
+    "type": "version"
+  },
+  {
+    "date": "2020-10-05",
+    "title": "User Testing",
+    "type": "milestone"
+  },
+  {
+    "date": "2020-12-15",
+    "title": "Bug Fixes and Improvements",
+    "type": "milestone"
+  },
+  {
+    "date": "2021-03-10",
+    "title": "Feature Enhancements",
+    "type": "milestone"
+  },
+  {
+    "date": "2021-05-15",
+    "title": "Mobile App Integration",
+    "type": "milestone"
+  },
+  {
+    "date": "2021-07-20",
+    "title": "Final Testing",
+    "type": "milestone"
+  },
+  {
+    "date": "2021-09-01",
+    "title": "Official Release",
+    "type": "version"
+  },
+  {
+    "date": "2021-10-10",
+    "title": "Post-launch Support",
+    "type": "milestone"
+  },
+  {
+    "date": "2022-01-05",
+    "title": "Performance Optimization",
+    "type": "milestone"
+  },
+  {
+    "date": "2022-03-15",
+    "title": "Security Updates",
+    "type": "milestone"
+  },
+  {
+    "date": "2022-05-20",
+    "title": "New Feature Development",
+    "type": "milestone"
+  },
+  {
+    "date": "2022-07-10",
+    "title": "Documentation Update",
+    "type": "milestone"
+  },
+  {
+    "date": "2022-09-01",
+    "title": "Version 2.0 Release",
+    "type": "version"
+  }
+]
