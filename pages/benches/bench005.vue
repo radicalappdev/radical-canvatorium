@@ -1,5 +1,19 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, ActionManager, ExecuteCodeAction, Animation, ArcRotateCamera } from "babylonjs";
+  import {
+    Scene,
+    Vector3,
+    MeshBuilder,
+    Mesh,
+    StandardMaterial,
+    Color3,
+    Color4,
+    ActionManager,
+    ExecuteCodeAction,
+    Animation,
+    FreeCamera,
+    ArcRotateCamera,
+    KeyboardEventTypes
+  } from "babylonjs";
   import projectData from "@/data/project-timeline.json";
 
   definePageMeta({
@@ -9,7 +23,9 @@
   });
 
   const createLabContent = async (scene: Scene) => {
+    scene.clearColor = Color4.FromHexString(labColors.slate6 + "ff");
     const cam = scene.getCameraByName("camera") as ArcRotateCamera;
+    // const cam = new FreeCamera("camera", new Vector3(0, 1, -6), scene);
 
     // cam.setTarget(new Vector3(0, 0, 0));
     // cam.position = new Vector3(0, 5, -6);
@@ -27,8 +43,12 @@
     console.log(dayCount);
 
     const timelineMaterial = new StandardMaterial("timeline-material", scene);
-    timelineMaterial.diffuseColor = Color3.FromHexString(labColors.slate8);
+    timelineMaterial.diffuseColor = Color3.FromHexString(labColors.slate2);
     timelineMaterial.specularColor = new Color3(0.2, 0.2, 0.2);
+
+    const monthMaterial = new StandardMaterial("month-material", scene);
+    monthMaterial.diffuseColor = Color3.FromHexString(labColors.slate4);
+    monthMaterial.specularColor = new Color3(0.2, 0.2, 0.2);
 
     // timeline: an array of tube meshes where each one represents a day
     // Create one tube mesh , then clone it for each day and move it along the x-axis
@@ -48,6 +68,10 @@
       // set the clone name to the date it represents
       clone.name = new Date(dateStart.getTime() + i * day).toISOString().split("T")[0];
       clone.position.x = i * 0.05;
+      // if the date is the first of the month, use the month mat
+      if (clone.name.split("-")[2] === "01") {
+        clone.material = monthMaterial;
+      }
       clone.actionManager = new ActionManager(scene);
       clone.actionManager.registerAction(
         new ExecuteCodeAction(
@@ -74,14 +98,37 @@
       );
     }
 
+    timeline.position.x = -2;
     // position the timeline so it's centered on the x-axis
-    timeline.position.x = -dayCount * 0.05 * 0.5;
-    console.log(timeline.position.x);
+    // timeline.position.x = -dayCount * 0.05 * 0.5;
+    // console.log(timeline.position.x);
 
-    if (cam) {
-      cam.setTarget(timeline);
-      cam.useFramingBehavior = true;
+    let targetIndex = 0;
+    // set the camera target to one of the tubes, say the 31st one
+    let target = timeline.getChildren()[targetIndex] as Mesh;
+    console.log(target);
+    if (cam && target) {
+      cam.setTarget(target);
     }
+
+    scene.onKeyboardObservable.add((kbInfo) => {
+      switch (kbInfo.type) {
+        case KeyboardEventTypes.KEYDOWN:
+          if (kbInfo.event.key === "w") {
+            targetIndex++;
+            target = timeline.getChildren()[targetIndex] as Mesh;
+            console.log(target.name);
+            if (cam && target) {
+              cam.setTarget(target);
+            }
+          } else if (kbInfo.event.key === "s") {
+            if (cam && target) {
+              cam.setTarget(target);
+            }
+          }
+          break;
+      }
+    });
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
