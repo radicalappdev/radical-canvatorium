@@ -1,6 +1,5 @@
 <script lang="ts" setup>
   import { Scene, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3 } from "babylonjs";
-  import "babylonjs-loaders";
   import projectData from "@/data/project-timeline.json";
 
   definePageMeta({
