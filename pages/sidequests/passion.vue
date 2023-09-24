@@ -233,9 +233,9 @@
   const bjsCanvas = ref(null);
   // With scene options
 
+  useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
   onMounted(() => {
     window.earcut = earcut;
-    useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
   });
 
   const createBase = (scene) => {
