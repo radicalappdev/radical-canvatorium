@@ -15,7 +15,7 @@
     WebXRPlaneDetector
   } from "babylonjs";
   import * as earcut from "earcut";
-  window.earcut = earcut;
+  // window.earcut = earcut;
 
   definePageMeta({
     featured: false,
@@ -159,6 +159,9 @@
   };
 
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
+  onMounted(() => {
+    window.earcut = earcut;
+  });
 </script>
 
 <template>
