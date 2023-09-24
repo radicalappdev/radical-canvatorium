@@ -15,7 +15,7 @@
     WebXRPlaneDetector
   } from "babylonjs";
   import * as earcut from "earcut";
-  // window.earcut = earcut;
+  window.earcut = earcut;
 
   definePageMeta({
     featured: false,
@@ -91,7 +91,7 @@
         "name",
         plane.polygonDefinition.map((p: Vector3) => new Vector2(p.x, p.z)),
         scene,
-        earcut
+        window.earcut
       );
       var polygon = polygon_triangulation.build(false, 0.01);
       plane.mesh = polygon;
@@ -119,7 +119,7 @@
         "name",
         plane.polygonDefinition.map((p: Vector3) => new Vector2(p.x, p.z)),
         scene,
-        earcut
+        window.earcut
       );
       var polygon = polygon_triangulation.build(false, 0.01);
       polygon.createNormals(false);
@@ -159,9 +159,6 @@
   };
 
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
-  onMounted(() => {
-    window.earcut = earcut;
-  });
 </script>
 
 <template>

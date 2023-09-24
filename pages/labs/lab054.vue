@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { Scene, Vector2, Vector3, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial, WebXRPlaneDetector } from "babylonjs";
   import earcut from "earcut";
-  // window.earcut = earcut;
+  window.earcut = earcut;
 
   definePageMeta({
     featured: false,
@@ -140,9 +140,6 @@ Press Y on the controller to toggle the planes.`;
   };
 
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
-  onMounted(() => {
-    window.earcut = earcut;
-  });
 </script>
 
 <template>
