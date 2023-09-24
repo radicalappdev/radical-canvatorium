@@ -139,9 +139,9 @@ Press Y on the controller to toggle the planes.`;
     useWebXRPlayer: false
   };
 
-  useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
   onMounted(() => {
     window.earcut = earcut;
+    useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
   });
 </script>
 

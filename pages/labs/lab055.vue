@@ -158,9 +158,9 @@
     useWebXRPlayer: false
   };
 
-  useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
   onMounted(() => {
     window.earcut = earcut;
+    useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
   });
 </script>
 
