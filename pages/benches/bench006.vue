@@ -47,12 +47,11 @@
         // get the first Bounds child node
         const boundsNode = node.querySelector("Bounds");
         if (boundsNode) {
-          //   console.log("Bounds:", boundsNode);
-          const nodeTop = (boundsNode.getAttribute("top") as unknown as number) ?? 0;
-          bounds.top = nodeTop;
-          bounds.left = (boundsNode.getAttribute("left") as unknown as number) ?? 0;
-          bounds.right = (boundsNode.getAttribute("right") as unknown as number) ?? 0;
-          bounds.bottom = (boundsNode.getAttribute("bottom") as unknown as number) ?? 0;
+          bounds.top = Number((boundsNode.getAttribute("top") as unknown as number) ?? 0);
+          bounds.left = Number((boundsNode.getAttribute("left") as unknown as number) ?? 0);
+          bounds.right = Number((boundsNode.getAttribute("right") as unknown as number) ?? 0);
+          bounds.bottom = Number((boundsNode.getAttribute("bottom") as unknown as number) ?? 0);
+          console.log("Bounds:", bounds.top);
         }
 
         console.log("Bounds:", bounds);
@@ -65,13 +64,12 @@
             const parentBoundsNode = parentNode.querySelector("Bounds");
             if (parentBoundsNode) {
               //   console.log("Parent Bounds:", parentBoundsNode);
-              const parentTop = (parentBoundsNode.getAttribute("top") as unknown as number) ?? 0;
-              bounds.top += Number(parentTop);
-              //   bounds.left += (parentBoundsNode.getAttribute("left") as unknown as number) ?? 0;
-              //   bounds.right += (parentBoundsNode.getAttribute("right") as unknown as number) ?? 0;
-              //   bounds.bottom += (parentBoundsNode.getAttribute("bottom") as unknown as number) ?? 0;
+              bounds.top += Number((parentBoundsNode.getAttribute("top") as unknown as number) ?? 0);
+              bounds.left += Number((parentBoundsNode.getAttribute("left") as unknown as number) ?? 0);
+              bounds.right += Number((parentBoundsNode.getAttribute("right") as unknown as number) ?? 0);
+              bounds.bottom += Number((parentBoundsNode.getAttribute("bottom") as unknown as number) ?? 0);
             }
-            console.log("Bounds:", bounds.top);
+            console.log("Bounds offset:", bounds.top);
             ancestorCount++;
           }
           parentNode = parentNode.parentNode;
