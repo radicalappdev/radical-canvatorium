@@ -14,14 +14,32 @@
     // fetch the XML data from the sample-data folder
     const layersData = await fetch("../sample-data/project-layers.xml").then((res) => res.text());
 
-    // console.log(layersData);
     // parse the XML data into an XMLDocument
     const parser = new DOMParser();
     const layersDoc = parser.parseFromString(layersData, "text/xml");
 
-    console.log(layersDoc);
+    // Function to log object type and count of ancestor Object nodes
+    function logObjectTypeAndAncestors(node: Element) {
+      if (node.nodeName === "Object") {
+        console.log("Object:", node);
+        console.log("Object Type:", node.getAttribute("type"));
 
-    // get the layers from the XMLDocument
+        let ancestorCount = 0;
+        let parentNode = node.parentNode;
+        while (parentNode) {
+          if (parentNode.nodeName === "Object") {
+            ancestorCount++;
+          }
+          parentNode = parentNode.parentNode;
+        }
+
+        console.log("Ancestor Object Nodes:", ancestorCount);
+      }
+    }
+
+    // Find and process Object nodes
+    const objectNodes = layersDoc.querySelectorAll("Object");
+    objectNodes.forEach(logObjectTypeAndAncestors);
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
