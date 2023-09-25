@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { Scene, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, Color4, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
+  import { NuxtComponentIndicator } from "nuxt/dist/app/composables/component";
 
   definePageMeta({
     featured: false,
@@ -47,7 +48,8 @@
         const boundsNode = node.querySelector("Bounds");
         if (boundsNode) {
           //   console.log("Bounds:", boundsNode);
-          bounds.top = (boundsNode.getAttribute("top") as unknown as number) ?? 0;
+          const nodeTop = (boundsNode.getAttribute("top") as unknown as number) ?? 0;
+          bounds.top = nodeTop;
           bounds.left = (boundsNode.getAttribute("left") as unknown as number) ?? 0;
           bounds.right = (boundsNode.getAttribute("right") as unknown as number) ?? 0;
           bounds.bottom = (boundsNode.getAttribute("bottom") as unknown as number) ?? 0;
@@ -63,12 +65,13 @@
             const parentBoundsNode = parentNode.querySelector("Bounds");
             if (parentBoundsNode) {
               //   console.log("Parent Bounds:", parentBoundsNode);
-              bounds.top += (parentBoundsNode.getAttribute("top") as unknown as number) ?? 0;
-              bounds.left += (parentBoundsNode.getAttribute("left") as unknown as number) ?? 0;
-              bounds.right += (parentBoundsNode.getAttribute("right") as unknown as number) ?? 0;
-              bounds.bottom += (parentBoundsNode.getAttribute("bottom") as unknown as number) ?? 0;
+              const parentTop = (parentBoundsNode.getAttribute("top") as unknown as number) ?? 0;
+              bounds.top += Number(parentTop);
+              //   bounds.left += (parentBoundsNode.getAttribute("left") as unknown as number) ?? 0;
+              //   bounds.right += (parentBoundsNode.getAttribute("right") as unknown as number) ?? 0;
+              //   bounds.bottom += (parentBoundsNode.getAttribute("bottom") as unknown as number) ?? 0;
             }
-            console.log("Bounds:", bounds);
+            console.log("Bounds:", bounds.top);
             ancestorCount++;
           }
           parentNode = parentNode.parentNode;
