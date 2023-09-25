@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, Color4, ArcRotateCamera } from "babylonjs";
+  import { Scene, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, Color4, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
 
   definePageMeta({
     featured: false,
@@ -11,6 +11,11 @@
     scene.clearColor = Color4.FromHexString(labColors.slate6 + "ff");
     const cam = scene.getCameraByName("camera") as ArcRotateCamera;
 
+    const baselayer = new StandardMaterial("timeline-material", scene);
+    baselayer.diffuseColor = Color3.FromHexString(labColors.slate2);
+    baselayer.specularColor = new Color3(0.2, 0.2, 0.2);
+    baselayer.alpha = 0.7;
+
     // fetch the XML data from the sample-data folder
     const layersData = await fetch("../sample-data/project-layers.xml").then((res) => res.text());
 
@@ -18,13 +23,20 @@
     const parser = new DOMParser();
     const layersDoc = parser.parseFromString(layersData, "text/xml");
 
+    interface Bounds {
+      top: number;
+      left: number;
+      right: number;
+      bottom: number;
+    }
+
     // Function to log object type and count of ancestor Object nodes
     function logObjectTypeAndAncestors(node: Element) {
       if (node.nodeName === "Object") {
         // console.log("Object:", node);
         // console.log("Object Type:", node.getAttribute("type"));
 
-        let bounds: any = {
+        let bounds: Bounds = {
           top: 0,
           left: 0,
           right: 0,
@@ -35,23 +47,35 @@
         const boundsNode = node.querySelector("Bounds");
         if (boundsNode) {
           //   console.log("Bounds:", boundsNode);
-          bounds.top = boundsNode.getAttribute("top");
-          bounds.left = boundsNode.getAttribute("left");
-          bounds.right = boundsNode.getAttribute("right");
-          bounds.bottom = boundsNode.getAttribute("bottom");
+          bounds.top = (boundsNode.getAttribute("top") as unknown as number) ?? 0;
+          bounds.left = (boundsNode.getAttribute("left") as unknown as number) ?? 0;
+          bounds.right = (boundsNode.getAttribute("right") as unknown as number) ?? 0;
+          bounds.bottom = (boundsNode.getAttribute("bottom") as unknown as number) ?? 0;
         }
+
+        console.log("Bounds:", bounds);
 
         let ancestorCount = 0;
         let parentNode = node.parentNode;
         while (parentNode) {
           if (parentNode.nodeName === "Object") {
+            // offset the bounds by the parent's bounds
+            const parentBoundsNode = parentNode.querySelector("Bounds");
+            if (parentBoundsNode) {
+              //   console.log("Parent Bounds:", parentBoundsNode);
+              bounds.top += (parentBoundsNode.getAttribute("top") as unknown as number) ?? 0;
+              bounds.left += (parentBoundsNode.getAttribute("left") as unknown as number) ?? 0;
+              bounds.right += (parentBoundsNode.getAttribute("right") as unknown as number) ?? 0;
+              bounds.bottom += (parentBoundsNode.getAttribute("bottom") as unknown as number) ?? 0;
+            }
+            console.log("Bounds:", bounds);
             ancestorCount++;
           }
           parentNode = parentNode.parentNode;
         }
 
         console.log("Object Type:", node.getAttribute("type"), "Deep:", ancestorCount, "Bounds:", bounds);
-        createLayerBox(ancestorCount, bounds, scene);
+        createLayerBox(ancestorCount, bounds, node, scene, baselayer);
       }
     }
 
@@ -60,18 +84,26 @@
     objectNodes.forEach(logObjectTypeAndAncestors);
   };
 
-  const createLayerBox = (deep: number, bounds: any, scene: Scene) => {
+  const createLayerBox = (deep: number, bounds: any, node: Element, scene: Scene, material: StandardMaterial) => {
     const offset = 100;
     const width = (bounds.right - bounds.left) / offset;
     const height = (bounds.bottom - bounds.top) / offset;
-    console.log(width, height);
+    // console.log(width, height);
     const layerBox = MeshBuilder.CreateBox("layer-box", { width: width, height: height, depth: 0.05 }, scene);
     const posX = bounds.left / offset;
     const posY = bounds.top / offset;
     layerBox.position.x = posX / 2;
     layerBox.position.y = -posY / 2;
-    layerBox.position.z = deep;
-    // layerBox.scaling = new Vector3(0.001, 0.001, 0.001);
+    layerBox.position.z = -deep;
+    layerBox.material = material;
+
+    const am = new ActionManager(scene);
+    layerBox.actionManager = am;
+    layerBox.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPickTrigger, (evt) => {
+        console.log("Clicked on", node.getAttribute("type"), deep, bounds);
+      })
+    );
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
