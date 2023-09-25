@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, Color4, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
+  import { Scene, Camera, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, Color4, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
   import { NuxtComponentIndicator } from "nuxt/dist/app/composables/component";
 
   definePageMeta({
@@ -9,13 +9,22 @@
   });
 
   const createLabContent = async (scene: Scene) => {
-    scene.clearColor = Color4.FromHexString(labColors.slate6 + "ff");
-    const cam = scene.getCameraByName("camera") as ArcRotateCamera;
+    // scene.clearColor = Color4.FromHexString(labColors.slate6 + "ff");
+    const cam = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 5, new Vector3(0, 0, 0), scene);
+    cam.attachControl(scene.getEngine().getRenderingCanvas() as HTMLCanvasElement, true);
+    // const cam = scene.getCameraByName("camera") as ArcRotateCamera;
+    if (cam) {
+      cam.mode = Camera.ORTHOGRAPHIC_CAMERA;
+      cam.orthoTop = 10;
+      cam.orthoBottom = -10;
+      cam.orthoLeft = -10;
+      cam.orthoRight = 10;
+    }
 
     const baselayer = new StandardMaterial("timeline-material", scene);
     baselayer.diffuseColor = Color3.FromHexString(labColors.slate2);
     baselayer.specularColor = new Color3(0.2, 0.2, 0.2);
-    baselayer.alpha = 0.7;
+    baselayer.alpha = 0.5;
 
     // fetch the XML data from the sample-data folder
     const layersData = await fetch("../sample-data/project-layers.xml").then((res) => res.text());
@@ -55,7 +64,6 @@
           bounds.left = Number((boundsNode.getAttribute("left") as unknown as number) ?? 0);
           bounds.right = Number((boundsNode.getAttribute("right") as unknown as number) ?? 0);
           bounds.bottom = Number((boundsNode.getAttribute("bottom") as unknown as number) ?? 0);
-          console.log("Bounds:", bounds.top);
         }
 
         console.log("Bounds:", bounds);
@@ -67,13 +75,9 @@
             // offset the bounds by the parent's bounds
             const parentBoundsNode = parentNode.querySelector("Bounds");
             if (parentBoundsNode) {
-              //   console.log("Parent Bounds:", parentBoundsNode);
               bounds.offX += Number((parentBoundsNode.getAttribute("left") as unknown as number) ?? 0);
               bounds.offY += Number((parentBoundsNode.getAttribute("top") as unknown as number) ?? 0);
-              //   bounds.right += Number((parentBoundsNode.getAttribute("right") as unknown as number) ?? 0);
-              //   bounds.bottom += Number((parentBoundsNode.getAttribute("bottom") as unknown as number) ?? 0);
             }
-            console.log("Bounds offset:", bounds.top);
             ancestorCount++;
           }
           parentNode = parentNode.parentNode;
@@ -96,19 +100,36 @@
     // console.log(width, height);
     const layerBox = MeshBuilder.CreateBox("layer-box", { width: width, height: height, depth: 0.05 }, scene);
     // console.log("Bounds off x:", bounds.offX);
-    if (bounds.offX == 0) {
-      const posX = bounds.left / offset;
-      layerBox.position.x = bounds.left / offset / 2;
-      console.log("Bounds regular x:", bounds.offX, posX);
-    } else {
-      const posX = bounds.offX / offset;
-      layerBox.position.x = posX;
-      console.log("Bounds offset x:", bounds.offX, posX);
-    }
-    const posY = bounds.top / offset;
-    layerBox.position.y = -posY / 2;
+    const posX = bounds.left / offset + width / 2;
+    layerBox.position.x = -posX;
+    console.log("Bounds regular x:", bounds.offX, posX);
+
+    const posY = bounds.top / offset + height / 2;
+    layerBox.position.y = -posY;
+    console.log("Bounds regular y:", bounds.offX, posY);
+    // if (bounds.offX == 0) {
+    //   const posX = bounds.left + width / 2 / offset;
+    //   layerBox.position.x = -bounds.left / offset;
+    //   console.log("Bounds regular x:", bounds.offX, posX);
+    // } else {
+    //   const posX = bounds.offX / offset;
+    //   layerBox.position.x = posX;
+    //   console.log("Bounds offset x:", bounds.offX, posX);
+    // }
+    // if (bounds.offY == 0) {
+    //   const posY = bounds.left / offset;
+    //   layerBox.position.y = -bounds.left / offset;
+    //   console.log("Bounds regular y:", bounds.offX, posY);
+    // } else {
+    //   const posY = bounds.offX / offset;
+    //   layerBox.position.y = posY;
+    //   console.log("Bounds offset y:", bounds.offX, posY);
+    // }
+    // const posY = bounds.top / offset;
+    // layerBox.position.y = -posY / 2;
     layerBox.position.z = -deep;
     layerBox.material = material;
+    console.log("position", layerBox.position.x, layerBox.position.y, layerBox.position.z);
 
     const am = new ActionManager(scene);
     layerBox.actionManager = am;
@@ -122,9 +143,9 @@
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
   // Otherwise, you can pass in an options object with the following properties:
   const labSceneOptions = {
-    useCamera: true,
+    useCamera: false,
     useLights: true,
-    useRoom: false,
+    useRoom: true,
     useOverlay: false,
     useWebXRPlayer: false
   };
