@@ -60,6 +60,8 @@
         // get the first Bounds child node
         const boundsNode = node.querySelector("Bounds");
         if (boundsNode) {
+          bounds.offY = Number((boundsNode.getAttribute("top") as unknown as number) ?? 0);
+          bounds.offX = Number((boundsNode.getAttribute("left") as unknown as number) ?? 0);
           bounds.top = Number((boundsNode.getAttribute("top") as unknown as number) ?? 0);
           bounds.left = Number((boundsNode.getAttribute("left") as unknown as number) ?? 0);
           bounds.right = Number((boundsNode.getAttribute("right") as unknown as number) ?? 0);
@@ -97,28 +99,15 @@
     const offset = 100;
     const width = (bounds.right - bounds.left) / offset;
     const height = (bounds.bottom - bounds.top) / offset;
-    // console.log(width, height);
     const layerBox = MeshBuilder.CreateBox("layer-box", { width: width, height: height, depth: 0.05 }, scene);
-    // console.log("Bounds off x:", bounds.offX);
-    if (bounds.offX == 0) {
-      const posX = bounds.left / offset + width / 2;
-      layerBox.position.x = -posX;
-      console.log("Bounds regular x:", bounds.offX, posX);
-    } else {
-      const posX = bounds.offX / offset + width / 2;
-      layerBox.position.x = -posX;
-      console.log("Bounds offset x:", bounds.offX, posX);
-    }
 
-    if (bounds.offY == 0) {
-      const posY = bounds.top / offset + height / 2;
-      layerBox.position.y = -posY;
-      console.log("Bounds regular y:", bounds.offX, posY);
-    } else {
-      const posY = bounds.offY / offset + height / 2;
-      layerBox.position.y = -posY;
-      console.log("Bounds offset y:", bounds.offX, posY);
-    }
+    const posX = bounds.offX / offset + width / 2;
+    layerBox.position.x = -posX;
+    // console.log("Bounds regular x:", bounds.offX, posX);
+
+    const posY = bounds.offY / offset + height / 2;
+    layerBox.position.y = -posY;
+    // console.log("Bounds regular y:", bounds.offX, posY);
 
     layerBox.position.z = deep;
     layerBox.material = material;
