@@ -21,8 +21,25 @@
     // Function to log object type and count of ancestor Object nodes
     function logObjectTypeAndAncestors(node: Element) {
       if (node.nodeName === "Object") {
-        console.log("Object:", node);
-        console.log("Object Type:", node.getAttribute("type"));
+        // console.log("Object:", node);
+        // console.log("Object Type:", node.getAttribute("type"));
+
+        let bounds: any = {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        };
+
+        // get the first Bounds child node
+        const boundsNode = node.querySelector("Bounds");
+        if (boundsNode) {
+          //   console.log("Bounds:", boundsNode);
+          bounds.top = boundsNode.getAttribute("top");
+          bounds.left = boundsNode.getAttribute("left");
+          bounds.right = boundsNode.getAttribute("right");
+          bounds.bottom = boundsNode.getAttribute("bottom");
+        }
 
         let ancestorCount = 0;
         let parentNode = node.parentNode;
@@ -33,7 +50,7 @@
           parentNode = parentNode.parentNode;
         }
 
-        console.log("Ancestor Object Nodes:", ancestorCount);
+        console.log("Object Type:", node.getAttribute("type"), "Deep:", ancestorCount, "Bounds:", bounds);
       }
     }
 
