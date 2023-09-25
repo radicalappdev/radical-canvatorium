@@ -122,6 +122,28 @@
           parentNode = parentNode.parentNode;
         }
 
+        const previousSiblings = node.parentNode?.querySelectorAll("Object");
+
+        if (previousSiblings) {
+          let previousSiblingCount = 0;
+
+          for (let i = 0; i < previousSiblings.length; i++) {
+            const sibling = previousSiblings[i];
+
+            // Check if the sibling is before the current node
+            if (sibling === node) {
+              break; // Stop counting when we reach the current node
+            }
+
+            // Calculate the offset for each sibling by using half of the space between major layers
+            const offZ = 0.9 / previousSiblings.length;
+            // Increment the count for each valid sibling
+            previousSiblingCount += offZ;
+          }
+
+          ancestorCount += previousSiblingCount;
+        }
+
         console.log("Object Type:", node.getAttribute("type"), "Deep:", ancestorCount, "Bounds:", bounds);
         createLayerBox(ancestorCount, bounds, node, scene, baselayer);
       }
