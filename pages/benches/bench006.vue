@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-  import { Scene, Camera, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, Color4, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
-  import { NuxtComponentIndicator } from "nuxt/dist/app/composables/component";
+  import { camelize } from "@vueuse/core";
+  import { Scene, Camera, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, KeyboardEventTypes, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
+  import { GridMaterial } from "babylonjs-materials";
 
   definePageMeta({
     featured: false,
@@ -9,17 +10,31 @@
   });
 
   const createLabContent = async (scene: Scene) => {
-    // scene.clearColor = Color4.FromHexString(labColors.slate6 + "ff");
-    const cam = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 5, new Vector3(0, 0, 0), scene);
+    const cam = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 15, new Vector3(-5, -3, 0), scene);
     cam.attachControl(scene.getEngine().getRenderingCanvas() as HTMLCanvasElement, true);
-    // const cam = scene.getCameraByName("camera") as ArcRotateCamera;
     if (cam) {
-      cam.mode = Camera.ORTHOGRAPHIC_CAMERA;
       cam.orthoTop = 10;
       cam.orthoBottom = -10;
       cam.orthoLeft = -10;
       cam.orthoRight = 10;
     }
+
+    const ground = MeshBuilder.CreateGround("ground", { width: 10, height: 6 }, scene);
+    ground.rotation.x = Math.PI / 2;
+    ground.position = new Vector3(-5, -3, 0);
+    cam.setTarget(ground);
+
+    // Create the grid material
+    const groundMaterial = new GridMaterial("ground-mat", scene);
+    groundMaterial.majorUnitFrequency = 0.1;
+    groundMaterial.gridRatio = 1;
+    groundMaterial.backFaceCulling = false;
+    groundMaterial.lineColor = Color3.FromHexString(labColors.slate8);
+    groundMaterial.mainColor = Color3.FromHexString(labColors.slate7);
+    groundMaterial.opacity = 0.5;
+
+    // Assign the ground material
+    ground.material = groundMaterial;
 
     const baselayer = new StandardMaterial("timeline-material", scene);
     baselayer.diffuseColor = Color3.FromHexString(labColors.slate2);
@@ -41,6 +56,29 @@
       posX: number;
       posY: number;
     }
+
+    const createLayerBox = (deep: number, bounds: any, node: Element, scene: Scene, material: StandardMaterial) => {
+      const offset = 100;
+      const width = (bounds.right - bounds.left) / offset;
+      const height = (bounds.bottom - bounds.top) / offset;
+      const posX = bounds.posX / offset + width / 2;
+      const posY = bounds.posY / offset + height / 2;
+
+      const layerBox = MeshBuilder.CreateBox("layer-box", { width: width, height: height, depth: 0.05 }, scene);
+      layerBox.position.x = -posX;
+      layerBox.position.y = -posY;
+      layerBox.position.z = deep;
+      layerBox.material = material;
+
+      const am = new ActionManager(scene);
+      layerBox.actionManager = am;
+      layerBox.actionManager.registerAction(
+        new ExecuteCodeAction(ActionManager.OnPickTrigger, (evt) => {
+          console.log("Clicked on", node.getAttribute("type"), deep, bounds);
+          cam.setTarget(layerBox);
+        })
+      );
+    };
 
     // Function to log object type and count of ancestor Object nodes
     function logObjectTypeAndAncestors(node: Element) {
@@ -93,28 +131,24 @@
     // Find and process Object nodes
     const objectNodes = layersDoc.querySelectorAll("Object");
     objectNodes.forEach(logObjectTypeAndAncestors);
-  };
 
-  const createLayerBox = (deep: number, bounds: any, node: Element, scene: Scene, material: StandardMaterial) => {
-    const offset = 100;
-    const width = (bounds.right - bounds.left) / offset;
-    const height = (bounds.bottom - bounds.top) / offset;
-    const posX = bounds.posX / offset + width / 2;
-    const posY = bounds.posY / offset + height / 2;
-
-    const layerBox = MeshBuilder.CreateBox("layer-box", { width: width, height: height, depth: 0.05 }, scene);
-    layerBox.position.x = -posX;
-    layerBox.position.y = -posY;
-    layerBox.position.z = deep;
-    layerBox.material = material;
-
-    const am = new ActionManager(scene);
-    layerBox.actionManager = am;
-    layerBox.actionManager.registerAction(
-      new ExecuteCodeAction(ActionManager.OnPickTrigger, (evt) => {
-        console.log("Clicked on", node.getAttribute("type"), deep, bounds);
-      })
-    );
+    scene.onKeyboardObservable.add((kbInfo) => {
+      switch (kbInfo.type) {
+        case KeyboardEventTypes.KEYDOWN:
+          if (kbInfo.event.key === "m") {
+            if (cam.mode === Camera.ORTHOGRAPHIC_CAMERA) {
+              cam.mode = Camera.PERSPECTIVE_CAMERA;
+            } else {
+              cam.mode = Camera.ORTHOGRAPHIC_CAMERA;
+            }
+          }
+          // if esp, set camera target to the ground
+          if (kbInfo.event.key === "Escape") {
+            cam.setTarget(ground);
+          }
+          break;
+      }
+    });
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
