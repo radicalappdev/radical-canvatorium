@@ -13,16 +13,16 @@
     const cam = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 15, new Vector3(-5, -3, 0), scene);
     cam.attachControl(scene.getEngine().getRenderingCanvas() as HTMLCanvasElement, true);
     if (cam) {
-      cam.orthoTop = 10;
-      cam.orthoBottom = -10;
-      cam.orthoLeft = -10;
-      cam.orthoRight = 10;
+      cam.orthoTop = 6;
+      cam.orthoBottom = -6;
+      cam.orthoLeft = -6;
+      cam.orthoRight = 6;
     }
 
-    const ground = MeshBuilder.CreateGround("ground", { width: 10, height: 6 }, scene);
-    ground.rotation.x = Math.PI / 2;
-    ground.position = new Vector3(-5, -3, 0);
-    cam.setTarget(ground);
+    const grid = MeshBuilder.CreateGround("grid", { width: 10, height: 6 }, scene);
+    grid.rotation.x = Math.PI / 2;
+    grid.position = new Vector3(-5, -3, 0);
+    cam.setTarget(grid);
 
     // Create the grid material
     const groundMaterial = new GridMaterial("ground-mat", scene);
@@ -34,7 +34,7 @@
     groundMaterial.opacity = 0.5;
 
     // Assign the ground material
-    ground.material = groundMaterial;
+    grid.material = groundMaterial;
 
     const baselayer = new StandardMaterial("timeline-material", scene);
     baselayer.diffuseColor = Color3.FromHexString(labColors.slate2);
@@ -142,9 +142,8 @@
               cam.mode = Camera.ORTHOGRAPHIC_CAMERA;
             }
           }
-          // if esp, set camera target to the ground
           if (kbInfo.event.key === "Escape") {
-            cam.setTarget(ground);
+            cam.setTarget(grid);
           }
           break;
       }
