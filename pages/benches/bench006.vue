@@ -38,8 +38,8 @@
       left: number;
       right: number;
       bottom: number;
-      offX: number;
-      offY: number;
+      posX: number;
+      posY: number;
     }
 
     // Function to log object type and count of ancestor Object nodes
@@ -53,15 +53,15 @@
           left: 0,
           right: 0,
           bottom: 0,
-          offX: 0,
-          offY: 0
+          posX: 0,
+          posY: 0
         };
 
         // get the first Bounds child node
         const boundsNode = node.querySelector("Bounds");
         if (boundsNode) {
-          bounds.offY = Number((boundsNode.getAttribute("top") as unknown as number) ?? 0);
-          bounds.offX = Number((boundsNode.getAttribute("left") as unknown as number) ?? 0);
+          bounds.posY = Number((boundsNode.getAttribute("top") as unknown as number) ?? 0);
+          bounds.posX = Number((boundsNode.getAttribute("left") as unknown as number) ?? 0);
           bounds.top = Number((boundsNode.getAttribute("top") as unknown as number) ?? 0);
           bounds.left = Number((boundsNode.getAttribute("left") as unknown as number) ?? 0);
           bounds.right = Number((boundsNode.getAttribute("right") as unknown as number) ?? 0);
@@ -77,8 +77,8 @@
             // offset the bounds by the parent's bounds
             const parentBoundsNode = parentNode.querySelector("Bounds");
             if (parentBoundsNode) {
-              bounds.offX += Number((parentBoundsNode.getAttribute("left") as unknown as number) ?? 0);
-              bounds.offY += Number((parentBoundsNode.getAttribute("top") as unknown as number) ?? 0);
+              bounds.posX += Number((parentBoundsNode.getAttribute("left") as unknown as number) ?? 0);
+              bounds.posY += Number((parentBoundsNode.getAttribute("top") as unknown as number) ?? 0);
             }
             ancestorCount++;
           }
@@ -99,19 +99,14 @@
     const offset = 100;
     const width = (bounds.right - bounds.left) / offset;
     const height = (bounds.bottom - bounds.top) / offset;
+    const posX = bounds.posX / offset + width / 2;
+    const posY = bounds.posY / offset + height / 2;
+
     const layerBox = MeshBuilder.CreateBox("layer-box", { width: width, height: height, depth: 0.05 }, scene);
-
-    const posX = bounds.offX / offset + width / 2;
     layerBox.position.x = -posX;
-    // console.log("Bounds regular x:", bounds.offX, posX);
-
-    const posY = bounds.offY / offset + height / 2;
     layerBox.position.y = -posY;
-    // console.log("Bounds regular y:", bounds.offX, posY);
-
     layerBox.position.z = deep;
     layerBox.material = material;
-    console.log("position", layerBox.position.x, layerBox.position.y, layerBox.position.z);
 
     const am = new ActionManager(scene);
     layerBox.actionManager = am;
@@ -127,7 +122,7 @@
   const labSceneOptions = {
     useCamera: false,
     useLights: true,
-    useRoom: true,
+    useRoom: false,
     useOverlay: false,
     useWebXRPlayer: false
   };
