@@ -9,6 +9,15 @@
     description: "Can I build a simple visual preview of FileMaker layouts in 3D?"
   });
 
+  interface Bounds {
+    top: number;
+    left: number;
+    right: number;
+    bottom: number;
+    posX: number;
+    posY: number;
+  }
+
   const createLabContent = async (scene: Scene) => {
     const cam = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 15, new Vector3(-5, -3, 0), scene);
     cam.attachControl(scene.getEngine().getRenderingCanvas() as HTMLCanvasElement, true);
@@ -19,11 +28,6 @@
       cam.orthoRight = 6;
     }
 
-    const grid = MeshBuilder.CreateGround("grid", { width: 10, height: 6 }, scene);
-    grid.rotation.x = Math.PI / 2;
-    grid.position = new Vector3(-5, -3, 0);
-    cam.setTarget(grid);
-
     // Create the grid material
     const gridMap = new GridMaterial("grid-mat", scene);
     gridMap.majorUnitFrequency = 0.1;
@@ -33,8 +37,12 @@
     gridMap.lineColor = Color3.FromHexString(labColors.slate8);
     gridMap.mainColor = Color3.FromHexString(labColors.slate7);
 
-    // Assign the ground material
+    let background: Mesh;
+    const grid = MeshBuilder.CreateGround("grid", { width: 10, height: 6 }, scene);
+    grid.rotation.x = Math.PI / 2;
+    grid.position = new Vector3(-5, -3, -2);
     grid.material = gridMap;
+    // cam.setTarget(grid);
 
     const baselayer = new StandardMaterial("timeline-material", scene);
     baselayer.diffuseColor = Color3.FromHexString(labColors.slate2);
@@ -48,13 +56,27 @@
     const parser = new DOMParser();
     const layersDoc = parser.parseFromString(layersData, "text/xml");
 
-    interface Bounds {
-      top: number;
-      left: number;
-      right: number;
-      bottom: number;
-      posX: number;
-      posY: number;
+    const layoutNode = layersDoc.querySelector("Layout");
+    // layout top = enclosingRectTop
+    if (layoutNode) {
+      const layoutTop = Number((layoutNode.getAttribute("enclosingRectTop") as unknown as number) ?? 0);
+      const layoutLeft = Number((layoutNode.getAttribute("enclosingRectLeft") as unknown as number) ?? 0);
+      const layoutRight = Number((layoutNode.getAttribute("enclosingRectRight") as unknown as number) ?? 0);
+      const layoutBottom = Number((layoutNode.getAttribute("enclosingRectBottom") as unknown as number) ?? 0);
+
+      const offset = 100;
+      const layoutWidth = (layoutRight - layoutLeft) / offset;
+      const layoutHeight = (layoutBottom - layoutTop) / offset;
+      console.log(layoutWidth, layoutHeight);
+
+      background = MeshBuilder.CreateGround("background", { width: layoutWidth, height: layoutHeight }, scene);
+      background.rotation.x = Math.PI / 2;
+      const posX = layoutLeft / offset + layoutWidth / 2;
+      const posY = layoutTop / offset + layoutHeight / 2;
+      background.position = new Vector3(-posX, -posY, -1);
+
+      background.material = baselayer;
+      cam.setTarget(background);
     }
 
     const createLayerBox = (deep: number, bounds: any, node: Element, scene: Scene, material: StandardMaterial) => {
@@ -83,9 +105,6 @@
     // Function to log object type and count of ancestor Object nodes
     function logObjectTypeAndAncestors(node: Element) {
       if (node.nodeName === "Object") {
-        // console.log("Object:", node);
-        // console.log("Object Type:", node.getAttribute("type"));
-
         let bounds: Bounds = {
           top: 0,
           left: 0,
@@ -106,19 +125,18 @@
           bounds.bottom = Number((boundsNode.getAttribute("bottom") as unknown as number) ?? 0);
         }
 
-        console.log("Bounds:", bounds);
-
         let ancestorCount = 0;
         let parentNode = node.parentNode;
         while (parentNode) {
           if (parentNode.nodeName === "Object") {
-            // offset the bounds by the parent's bounds
+            // Accumulate the count of ancestor Object nodes - used for the z order of layers, containment, etc.
+            ancestorCount++;
+            // Add the parent's bounds to the current bounds to get the position
             const parentBoundsNode = parentNode.querySelector("Bounds");
             if (parentBoundsNode) {
               bounds.posX += Number((parentBoundsNode.getAttribute("left") as unknown as number) ?? 0);
               bounds.posY += Number((parentBoundsNode.getAttribute("top") as unknown as number) ?? 0);
             }
-            ancestorCount++;
           }
           parentNode = parentNode.parentNode;
         }
@@ -143,7 +161,7 @@
             }
           }
           if (kbInfo.event.key === "Escape") {
-            cam.setTarget(grid);
+            cam.setTarget(background);
           }
           break;
       }
