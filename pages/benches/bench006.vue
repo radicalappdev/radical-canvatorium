@@ -1,6 +1,5 @@
 <script lang="ts" setup>
   import { Scene, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, Color4, ArcRotateCamera } from "babylonjs";
-  import projectData from "@/data/project-timeline.json";
 
   definePageMeta({
     featured: false,
@@ -11,6 +10,18 @@
   const createLabContent = async (scene: Scene) => {
     scene.clearColor = Color4.FromHexString(labColors.slate6 + "ff");
     const cam = scene.getCameraByName("camera") as ArcRotateCamera;
+
+    // fetch the XML data from the sample-data folder
+    const layersData = await fetch("../sample-data/project-layers.xml").then((res) => res.text());
+
+    // console.log(layersData);
+    // parse the XML data into an XMLDocument
+    const parser = new DOMParser();
+    const layersDoc = parser.parseFromString(layersData, "text/xml");
+
+    console.log(layersDoc);
+
+    // get the layers from the XMLDocument
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
