@@ -29,6 +29,8 @@
       left: number;
       right: number;
       bottom: number;
+      offX: number;
+      offY: number;
     }
 
     // Function to log object type and count of ancestor Object nodes
@@ -41,7 +43,9 @@
           top: 0,
           left: 0,
           right: 0,
-          bottom: 0
+          bottom: 0,
+          offX: 0,
+          offY: 0
         };
 
         // get the first Bounds child node
@@ -64,10 +68,10 @@
             const parentBoundsNode = parentNode.querySelector("Bounds");
             if (parentBoundsNode) {
               //   console.log("Parent Bounds:", parentBoundsNode);
-              bounds.top += Number((parentBoundsNode.getAttribute("top") as unknown as number) ?? 0);
-              bounds.left += Number((parentBoundsNode.getAttribute("left") as unknown as number) ?? 0);
-              bounds.right += Number((parentBoundsNode.getAttribute("right") as unknown as number) ?? 0);
-              bounds.bottom += Number((parentBoundsNode.getAttribute("bottom") as unknown as number) ?? 0);
+              bounds.offX += Number((parentBoundsNode.getAttribute("left") as unknown as number) ?? 0);
+              bounds.offY += Number((parentBoundsNode.getAttribute("top") as unknown as number) ?? 0);
+              //   bounds.right += Number((parentBoundsNode.getAttribute("right") as unknown as number) ?? 0);
+              //   bounds.bottom += Number((parentBoundsNode.getAttribute("bottom") as unknown as number) ?? 0);
             }
             console.log("Bounds offset:", bounds.top);
             ancestorCount++;
@@ -91,9 +95,17 @@
     const height = (bounds.bottom - bounds.top) / offset;
     // console.log(width, height);
     const layerBox = MeshBuilder.CreateBox("layer-box", { width: width, height: height, depth: 0.05 }, scene);
-    const posX = bounds.left / offset;
+    // console.log("Bounds off x:", bounds.offX);
+    if (bounds.offX == 0) {
+      const posX = bounds.left / offset;
+      layerBox.position.x = bounds.left / offset / 2;
+      console.log("Bounds regular x:", bounds.offX, posX);
+    } else {
+      const posX = bounds.offX / offset;
+      layerBox.position.x = posX;
+      console.log("Bounds offset x:", bounds.offX, posX);
+    }
     const posY = bounds.top / offset;
-    layerBox.position.x = posX / 2;
     layerBox.position.y = -posY / 2;
     layerBox.position.z = -deep;
     layerBox.material = material;
