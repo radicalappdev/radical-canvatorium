@@ -25,16 +25,16 @@
     cam.setTarget(grid);
 
     // Create the grid material
-    const groundMaterial = new GridMaterial("ground-mat", scene);
-    groundMaterial.majorUnitFrequency = 0.1;
-    groundMaterial.gridRatio = 1;
-    groundMaterial.backFaceCulling = false;
-    groundMaterial.lineColor = Color3.FromHexString(labColors.slate8);
-    groundMaterial.mainColor = Color3.FromHexString(labColors.slate7);
-    groundMaterial.opacity = 0.5;
+    const gridMap = new GridMaterial("grid-mat", scene);
+    gridMap.majorUnitFrequency = 0.1;
+    gridMap.gridRatio = 1;
+    gridMap.backFaceCulling = false;
+    gridMap.opacity = 0.5;
+    gridMap.lineColor = Color3.FromHexString(labColors.slate8);
+    gridMap.mainColor = Color3.FromHexString(labColors.slate7);
 
     // Assign the ground material
-    grid.material = groundMaterial;
+    grid.material = gridMap;
 
     const baselayer = new StandardMaterial("timeline-material", scene);
     baselayer.diffuseColor = Color3.FromHexString(labColors.slate2);
