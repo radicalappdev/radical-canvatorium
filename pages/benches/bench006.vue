@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-  import { camelize } from "@vueuse/core";
   import { Scene, Camera, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, KeyboardEventTypes, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
   import { GridMaterial } from "babylonjs-materials";
 
@@ -42,7 +41,12 @@
     grid.rotation.x = Math.PI / 2;
     grid.position = new Vector3(-5, -3, -2);
     grid.material = gridMap;
-    // cam.setTarget(grid);
+    cam.setTarget(grid);
+
+    const layoutMat = new StandardMaterial("timeline-material", scene);
+    layoutMat.diffuseColor = Color3.FromHexString(labColors.slate1);
+    layoutMat.specularColor = new Color3(0.2, 0.2, 0.2);
+    layoutMat.alpha = 0.5;
 
     const baselayer = new StandardMaterial("timeline-material", scene);
     baselayer.diffuseColor = Color3.FromHexString(labColors.slate2);
@@ -55,29 +59,6 @@
     // parse the XML data into an XMLDocument
     const parser = new DOMParser();
     const layersDoc = parser.parseFromString(layersData, "text/xml");
-
-    const layoutNode = layersDoc.querySelector("Layout");
-    // layout top = enclosingRectTop
-    if (layoutNode) {
-      const layoutTop = Number((layoutNode.getAttribute("enclosingRectTop") as unknown as number) ?? 0);
-      const layoutLeft = Number((layoutNode.getAttribute("enclosingRectLeft") as unknown as number) ?? 0);
-      const layoutRight = Number((layoutNode.getAttribute("enclosingRectRight") as unknown as number) ?? 0);
-      const layoutBottom = Number((layoutNode.getAttribute("enclosingRectBottom") as unknown as number) ?? 0);
-
-      const offset = 100;
-      const layoutWidth = (layoutRight - layoutLeft) / offset;
-      const layoutHeight = (layoutBottom - layoutTop) / offset;
-      console.log(layoutWidth, layoutHeight);
-
-      background = MeshBuilder.CreateGround("background", { width: layoutWidth, height: layoutHeight }, scene);
-      background.rotation.x = Math.PI / 2;
-      const posX = layoutLeft / offset + layoutWidth / 2;
-      const posY = layoutTop / offset + layoutHeight / 2;
-      background.position = new Vector3(-posX, -posY, -1);
-
-      background.material = baselayer;
-      cam.setTarget(background);
-    }
 
     const createLayerBox = (deep: number, bounds: any, node: Element, scene: Scene, material: StandardMaterial) => {
       const offset = 100;
@@ -150,6 +131,26 @@
     const objectNodes = layersDoc.querySelectorAll("Object");
     objectNodes.forEach(logObjectTypeAndAncestors);
 
+    // Create the layout layer - FileMaker calculates the bounds of the layout objects, not the layout itself
+    const layoutNode = layersDoc.querySelector("Layout");
+    if (layoutNode) {
+      const layoutTop = Number((layoutNode.getAttribute("enclosingRectTop") as unknown as number) ?? 0);
+      const layoutLeft = Number((layoutNode.getAttribute("enclosingRectLeft") as unknown as number) ?? 0);
+      const layoutRight = Number((layoutNode.getAttribute("enclosingRectRight") as unknown as number) ?? 0);
+      const layoutBottom = Number((layoutNode.getAttribute("enclosingRectBottom") as unknown as number) ?? 0);
+
+      let layoutBounds: Bounds = {
+        top: layoutTop,
+        left: layoutLeft,
+        right: layoutRight,
+        bottom: layoutBottom,
+        posX: 0,
+        posY: 0
+      };
+
+      createLayerBox(-1, layoutBounds, layoutNode, scene, layoutMat);
+    }
+
     scene.onKeyboardObservable.add((kbInfo) => {
       switch (kbInfo.type) {
         case KeyboardEventTypes.KEYDOWN:
@@ -160,8 +161,15 @@
               cam.mode = Camera.ORTHOGRAPHIC_CAMERA;
             }
           }
+          if (kbInfo.event.key === "g") {
+            if (grid.visibility == 1) {
+              grid.visibility = 0;
+            } else {
+              grid.visibility = 1;
+            }
+          }
           if (kbInfo.event.key === "Escape") {
-            cam.setTarget(background);
+            cam.setTarget(grid);
           }
           break;
       }
