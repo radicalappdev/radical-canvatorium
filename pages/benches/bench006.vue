@@ -51,12 +51,27 @@
         }
 
         console.log("Object Type:", node.getAttribute("type"), "Deep:", ancestorCount, "Bounds:", bounds);
+        createLayerBox(ancestorCount, bounds, scene);
       }
     }
 
     // Find and process Object nodes
     const objectNodes = layersDoc.querySelectorAll("Object");
     objectNodes.forEach(logObjectTypeAndAncestors);
+  };
+
+  const createLayerBox = (deep: number, bounds: any, scene: Scene) => {
+    const offset = 100;
+    const width = (bounds.right - bounds.left) / offset;
+    const height = (bounds.bottom - bounds.top) / offset;
+    console.log(width, height);
+    const layerBox = MeshBuilder.CreateBox("layer-box", { width: width, height: height, depth: 0.05 }, scene);
+    const posX = bounds.left / offset;
+    const posY = bounds.top / offset;
+    layerBox.position.x = posX / 2;
+    layerBox.position.y = -posY / 2;
+    layerBox.position.z = deep;
+    // layerBox.scaling = new Vector3(0.001, 0.001, 0.001);
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
