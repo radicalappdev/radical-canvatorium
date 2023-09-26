@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Scene, Camera, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, KeyboardEventTypes, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
-  import { AdvancedDynamicTexture, Control, Rectangle, ScrollViewer, TextBlock } from "babylonjs-gui";
+  import { AdvancedDynamicTexture, Control, Rectangle, ScrollViewer, StackPanel, TextBlock } from "babylonjs-gui";
   import { GridMaterial } from "babylonjs-materials";
 
   definePageMeta({
@@ -19,6 +19,47 @@
   }
 
   const createLabContent = async (scene: Scene) => {
+    const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("overlay", true, scene);
+
+    const inspector = new StackPanel("gui-inspector");
+    inspector.width = "300px";
+    inspector.height = "100%";
+    inspector.background = labColors.slate8;
+    inspector.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    inspector.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    advancedTexture.addControl(inspector);
+
+    const title = new TextBlock("gui-title");
+    title.text = "Select an object";
+    title.color = "white";
+    title.fontSize = "18px";
+    title.fontWeight = "bold";
+    title.textWrapping = true;
+    title.height = "40px";
+    title.paddingTop = "8px";
+    title.paddingBottom = "8px";
+    title.paddingLeft = "8px";
+    title.paddingRight = "8px";
+    title.fontFamily = "NotoSans-Bold";
+    title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    inspector.addControl(title);
+
+    // add a description
+    const description = new TextBlock("gui-description");
+    description.text = "";
+    description.color = "white";
+    description.fontSize = "10px";
+    description.fontWeight = "normal";
+    description.textWrapping = true;
+    description.paddingBottom = "8px";
+    description.paddingLeft = "8px";
+    description.paddingRight = "8px";
+    description.fontFamily = "NotoSans-Medium";
+    description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+    inspector.addControl(description);
+
     const cam = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 15, new Vector3(-5, -3, 0), scene);
     cam.attachControl(scene.getEngine().getRenderingCanvas() as HTMLCanvasElement, true);
     if (cam) {
@@ -80,6 +121,15 @@
         new ExecuteCodeAction(ActionManager.OnPickTrigger, (evt) => {
           console.log("Clicked on", node.getAttribute("type"), deep, bounds);
           cam.setTarget(layerBox);
+          if (node.getAttribute("type")) {
+            if (title) {
+              title.text = node.getAttribute("type") as string;
+              description.text = new XMLSerializer().serializeToString(node);
+            }
+          } else {
+            title.text = "Root Object";
+            description.text = "";
+          }
         })
       );
     };
@@ -191,55 +241,32 @@
               grid.visibility = 1;
             }
           }
+          if (kbInfo.event.key === "i") {
+            if (inspector.isVisible) {
+              inspector.isVisible = false;
+            } else {
+              inspector.isVisible = true;
+            }
+          }
+          if (kbInfo.event.key === "o") {
+            if (inspector.width == "300px") {
+              inspector.width = "50%";
+              advancedTexture.markAsDirty();
+            } else {
+              inspector.width = "300px";
+              advancedTexture.markAsDirty();
+            }
+          }
           if (kbInfo.event.key === "Escape") {
             cam.setTarget(grid);
+            title.text = "Select an object";
+            description.text = "";
+            inspector.width = "300px";
+            advancedTexture.markAsDirty();
           }
           break;
       }
     });
-
-    const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("overlay", true, scene);
-
-    const inspector = new ScrollViewer();
-    inspector.width = "300px";
-    inspector.height = "600px";
-    inspector.background = labColors.slate8;
-    inspector.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    inspector.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-    advancedTexture.addControl(inspector);
-
-    const title = new TextBlock("gui-title");
-    title.text = "{Object Type}";
-    title.color = "white";
-    title.fontSize = "18px";
-    title.fontWeight = "bold";
-    title.textWrapping = true;
-    title.paddingTop = "10px";
-    title.paddingBottom = "10px";
-    title.paddingLeft = "12px";
-    title.paddingRight = "12px";
-    title.fontFamily = "NotoSans-Bold";
-    title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-
-    // add a description
-    const description = new TextBlock("gui-description");
-    description.text = "Description";
-    description.color = "white";
-    description.fontSize = "14px";
-    description.fontWeight = "normal";
-    description.textWrapping = true;
-    description.top = 60;
-    // description.paddingTop = "100px";
-    // description.paddingBottom = "10px";
-    description.paddingLeft = "12px";
-    description.paddingRight = "12px";
-    description.fontFamily = "NotoSans-Medium";
-    description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-
-    inspector.addControl(title);
-    inspector.addControl(description);
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
