@@ -21,12 +21,12 @@
   const createLabContent = async (scene: Scene) => {
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("overlay", true, scene);
 
-    // scene.getEngine().setHardwareScalingLevel(1 / window.devicePixelRatio);
+    scene.getEngine().setHardwareScalingLevel(1 / window.devicePixelRatio);
     // advancedTexture.rootContainer.scaleX = window.devicePixelRatio;
     // advancedTexture.rootContainer.scaleY = window.devicePixelRatio;
 
     const inspector = new StackPanel("gui-inspector");
-    inspector.width = "300px";
+    inspector.width = "25%";
     inspector.height = "100%";
     inspector.background = labColors.slate8;
     inspector.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -36,14 +36,14 @@
     const title = new TextBlock("gui-title");
     title.text = "Select an object";
     title.color = "white";
-    title.fontSize = "18px";
+    title.fontSize = "32px";
     title.fontWeight = "bold";
     title.textWrapping = true;
-    title.height = "40px";
-    title.paddingTop = "10px";
-    title.paddingBottom = "8px";
-    title.paddingLeft = "8px";
-    title.paddingRight = "8px";
+    title.height = "80px";
+    title.paddingTop = "20px";
+    title.paddingBottom = "16px";
+    title.paddingLeft = "16px";
+    title.paddingRight = "16px";
     title.fontFamily = "NotoSans-Bold";
     title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -54,10 +54,10 @@
     scroll.color = "#3e4a5d";
     scroll.background = "#3e4a5d";
     scroll.width = "100%";
-    scroll.barSize = 10;
+    scroll.barSize = 20;
     scroll.barColor = "#53637b";
     scroll.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-    scroll.wheelPrecision = 0.1;
+    scroll.wheelPrecision = 0.05;
     scroll.onPointerEnterObservable.add((ev) => {
       cam.inputs.removeByType("ArcRotateCameraMouseWheelInput");
     });
@@ -70,7 +70,7 @@
     const description = new TextBlock("gui-description");
     description.text = "";
     description.color = "white";
-    description.fontSize = "10px";
+    description.fontSize = "24px";
     description.fontWeight = "normal";
     description.textWrapping = true;
     description.width = 1;
@@ -273,11 +273,11 @@
             }
           }
           if (kbInfo.event.key === "o") {
-            if (inspector.width == "300px") {
+            if (inspector.width == "25%") {
               inspector.width = "50%";
               advancedTexture.markAsDirty();
             } else {
-              inspector.width = "300px";
+              inspector.width = "25%";
               advancedTexture.markAsDirty();
             }
           }
@@ -285,7 +285,7 @@
             cam.setTarget(grid);
             title.text = "Select an object";
             description.text = "";
-            inspector.width = "300px";
+            // inspector.width = "300px";
             advancedTexture.markAsDirty();
           }
           break;
