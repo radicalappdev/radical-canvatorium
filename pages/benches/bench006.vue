@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Scene, Camera, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, KeyboardEventTypes, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
-  import { AdvancedDynamicTexture, Control, Rectangle, ScrollViewer, StackPanel, TextBlock } from "babylonjs-gui";
+  import { AdvancedDynamicTexture, Control, ScrollViewer, StackPanel, TextBlock } from "babylonjs-gui";
   import { GridMaterial } from "babylonjs-materials";
 
   definePageMeta({
@@ -20,6 +20,10 @@
 
   const createLabContent = async (scene: Scene) => {
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("overlay", true, scene);
+
+    // scene.getEngine().setHardwareScalingLevel(1 / window.devicePixelRatio);
+    // advancedTexture.rootContainer.scaleX = window.devicePixelRatio;
+    // advancedTexture.rootContainer.scaleY = window.devicePixelRatio;
 
     const inspector = new StackPanel("gui-inspector");
     inspector.width = "300px";
@@ -46,12 +50,10 @@
     inspector.addControl(title);
 
     const scroll = new ScrollViewer("gui-scroll");
-    scroll.height = "100%";
     scroll.thickness = 10;
     scroll.color = "#3e4a5d";
     scroll.background = "#3e4a5d";
     scroll.width = "100%";
-    scroll.height = "100%";
     scroll.barSize = 10;
     scroll.barColor = "#53637b";
     scroll.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
