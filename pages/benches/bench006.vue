@@ -36,7 +36,7 @@
     title.fontWeight = "bold";
     title.textWrapping = true;
     title.height = "40px";
-    title.paddingTop = "8px";
+    title.paddingTop = "10px";
     title.paddingBottom = "8px";
     title.paddingLeft = "8px";
     title.paddingRight = "8px";
@@ -45,6 +45,25 @@
     title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
     inspector.addControl(title);
 
+    const scroll = new ScrollViewer("gui-scroll");
+    scroll.height = "100%";
+    scroll.thickness = 10;
+    scroll.color = "#3e4a5d";
+    scroll.background = "#3e4a5d";
+    scroll.width = "100%";
+    scroll.height = "100%";
+    scroll.barSize = 10;
+    scroll.barColor = "#53637b";
+    scroll.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    scroll.wheelPrecision = 0.1;
+    scroll.onPointerEnterObservable.add((ev) => {
+      cam.inputs.removeByType("ArcRotateCameraMouseWheelInput");
+    });
+    scroll.onPointerOutObservable.add((ev) => {
+      cam.inputs.addMouseWheel();
+    });
+    inspector.addControl(scroll);
+
     // add a description
     const description = new TextBlock("gui-description");
     description.text = "";
@@ -52,13 +71,16 @@
     description.fontSize = "10px";
     description.fontWeight = "normal";
     description.textWrapping = true;
-    description.paddingBottom = "8px";
-    description.paddingLeft = "8px";
-    description.paddingRight = "8px";
+    description.width = 1;
+    description.height = 5;
+    description.paddingTop = "1%";
+    description.paddingLeft = "30px";
+    description.paddingRight = "20px";
+    description.paddingBottom = "5%";
     description.fontFamily = "NotoSans-Medium";
     description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-    inspector.addControl(description);
+    scroll.addControl(description);
 
     const cam = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 15, new Vector3(-5, -3, 0), scene);
     cam.attachControl(scene.getEngine().getRenderingCanvas() as HTMLCanvasElement, true);
