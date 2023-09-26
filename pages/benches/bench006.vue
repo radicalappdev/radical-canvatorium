@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { Scene, Camera, Vector3, MeshBuilder, Mesh, StandardMaterial, Color3, KeyboardEventTypes, ArcRotateCamera, ExecuteCodeAction, ActionManager } from "babylonjs";
+  import { AdvancedDynamicTexture, Control, Rectangle, ScrollViewer, TextBlock } from "babylonjs-gui";
   import { GridMaterial } from "babylonjs-materials";
 
   definePageMeta({
@@ -196,6 +197,49 @@
           break;
       }
     });
+
+    const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("overlay", true, scene);
+
+    const inspector = new ScrollViewer();
+    inspector.width = "300px";
+    inspector.height = "600px";
+    inspector.background = labColors.slate8;
+    inspector.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    inspector.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    advancedTexture.addControl(inspector);
+
+    const title = new TextBlock("gui-title");
+    title.text = "{Object Type}";
+    title.color = "white";
+    title.fontSize = "18px";
+    title.fontWeight = "bold";
+    title.textWrapping = true;
+    title.paddingTop = "10px";
+    title.paddingBottom = "10px";
+    title.paddingLeft = "12px";
+    title.paddingRight = "12px";
+    title.fontFamily = "NotoSans-Bold";
+    title.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+    // add a description
+    const description = new TextBlock("gui-description");
+    description.text = "Description";
+    description.color = "white";
+    description.fontSize = "14px";
+    description.fontWeight = "normal";
+    description.textWrapping = true;
+    description.top = 60;
+    // description.paddingTop = "100px";
+    // description.paddingBottom = "10px";
+    description.paddingLeft = "12px";
+    description.paddingRight = "12px";
+    description.fontFamily = "NotoSans-Medium";
+    description.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+    description.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+
+    inspector.addControl(title);
+    inspector.addControl(description);
   };
 
   // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
