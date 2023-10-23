@@ -57,5 +57,3 @@ Fixed: removed the L command and updated the coordinates to be relative.
 ```svg
 m 10.8834 8.7409 l 2.924 -0.496 l 2.885 1.028 l -2.325 0.386 l -1.47 0.217 l -1.171 1.678 l -0.261 0.486 l -0.934 0.798 l -0.279 0.036 l -0.117 -0.942 l -0.3734 -2.9239 l 1.1214 -0.2671
 ```
-
-THIS IS A SALVAGE BRANCH. Something broke my project on Vercel and I'm trying to roll back to a working version.
