@@ -5,7 +5,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "dev-windows": "SET NODE_ENV=development&& nuxt dev --ssl-cert ./.certs/cert.pem --ssl-key ./.certs/key.pem",
-    "dev-mac": "NODE_ENV=development nuxt dev --https --ssl-cert ./.certs/cert.pem --ssl-key ./.certs/key.pem",
+    "dev-mac": "NODE_ENV=development nuxt dev --host -https --ssl-cert ./.certs/cert.pem --ssl-key ./.certs/key.pem",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
