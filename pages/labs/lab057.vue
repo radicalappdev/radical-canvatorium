@@ -30,9 +30,11 @@
 
     for (let i = 0; i < 6; i++) {
       const card = generateCard(scene, i);
-      // Add the card to a Control
-      const control = new Control3D(card);
-      panel.addControl(control);
+      // Add the card to a Control?
+      // There is no way to pass Control3D a mesh or node from what I can tell...
+
+      // const control = new Control3D(card); // ❌ this fails
+      //   panel.addControl(control);
     }
   };
 
@@ -49,13 +51,13 @@
     }
 
     const titleText = new TextBlock("title-text");
-    titleText.text = index + " Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    titleText.text = "Lab 057 Failed. See notes and comments in code.";
     titleText.textWrapping = true;
     titleText.textHorizontalAlignment = TextBlock.HORIZONTAL_ALIGNMENT_LEFT;
     titleText.paddingLeftInPixels = 24;
     titleText.paddingRightInPixels = 24;
     titleText.color = "black";
-    titleText.fontSize = 48;
+    titleText.fontSize = 36;
     advancedTexture.addControl(titleText);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
