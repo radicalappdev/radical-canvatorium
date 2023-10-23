@@ -1,12 +1,12 @@
 <script lang="ts" setup>
   import { Scene, Vector3, SixDofDragBehavior, TransformNode } from "babylonjs";
-  import { TextBlock, GUI3DManager, SpherePanel, MeshButton3D, Rectangle, Button, Control3D } from "babylonjs-gui";
+  import { TextBlock, GUI3DManager, SpherePanel, MeshButton3D, Rectangle, Button } from "babylonjs-gui";
 
   definePageMeta({
     featured: true,
-    title: "Lab 057 - ❌ Adding regular controls to GUI3DManager",
-    description: "Can I add regular controls to a GUI3DManager instead of MeshButton3D?",
-    labNotes: `I'd like to create a mesh that has an ADT, then add the mesh to a control to be able add it to a GUI3DManager.`
+    title: "Lab 058 - Adding 2D GUI to 3D GUI",
+    description: "Can I add interactive 2D content to a 3D GUI?",
+    labNotes: `I'd like to use 3D GUI features like Sphere Panel to lay out my cards, but I don't want the 3D controls to be interactive. I want to add my own 2D GUI controls to the 3D GUI.`
   });
 
   const createLabContent = async (scene: Scene) => {
@@ -31,15 +31,29 @@
     for (let i = 0; i < 6; i++) {
       const card = generateCard(scene, i);
       // Add the card to a Control
-      const control = new Control3D(card);
-      panel.addControl(control);
+      const button3D = new MeshButton3D(card, "button-" + i);
+
+      // Override the default animations
+      button3D.pointerEnterAnimation = () => {
+        console.log("pointerEnterAnimation");
+      };
+      button3D.pointerOutAnimation = () => {
+        console.log("pointerOutAnimation");
+      };
+      button3D.pointerDownAnimation = () => {
+        console.log("pointerDownAnimation");
+      };
+      button3D.pointerUpAnimation = () => {
+        console.log("pointerUpAnimation");
+      };
+
+      panel.addControl(button3D);
     }
   };
 
   const generateCard = (scene: Scene, index: number) => {
     const { plane, advancedTexture } = canLabCardSimple(4, 3, scene);
     plane.name = "plane";
-    plane.scaling = new Vector3(0.5, 0.5, 0.5);
     advancedTexture.name = "card-texture";
 
     // get the rect
@@ -57,6 +71,17 @@
     titleText.color = "black";
     titleText.fontSize = 48;
     advancedTexture.addControl(titleText);
+
+    // Add a button
+    const button = Button.CreateSimpleButton("button", "Click Me");
+    button.width = 0.2;
+    button.height = "40px";
+    button.color = "white";
+    button.background = "green";
+    button.onPointerUpObservable.add(() => {
+      console.log("button clicked");
+    });
+    advancedTexture.addControl(button);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
     sixDofDragBehavior.allowMultiPointer = true;
