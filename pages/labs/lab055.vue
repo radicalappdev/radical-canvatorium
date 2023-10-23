@@ -100,7 +100,6 @@
       polygon.createNormals(false);
 
       plane.mesh.material = detectedMat;
-      // plane.mesh.visibility = 0.2;
       plane.mesh.rotationQuaternion = new Quaternion();
       plane.transformationMatrix.decompose(plane.mesh.scaling, plane.mesh.rotationQuaternion, plane.mesh.position);
       surfaceMagnetismBehavior.meshes.push(plane.mesh);

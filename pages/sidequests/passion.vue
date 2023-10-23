@@ -232,7 +232,11 @@
 
   const bjsCanvas = ref(null);
   // With scene options
+
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
+  onMounted(() => {
+    window.earcut = earcut;
+  });
 
   const createBase = (scene) => {
     const blockMat = new CellMaterial("base-mat", scene);
