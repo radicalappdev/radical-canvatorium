@@ -13,17 +13,17 @@
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.6.4",
     "@types/earcut": "^2.1.1",
-    "babylonjs-inspector": "^6.21.1",
+    "babylonjs-inspector": "^6.12.1",
     "nuxt": "^3.3.2"
   },
   "dependencies": {
     "@vueuse/core": "^10.4.1",
     "babylonjs": "^6.21.1",
-    "babylonjs-gui": "^6.21.1",
-    "babylonjs-inspector": "^6.21.1",
-    "babylonjs-loaders": "^6.21.1",
-    "babylonjs-materials": "^6.21.1",
-    "babylonjs-procedural-textures": "^6.21.1",
+    "babylonjs-gui": "^6.12.1",
+    "babylonjs-inspector": "^6.12.1",
+    "babylonjs-loaders": "^6.12.1",
+    "babylonjs-materials": "^6.12.1",
+    "babylonjs-procedural-textures": "^6.12.1",
     "earcut": "^2.2.4"
   }
 }
