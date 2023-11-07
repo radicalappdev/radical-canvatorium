@@ -9,5 +9,8 @@ export default defineNuxtConfig({
     "/sidequests/passion": { ssr: false },
     "/labs/lab054": { ssr: false },
     "/labs/lab055": { ssr: false }
+  },
+  devServer: {
+    https: true
   }
 });
