@@ -14,7 +14,8 @@
     UtilityLayerRenderer,
     WebXRPlaneDetector
   } from "babylonjs";
-  import * as earcut from "earcut";
+
+  import earcut from "earcut";
   window.earcut = earcut;
 
   definePageMeta({
