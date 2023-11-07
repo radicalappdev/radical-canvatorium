@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, Ref } from "vue";
-import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera, WebXRDefaultExperience } from "babylonjs";
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button, Rectangle } from "babylonjs-gui";
+import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, WebXRDefaultExperience } from "babylonjs";
+import { AdvancedDynamicTexture, TextBlock, Control, Button, Rectangle } from "babylonjs-gui";
 import { GridMaterial } from "babylonjs-materials";
 
 interface LabSceneOptions {
