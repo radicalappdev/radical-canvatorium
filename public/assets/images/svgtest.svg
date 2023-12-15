@@ -1,0 +1,5 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <defs></defs>
+  <rect id="background" x="0" y="0" width="500" height="500" style="stroke-width: 10px; stroke: rgb(0, 0, 0); fill: rgb(255, 109, 109);"></rect>
+  <rect id="subject" x="30" y="30" width="50" height="50" style="stroke-width: 10px; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255);"></rect>
+</svg>
