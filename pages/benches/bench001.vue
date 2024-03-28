@@ -1,4 +1,4 @@
-<!-- <script setup>
+<script setup>
   import { Vector3, HemisphericLight, Mesh, StandardMaterial, Color3, Color4, MeshBuilder } from "babylonjs";
   import "babylonjs-loaders";
   import sampleData from "@/data/ohio-demo-02.json";
@@ -118,4 +118,4 @@
 </script>
 <template>
   <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
-</template> -->
+</template>

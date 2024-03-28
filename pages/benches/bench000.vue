@@ -1,4 +1,4 @@
-<!-- <script setup>
+<script setup>
   import { Vector3 } from "babylonjs";
   import "babylonjs-loaders";
 
@@ -153,4 +153,4 @@
 </script>
 <template>
   <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
-</template> -->
+</template>
