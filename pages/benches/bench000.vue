@@ -1,6 +1,6 @@
 <script setup>
   import { Vector3 } from "@babylonjs/core";
-  import "babylonjs-loaders";
+  import "@babylonjs/loaders";
 
   definePageMeta({
     featured: false,
