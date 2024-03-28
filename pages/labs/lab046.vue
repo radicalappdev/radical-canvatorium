@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Scene, Vector3 } from "babylonjs";
+  import { Scene, Vector3 } from "@babylonjs/core";
   import computingData from "@/data/computing.json";
 
   definePageMeta({

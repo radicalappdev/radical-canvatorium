@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, Vector3 } from "babylonjs";
-  import { ScrollViewer, TextBlock, Control } from "babylonjs-gui";
+  import { Scene, Vector3 } from "@babylonjs/core";
+  import { ScrollViewer, TextBlock, Control } from "@babylonjs/gui";
 
   definePageMeta({
     featured: true,

@@ -1,5 +1,5 @@
 <script setup>
-  import { Vector3 } from "babylonjs";
+  import { Vector3 } from "@babylonjs/core";
   import "babylonjs-loaders";
 
   definePageMeta({

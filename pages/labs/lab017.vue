@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Scene, StandardMaterial, Vector3, Color3, MeshBuilder, SixDofDragBehavior, SurfaceMagnetismBehavior } from "babylonjs";
+  import { Scene, StandardMaterial, Vector3, Color3, MeshBuilder, SixDofDragBehavior, SurfaceMagnetismBehavior } from "@babylonjs/core";
 
   definePageMeta({
     featured: true,

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, SixDofDragBehavior } from "babylonjs";
-  import { TextBlock, Button } from "babylonjs-gui";
+  import { Scene, Vector3, SixDofDragBehavior } from "@babylonjs/core";
+  import { TextBlock, Button } from "@babylonjs/gui";
 
   definePageMeta({
     featured: true,

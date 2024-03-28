@@ -1,10 +1,10 @@
 <script setup>
-  import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial, Color3, ArcRotateCamera, Animation, CubicEase, Mesh, EasingFunction } from "babylonjs";
-  import { SkyMaterial, CellMaterial, GridMaterial, GradientMaterial, NormalMaterial } from "babylonjs-materials";
+  import { Vector3, MeshBuilder, DirectionalLight, StandardMaterial, Color3, ArcRotateCamera, Animation, CubicEase, Mesh, EasingFunction } from "@babylonjs/core";
+  import { SkyMaterial, CellMaterial, GridMaterial, GradientMaterial, NormalMaterial } from "@babylonjs/materials";
 
   import earcut from "earcut";
   window.earcut = earcut;
-  //   import { TextBlock } from "babylonjs-gui";
+  //   import { TextBlock } from "@babylonjs/gui";
 
   // Fonts from https://www.kenney.nl/assets/kenney-fonts
   // Converted with http://gero3.github.io/facetype.js/

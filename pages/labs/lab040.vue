@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Rectangle } from "babylonjs-gui";
+  import { Scene } from "@babylonjs/core";
+  import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Rectangle } from "@babylonjs/gui";
 
   const route = useRoute();
 

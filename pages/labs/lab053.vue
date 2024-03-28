@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, TransformNode, Vector3, Animation, Color4 } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel, Container3D, Control3D } from "babylonjs-gui";
+  import { Scene, TransformNode, Vector3, Animation, Color4 } from "@babylonjs/core";
+  import { AdvancedDynamicTexture, TextBlock, Image, Control, Rectangle, MeshButton3D, GUI3DManager, PlanePanel, Container3D, Control3D } from "@babylonjs/gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({

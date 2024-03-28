@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Scene, Color3, StandardMaterial, MeshBuilder, Vector3 } from "babylonjs";
+  import { Scene, Color3, StandardMaterial, MeshBuilder, Vector3 } from "@babylonjs/core";
 
   definePageMeta({
     featured: false,

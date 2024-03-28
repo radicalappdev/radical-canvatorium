@@ -1,4 +1,4 @@
-import { Vector3 } from "babylonjs";
+import { Vector3 } from "@babylonjs/core";
 
 // TODO: Refactor to make a bit more sense
 export const extractSVG_babylon = (svg) => {

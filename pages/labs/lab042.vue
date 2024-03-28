@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Scene, Mesh, MeshBuilder, PointerDragBehavior } from "babylonjs";
+  import { Scene, Mesh, MeshBuilder, PointerDragBehavior } from "@babylonjs/core";
 
   definePageMeta({
     featured: false,
