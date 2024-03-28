@@ -1,7 +1,15 @@
 import { onMounted, onUnmounted, Ref } from "vue";
-import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera, WebXRDefaultExperience } from "babylonjs";
-import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button, Rectangle } from "babylonjs-gui";
-import { GridMaterial } from "babylonjs-materials";
+import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera, WebXRDefaultExperience } from "@babylonjs/core";
+import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button, Rectangle } from "@babylonjs/gui";
+import { GridMaterial } from "@babylonjs/materials";
+// Enable GLTF/GLB loader for loading controller models from WebXR Input registry
+import "@babylonjs/loaders/glTF";
+
+// Without this next import, an error message like this occurs loading controller models:
+//  Build of NodeMaterial failed" error when loading controller model
+//  Uncaught (in promise) Build of NodeMaterial failed: input rgba from block
+//  FragmentOutput[FragmentOutputBlock] is not connected and is not optional.
+import "@babylonjs/core/Materials/Node/Blocks";
 
 interface LabSceneOptions {
   useCamera?: boolean;

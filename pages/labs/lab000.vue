@@ -1,6 +1,9 @@
 <script lang="ts" setup>
-  import { Scene, Vector3 } from "babylonjs";
-  import { TextBlock } from "babylonjs-gui";
+  // import { Scene, Vector3 } from "babylonjs";
+  // import { TextBlock } from "babylonjs-gui";
+
+  import { Scene, Vector3 } from "@babylonjs/core";
+  import { TextBlock } from "@babylonjs/gui";
 
   definePageMeta({
     featured: false,
