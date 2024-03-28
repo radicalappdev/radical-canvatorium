@@ -13,7 +13,7 @@
     AxisDragGizmo,
     UtilityLayerRenderer,
     WebXRPlaneDetector
-  } from "babylonjs";
+  } from "@babylonjs/core";
   import earcut from "earcut";
   window.earcut = earcut;
 

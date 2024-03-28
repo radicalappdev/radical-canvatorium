@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, SixDofDragBehavior } from "babylonjs";
-  import { Grid } from "babylonjs-gui";
+  import { Scene, Vector3, Color3, MeshBuilder, StandardMaterial, PointerDragBehavior, Scalar, Mesh, SixDofDragBehavior } from "@babylonjs/core";
+  import { Grid } from "@babylonjs/gui";
   import { useStorage } from "@vueuse/core";
 
   definePageMeta({

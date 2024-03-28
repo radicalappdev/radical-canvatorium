@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { ref } from "vue";
-  import { MeshBuilder, StandardMaterial, Color3, Vector3, Mesh, Scene } from "babylonjs";
+  import { MeshBuilder, StandardMaterial, Color3, Vector3, Mesh, Scene } from "@babylonjs/core";
 
   definePageMeta({
     featured: false,

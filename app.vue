@@ -1,5 +1,6 @@
 <script setup>
-import "babylonjs-loaders/babylon.glTFFileLoader.js";
+  // import "babylonjs-loaders/babylon.glTFFileLoader.js";
+  import "@babylonjs/loaders/glTF";
 </script>
 
 <template>

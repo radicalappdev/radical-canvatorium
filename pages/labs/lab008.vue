@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, AbstractMesh, Vector3 } from "babylonjs";
-  import { GUI3DManager, NearMenu, TouchHolographicButton, ScrollViewer, TextBlock, Control } from "babylonjs-gui";
+  import { Scene, AbstractMesh, Vector3 } from "@babylonjs/core";
+  import { GUI3DManager, NearMenu, TouchHolographicButton, ScrollViewer, TextBlock, Control } from "@babylonjs/gui";
 
   definePageMeta({
     featured: true,

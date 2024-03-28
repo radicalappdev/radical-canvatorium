@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Scene, Vector2, Vector3, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial, WebXRPlaneDetector } from "babylonjs";
+  import { Scene, Vector2, Vector3, Quaternion, Color3, PolygonMeshBuilder, StandardMaterial, WebXRPlaneDetector } from "@babylonjs/core";
   import earcut from "earcut";
   window.earcut = earcut;
 

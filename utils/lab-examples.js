@@ -1,4 +1,4 @@
-import { TextBlock, Image, Control, Rectangle, Button, Grid } from "babylonjs-gui";
+import { TextBlock, Image, Control, Rectangle, Button, Grid } from "@babylonjs/gui";
 
 // use toolbar
 export const exampleToolbar = (activeIndex, computingData, scene) => {

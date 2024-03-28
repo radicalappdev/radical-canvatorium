@@ -17,6 +17,9 @@ Using npm version 19 with nvm installed
 Install
 `npm install`
 
+Reinstall BabylonJS latest versions
+`npm install --save @babylonjs/core @babylonjs/core @babylonjs/gui @babylonjs/materials @babylonjs/procedural-textures @babylonjs/inspector`
+
 Running in development mode
 `npm run dev` // standard Vite server
 or

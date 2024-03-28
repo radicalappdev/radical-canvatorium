@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Scene, Camera, MeshBuilder, Tools } from "babylonjs";
+  import { Scene, Camera, MeshBuilder, Tools } from "@babylonjs/core";
 
   definePageMeta({
     featured: true,

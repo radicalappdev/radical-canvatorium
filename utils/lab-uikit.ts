@@ -1,5 +1,5 @@
-import { Scene, MeshBuilder, Vector3, SixDofDragBehavior } from "babylonjs";
-import { AdvancedDynamicTexture, Rectangle, Button, Control, TextBlock, Slider, Checkbox } from "babylonjs-gui";
+import { Scene, MeshBuilder, Vector3, SixDofDragBehavior } from "@babylonjs/core";
+import { AdvancedDynamicTexture, Rectangle, Button, Control, TextBlock, Slider, Checkbox } from "@babylonjs/gui";
 
 // A styled 2D GUI card with a plane and ADT
 export const canLabCardSimple = (width: number, height: number, scene: Scene) => {

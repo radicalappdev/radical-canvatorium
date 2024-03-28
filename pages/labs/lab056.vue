@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, StandardMaterial, Vector3, Color3, MeshBuilder, SixDofDragBehavior, SurfaceMagnetismBehavior, TransformNode, BoundingBox } from "babylonjs";
-  import { MeshButton3D, GUI3DManager, SpherePanel } from "babylonjs-gui";
+  import { Scene, StandardMaterial, Vector3, Color3, MeshBuilder, SixDofDragBehavior, SurfaceMagnetismBehavior, TransformNode, BoundingBox } from "@babylonjs/core";
+  import { MeshButton3D, GUI3DManager, SpherePanel } from "@babylonjs/gui";
 
   definePageMeta({
     featured: true,

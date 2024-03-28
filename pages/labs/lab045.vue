@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, Animation } from "babylonjs";
-  import { TextBlock, Image, Ellipse, Control } from "babylonjs-gui";
+  import { Scene, Vector3, Animation } from "@babylonjs/core";
+  import { TextBlock, Image, Ellipse, Control } from "@babylonjs/gui";
 
   definePageMeta({
     featured: false,

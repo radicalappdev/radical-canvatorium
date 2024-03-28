@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, Animation } from "babylonjs";
-  import { TextBlock, Control, Rectangle } from "babylonjs-gui";
+  import { Scene, Vector3, Animation } from "@babylonjs/core";
+  import { TextBlock, Control, Rectangle } from "@babylonjs/gui";
   import computingData from "@/data/computing.json";
 
   definePageMeta({

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-  import { Vector3, Scene } from "babylonjs";
-  import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui";
+  import { Vector3, Scene } from "@babylonjs/core";
+  import { AdvancedDynamicTexture, TextBlock } from "@babylonjs/gui";
 
   definePageMeta({
     featured: true,
