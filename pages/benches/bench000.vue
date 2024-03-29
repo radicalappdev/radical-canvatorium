@@ -1,4 +1,5 @@
 <script setup>
+  import * as BABYLON from "@babylonjs/core";
   import { Vector3 } from "@babylonjs/core";
   import "@babylonjs/loaders";
 
@@ -9,7 +10,7 @@
   });
 
   const createLabContent = async (scene) => {
-    scene.clearColor = new BABYLON.Color4.FromHexString(labColors.slate3 + "ff");
+    scene.clearColor = BABYLON.Color4.FromHexString(labColors.slate3 + "ff");
 
     const cam = scene.getCameraByName("camera");
     cam.setTarget(new Vector3(0, 0, 0));
@@ -43,7 +44,7 @@
 
       // Create a material for the mesh
       const material = new BABYLON.StandardMaterial("material", scene);
-      material.diffuseColor = new BABYLON.Color3.FromHexString(color);
+      material.diffuseColor = BABYLON.Color3.FromHexString(color);
       material.specularColor = new BABYLON.Color3(0.1, 0.1, 0.1);
 
       extrudedMesh.material = material;

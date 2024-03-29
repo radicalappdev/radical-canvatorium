@@ -18,7 +18,7 @@ Install
 `npm install`
 
 Reinstall BabylonJS latest versions
-`npm install --save @babylonjs/core @babylonjs/core @babylonjs/gui @babylonjs/materials @babylonjs/procedural-textures @babylonjs/inspector`
+`npm install --save @babylonjs/core @babylonjs/core @babylonjs/gui @babylonjs/materials @babylonjs/procedural-textures @babylonjs/inspector @babylonjs/inspector`
 
 Running in development mode
 `npm run dev` // standard Vite server
