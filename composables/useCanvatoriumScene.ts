@@ -1,4 +1,5 @@
-import { onMounted, onUnmounted, Ref } from "vue";
+import type { Ref } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { ArcRotateCamera, Scene, Engine, Vector3, Color3, Color4, MeshBuilder, HemisphericLight, GroundMesh, Tools, Camera, WebXRDefaultExperience } from "@babylonjs/core";
 import { AdvancedDynamicTexture, TextBlock, StackPanel, Control, Button, Rectangle } from "@babylonjs/gui";
 import { GridMaterial } from "@babylonjs/materials";

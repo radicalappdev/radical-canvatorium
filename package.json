@@ -16,11 +16,11 @@
     "nuxt": "^3.3.2"
   },
   "dependencies": {
-    "@babylonjs/core": "^6.49.0",
-    "@babylonjs/gui": "^6.49.0",
-    "@babylonjs/inspector": "^6.49.0",
-    "@babylonjs/materials": "^6.49.0",
-    "@babylonjs/procedural-textures": "^6.49.0",
+    "@babylonjs/core": "^7.0.0",
+    "@babylonjs/gui": "^7.0.0",
+    "@babylonjs/inspector": "^7.0.0",
+    "@babylonjs/materials": "^7.0.0",
+    "@babylonjs/procedural-textures": "^7.0.0",
     "@vueuse/core": "^10.4.1",
     "earcut": "^2.2.4"
   }
