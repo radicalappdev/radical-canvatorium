@@ -18,10 +18,9 @@
     const cube = MeshBuilder.CreateBox("cube", { size: 1 }, scene);
     cube.position = new Vector3(1, 1.3, 0);
     cube.scaling = new Vector3(scaler.value / 10, scaler.value / 10, scaler.value / 10);
+    cube.isNearPickable = true; // This will enable direct touch interactions in WebXR
     cube.material = material;
-    cube.isNearPickable = true;
 
-    // Tap on the cube to change the color
     cube.actionManager = new ActionManager(scene);
     cube.actionManager.registerAction(
       new ExecuteCodeAction(ActionManager.OnPickTrigger, (evt) => {
@@ -38,7 +37,7 @@
     const { plane, advancedTexture } = canLabCardSimple(8, 4.4, scene);
     plane.position = new Vector3(-1, 1.3, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
-    plane.isNearPickable = true;
+    plane.isNearPickable = true; // This will enable direct touch interactions in WebXR
 
     const stack = new StackPanel();
     stack.fontSize = "14px";
@@ -103,24 +102,20 @@
 
     if (vrSupported) {
       const xr = await scene.createDefaultXRExperienceAsync({
-        floorMeshes: []
-      });
-
-      xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
-        console.log("Entering Immersive Mode with camera", xrCamera);
-        group.scaling = new Vector3(0.3, 0.3, 0.3);
-        group.position = new Vector3(0, 0.8, 0);
-        xrCamera.position = new Vector3(0, 0, -0.4);
+        floorMeshes: [] // pass an empty array to disable teleportation for this demo
       });
 
       // enable hand tracking
       const featureManager = xr.baseExperience.featuresManager;
-
       featureManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", {
         xrInput: xr.input
       });
 
-      console.log("xr player created", xr);
+      xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
+        group.scaling = new Vector3(0.3, 0.3, 0.3);
+        group.position = new Vector3(0, 0.8, 0);
+        xrCamera.position = new Vector3(0, 0, -0.4);
+      });
     }
 
     watch(scaler, (newValue) => {
