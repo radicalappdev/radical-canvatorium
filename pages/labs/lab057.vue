@@ -19,7 +19,6 @@
     cube.position = new Vector3(1, 1.3, 0);
     cube.scaling = new Vector3(scaler.value / 10, scaler.value / 10, scaler.value / 10);
     cube.material = material;
-    cube.isNearPickable = true;
 
     // Tap on the cube to change the color
     cube.actionManager = new ActionManager(scene);
@@ -38,7 +37,6 @@
     const { plane, advancedTexture } = canLabCardSimple(8, 4.4, scene);
     plane.position = new Vector3(-1, 1.3, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
-    plane.isNearPickable = true;
 
     const stack = new StackPanel();
     stack.fontSize = "14px";
@@ -112,6 +110,8 @@
       group.scaling = new Vector3(0.3, 0.3, 0.3);
       group.position = new Vector3(0, 0.8, 0);
       xrCamera.position = new Vector3(0, 0, -0.4);
+      //   cube.isNearPickable = true;
+      //   plane.isNearPickable = true;
     });
 
     // enable hand tracking
@@ -119,7 +119,6 @@
 
     featureManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", {
       xrInput: xr.input
-      // other options
     });
 
     console.log("xr player created", xr);
