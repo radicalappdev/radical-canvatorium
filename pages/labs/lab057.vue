@@ -99,19 +99,19 @@
     group.addChild(cube);
     group.addChild(plane);
 
-    // get mesh by name 'ground' to use for teleportation - this is created by the labCreateRoom function in useCanvatoriumScene
-    const ground = scene.getMeshByName("ground") as Mesh;
-    console.log("ground", ground);
+    // // get mesh by name 'ground' to use for teleportation - this is created by the labCreateRoom function in useCanvatoriumScene
+    // const ground = scene.getMeshByName("ground") as Mesh;
+    // console.log("ground", ground);
 
     const xr = await scene.createDefaultXRExperienceAsync({
-      floorMeshes: [ground]
+      floorMeshes: []
     });
 
     xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
       console.log("Entering Immersive Mode with camera", xrCamera);
       group.scaling = new Vector3(0.3, 0.3, 0.3);
-      group.position = new Vector3(0, 1, 0);
-      xrCamera.position = new Vector3(0, 0, -0.2);
+      group.position = new Vector3(0, 0.8, 0);
+      xrCamera.position = new Vector3(0, 0, -0.4);
     });
 
     // enable hand tracking
