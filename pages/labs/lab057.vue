@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Mesh, Vector3, Scene, MeshBuilder, StandardMaterial, Color3, ActionManager, ExecuteCodeAction, WebXRFeatureName } from "@babylonjs/core";
+  import { Mesh, Vector3, Scene, MeshBuilder, StandardMaterial, Color3, ActionManager, ExecuteCodeAction, WebXRFeatureName, WebXRSessionManager } from "@babylonjs/core";
   import { AdvancedDynamicTexture, TextBlock, StackPanel } from "@babylonjs/gui";
 
   definePageMeta({
@@ -19,6 +19,7 @@
     cube.position = new Vector3(1, 1.3, 0);
     cube.scaling = new Vector3(scaler.value / 10, scaler.value / 10, scaler.value / 10);
     cube.material = material;
+    cube.isNearPickable = true;
 
     // Tap on the cube to change the color
     cube.actionManager = new ActionManager(scene);
@@ -37,6 +38,7 @@
     const { plane, advancedTexture } = canLabCardSimple(8, 4.4, scene);
     plane.position = new Vector3(-1, 1.3, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
+    plane.isNearPickable = true;
 
     const stack = new StackPanel();
     stack.fontSize = "14px";
@@ -97,31 +99,29 @@
     group.addChild(cube);
     group.addChild(plane);
 
-    // // get mesh by name 'ground' to use for teleportation - this is created by the labCreateRoom function in useCanvatoriumScene
-    // const ground = scene.getMeshByName("ground") as Mesh;
-    // console.log("ground", ground);
+    const vrSupported = await WebXRSessionManager.IsSessionSupportedAsync("immersive-vr");
 
-    const xr = await scene.createDefaultXRExperienceAsync({
-      floorMeshes: []
-    });
+    if (vrSupported) {
+      const xr = await scene.createDefaultXRExperienceAsync({
+        floorMeshes: []
+      });
 
-    xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
-      console.log("Entering Immersive Mode with camera", xrCamera);
-      group.scaling = new Vector3(0.3, 0.3, 0.3);
-      group.position = new Vector3(0, 0.8, 0);
-      xrCamera.position = new Vector3(0, 0, -0.4);
-      //   cube.isNearPickable = true;
-      //   plane.isNearPickable = true;
-    });
+      xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
+        console.log("Entering Immersive Mode with camera", xrCamera);
+        group.scaling = new Vector3(0.3, 0.3, 0.3);
+        group.position = new Vector3(0, 0.8, 0);
+        xrCamera.position = new Vector3(0, 0, -0.4);
+      });
 
-    // enable hand tracking
-    const featureManager = xr.baseExperience.featuresManager;
+      // enable hand tracking
+      const featureManager = xr.baseExperience.featuresManager;
 
-    featureManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", {
-      xrInput: xr.input
-    });
+      featureManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", {
+        xrInput: xr.input
+      });
 
-    console.log("xr player created", xr);
+      console.log("xr player created", xr);
+    }
 
     watch(scaler, (newValue) => {
       const counterTexture = scene.getTextureByName("lab-card-rect-texture") as AdvancedDynamicTexture;
