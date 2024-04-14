@@ -5,17 +5,29 @@
   definePageMeta({
     featured: true,
     title: "Lab 057 – Universal Input with Babylon.js",
-    description: ""
+    description: `This lab contains a 3D cube and a 2D GUI. Users can interact with these objects in a number of ways depending on how the scene is presented.`,
+    labNotes: `
+- Mouse / Trackpad on a personal computer
+- Tap on touch screen devices
+- VR Controllers
+  - Laser Pointer
+  - Near Interaction
+- VR Hand Tracking
+  - Laser Pointer
+  - Near Interaction for direct touch
+- Natural Input (gaze+pinch) on Apple Vision Pro
+`
   });
 
   const createLabContent = async (scene: Scene) => {
     const scaler = ref(5);
     const color = ref(labColors.purple);
 
-    const material = new StandardMaterial("material", scene);
+    // Create a cube for the user to interact with
+    const material = new StandardMaterial("cube-material", scene);
     material.diffuseColor = Color3.FromHexString(color.value);
 
-    const cube = MeshBuilder.CreateBox("cube", { size: 1 }, scene);
+    const cube = MeshBuilder.CreateBox("cube-mesh", { size: 1 }, scene);
     cube.position = new Vector3(1, 1.3, 0);
     cube.scaling = new Vector3(scaler.value / 10, scaler.value / 10, scaler.value / 10);
     cube.isNearPickable = true; // This will enable direct touch interactions in WebXR
@@ -34,6 +46,7 @@
       })
     );
 
+    // Create a 2D GUI
     const { plane, advancedTexture } = canLabCardSimple(8, 4.4, scene);
     plane.position = new Vector3(-1, 1.3, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
@@ -94,12 +107,13 @@
     });
     row.addControl(buttonIncrement);
 
+    // Group the cube and plane so they can be transformed together
     const group = new Mesh("group", scene);
     group.addChild(cube);
     group.addChild(plane);
 
+    // WebXR
     const vrSupported = await WebXRSessionManager.IsSessionSupportedAsync("immersive-vr");
-
     if (vrSupported) {
       const xr = await scene.createDefaultXRExperienceAsync({
         floorMeshes: [] // pass an empty array to disable teleportation for this demo
@@ -118,18 +132,11 @@
       });
     }
 
+    // Watchers for reactive updates
     watch(scaler, (newValue) => {
-      const counterTexture = scene.getTextureByName("lab-card-rect-texture") as AdvancedDynamicTexture;
-      if (counterTexture) {
-        const counterControl = counterTexture.getControlByName("couter-text") as TextBlock;
-        if (counterControl) {
-          newValue = Math.min(10, Math.max(1, newValue));
-
-          counterControl.text = (newValue / 10).toString();
-
-          cube.scaling = new Vector3(newValue / 10, newValue / 10, newValue / 10);
-        }
-      }
+      newValue = Math.min(10, Math.max(1, newValue));
+      cube.scaling = new Vector3(newValue / 10, newValue / 10, newValue / 10);
+      counterText.text = (newValue / 10).toString();
     });
 
     watch(color, (newValue) => {
