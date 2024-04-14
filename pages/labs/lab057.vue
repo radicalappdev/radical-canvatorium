@@ -10,7 +10,7 @@
 
   const createLabContent = async (scene: Scene) => {
     // Set count as a reactive value
-    const count = ref(0);
+    const scaler = ref(5);
     const color = ref(labColors.purple);
 
     // Create a material and a cube
@@ -18,15 +18,17 @@
     material.diffuseColor = Color3.FromHexString(color.value);
 
     const cube = MeshBuilder.CreateBox("cube", { size: 1 }, scene);
-    cube.position.y = 0.5;
+    cube.position = new Vector3(1, 1.3, 0);
+    cube.scaling = new Vector3(scaler.value / 10, scaler.value / 10, scaler.value / 10);
     cube.material = material;
 
     // Tap on the cube to change the color
     cube.actionManager = new ActionManager(scene);
     cube.actionManager.registerAction(
       new ExecuteCodeAction(ActionManager.OnPickTrigger, (evt) => {
-        // if the current color is purple, change it to green
         if (color.value === labColors.purple) {
+          color.value = labColors.blue;
+        } else if (color.value === labColors.blue) {
           color.value = labColors.green;
         } else {
           color.value = labColors.purple;
@@ -35,7 +37,7 @@
     );
 
     const { plane, advancedTexture } = canLabCardSimple(8, 4.4, scene);
-    plane.position.y = 1.3;
+    plane.position = new Vector3(-1, 1.3, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
 
     const titleText = new TextBlock("title-text");
@@ -47,7 +49,7 @@
     advancedTexture.addControl(titleText);
 
     const counterText = new TextBlock("couter-text");
-    counterText.text = "0";
+    counterText.text = scaler.value / 10;
     counterText.color = "black";
     counterText.fontSize = 72;
     advancedTexture.addControl(counterText);
@@ -57,7 +59,7 @@
     buttonIncrement.left = "100px";
     buttonIncrement.fontSize = 48;
     buttonIncrement.onPointerUpObservable.add(() => {
-      count.value++;
+      scaler.value++;
     });
     advancedTexture.addControl(buttonIncrement);
 
@@ -66,17 +68,21 @@
     buttonDecrement.left = "-100px";
     buttonDecrement.fontSize = 48;
     buttonDecrement.onPointerUpObservable.add(() => {
-      count.value--;
+      scaler.value--;
     });
     advancedTexture.addControl(buttonDecrement);
 
     // watch() the count value and update the counterText control
-    watch(count, (newValue) => {
+    watch(scaler, (newValue) => {
       const counterTexture = scene.getTextureByName("lab-card-rect-texture") as AdvancedDynamicTexture;
       if (counterTexture) {
         const counterControl = counterTexture.getControlByName("couter-text") as TextBlock;
         if (counterControl) {
-          counterControl.text = newValue.toString();
+          newValue = Math.min(10, Math.max(1, newValue));
+
+          counterControl.text = newValue / 10;
+
+          cube.scaling = new Vector3(newValue / 10, newValue / 10, newValue / 10);
         }
       }
     });
