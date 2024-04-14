@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Vector3, Scene, MeshBuilder, StandardMaterial, Color3, ActionManager, ExecuteCodeAction } from "@babylonjs/core";
-  import { AdvancedDynamicTexture, TextBlock } from "@babylonjs/gui";
+  import { AdvancedDynamicTexture, TextBlock, StackPanel } from "@babylonjs/gui";
 
   definePageMeta({
     featured: true,
@@ -9,11 +9,9 @@
   });
 
   const createLabContent = async (scene: Scene) => {
-    // Set count as a reactive value
     const scaler = ref(5);
     const color = ref(labColors.purple);
 
-    // Create a material and a cube
     const material = new StandardMaterial("material", scene);
     material.diffuseColor = Color3.FromHexString(color.value);
 
@@ -40,39 +38,61 @@
     plane.position = new Vector3(-1, 1.3, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
 
+    const stack = new StackPanel();
+    stack.fontSize = "14px";
+    stack.verticalAlignment = 2;
+    stack.spacing = 20;
+    advancedTexture.addControl(stack);
+
     const titleText = new TextBlock("title-text");
     titleText.text = "Universal Input with Babylon.js";
     titleText.color = "black";
     titleText.fontSize = 36;
-    titleText.width = 0.9;
-    titleText.top = -80;
-    advancedTexture.addControl(titleText);
+    titleText.height = "60px";
+    stack.addControl(titleText);
+
+    const lineOne = new TextBlock("title-text");
+    lineOne.text = "Tab or click on the cube to change the color.";
+    lineOne.color = "black";
+    lineOne.fontSize = 24;
+    lineOne.height = "40px";
+    stack.addControl(lineOne);
+
+    const lineTwo = new TextBlock("title-text");
+    lineTwo.text = "Use the buttons to scale the cube.";
+    lineTwo.color = "black";
+    lineTwo.fontSize = 24;
+    lineTwo.height = "40px";
+    stack.addControl(lineTwo);
+
+    const row = new StackPanel();
+    row.isVertical = false;
+    row.height = "100px";
+    stack.addControl(row);
+
+    const buttonDecrement = canLabButtonSimple("button-decrement", "-");
+    buttonDecrement.fontSize = 48;
+    buttonDecrement.width = "200px";
+    buttonDecrement.onPointerUpObservable.add(() => {
+      scaler.value--;
+    });
+    row.addControl(buttonDecrement);
 
     const counterText = new TextBlock("couter-text");
     counterText.text = scaler.value / 10;
     counterText.color = "black";
-    counterText.fontSize = 72;
-    advancedTexture.addControl(counterText);
+    counterText.fontSize = 36;
+    counterText.width = "120px";
+    row.addControl(counterText);
 
     const buttonIncrement = canLabButtonSimple("button-Increment", "+");
-    buttonIncrement.top = 80;
-    buttonIncrement.left = "100px";
     buttonIncrement.fontSize = 48;
+    buttonIncrement.width = "200px";
     buttonIncrement.onPointerUpObservable.add(() => {
       scaler.value++;
     });
-    advancedTexture.addControl(buttonIncrement);
+    row.addControl(buttonIncrement);
 
-    const buttonDecrement = canLabButtonSimple("button-decrement", "-");
-    buttonDecrement.top = 80;
-    buttonDecrement.left = "-100px";
-    buttonDecrement.fontSize = 48;
-    buttonDecrement.onPointerUpObservable.add(() => {
-      scaler.value--;
-    });
-    advancedTexture.addControl(buttonDecrement);
-
-    // watch() the count value and update the counterText control
     watch(scaler, (newValue) => {
       const counterTexture = scene.getTextureByName("lab-card-rect-texture") as AdvancedDynamicTexture;
       if (counterTexture) {
@@ -87,7 +107,6 @@
       }
     });
 
-    // watch() the color value and update the cube material
     watch(color, (newValue) => {
       material.diffuseColor = Color3.FromHexString(newValue);
     });
