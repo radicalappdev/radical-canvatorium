@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Vector3, Scene, MeshBuilder, StandardMaterial, Color3, ActionManager, ExecuteCodeAction } from "@babylonjs/core";
+  import { Mesh, Vector3, Scene, MeshBuilder, StandardMaterial, Color3, ActionManager, ExecuteCodeAction, WebXRFeatureName } from "@babylonjs/core";
   import { AdvancedDynamicTexture, TextBlock, StackPanel } from "@babylonjs/gui";
 
   definePageMeta({
@@ -19,6 +19,7 @@
     cube.position = new Vector3(1, 1.3, 0);
     cube.scaling = new Vector3(scaler.value / 10, scaler.value / 10, scaler.value / 10);
     cube.material = material;
+    cube.isNearPickable = true;
 
     // Tap on the cube to change the color
     cube.actionManager = new ActionManager(scene);
@@ -37,6 +38,7 @@
     const { plane, advancedTexture } = canLabCardSimple(8, 4.4, scene);
     plane.position = new Vector3(-1, 1.3, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
+    plane.isNearPickable = true;
 
     const stack = new StackPanel();
     stack.fontSize = "14px";
@@ -79,7 +81,7 @@
     row.addControl(buttonDecrement);
 
     const counterText = new TextBlock("couter-text");
-    counterText.text = scaler.value / 10;
+    counterText.text = (scaler.value / 10).toString();
     counterText.color = "black";
     counterText.fontSize = 36;
     counterText.width = "120px";
@@ -93,6 +95,35 @@
     });
     row.addControl(buttonIncrement);
 
+    const group = new Mesh("group", scene);
+    group.addChild(cube);
+    group.addChild(plane);
+
+    // get mesh by name 'ground' to use for teleportation - this is created by the labCreateRoom function in useCanvatoriumScene
+    const ground = scene.getMeshByName("ground") as Mesh;
+    console.log("ground", ground);
+
+    const xr = await scene.createDefaultXRExperienceAsync({
+      floorMeshes: [ground]
+    });
+
+    xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
+      console.log("Entering Immersive Mode with camera", xrCamera);
+      group.scaling = new Vector3(0.3, 0.3, 0.3);
+      group.position = new Vector3(0, 1, 0);
+      xrCamera.position = new Vector3(0, 0, -0.2);
+    });
+
+    // enable hand tracking
+    const featureManager = xr.baseExperience.featuresManager;
+
+    featureManager.enableFeature(WebXRFeatureName.HAND_TRACKING, "latest", {
+      xrInput: xr.input
+      // other options
+    });
+
+    console.log("xr player created", xr);
+
     watch(scaler, (newValue) => {
       const counterTexture = scene.getTextureByName("lab-card-rect-texture") as AdvancedDynamicTexture;
       if (counterTexture) {
@@ -100,7 +131,7 @@
         if (counterControl) {
           newValue = Math.min(10, Math.max(1, newValue));
 
-          counterControl.text = newValue / 10;
+          counterControl.text = (newValue / 10).toString();
 
           cube.scaling = new Vector3(newValue / 10, newValue / 10, newValue / 10);
         }
@@ -112,8 +143,14 @@
     });
   };
 
+  // Omit the scene options to use the default XR experience from useCanvatoriumScene
+  const labSceneOptions = {
+    useWebXRPlayer: false
+  };
+
   const bjsCanvas = ref(null);
-  useCanvatoriumScene(bjsCanvas, createLabContent);
+  // With scene options
+  useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 </script>
 <template>
   <canvas id="bjsCanvas" ref="bjsCanvas"></canvas>
