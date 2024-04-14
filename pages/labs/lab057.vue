@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { Vector3, Scene, MeshBuilder, StandardMaterial, Color3 } from "@babylonjs/core";
+  import { Vector3, Scene, MeshBuilder, StandardMaterial, Color3, ActionManager, ExecuteCodeAction } from "@babylonjs/core";
   import { AdvancedDynamicTexture, TextBlock } from "@babylonjs/gui";
 
   definePageMeta({
@@ -11,14 +11,28 @@
   const createLabContent = async (scene: Scene) => {
     // Set count as a reactive value
     const count = ref(0);
+    const color = ref(labColors.purple);
 
     // Create a material and a cube
     const material = new StandardMaterial("material", scene);
-    material.diffuseColor = Color3.FromHexString(labColors.purple);
+    material.diffuseColor = Color3.FromHexString(color.value);
 
     const cube = MeshBuilder.CreateBox("cube", { size: 1 }, scene);
     cube.position.y = 0.5;
     cube.material = material;
+
+    // Tap on the cube to change the color
+    cube.actionManager = new ActionManager(scene);
+    cube.actionManager.registerAction(
+      new ExecuteCodeAction(ActionManager.OnPickTrigger, (evt) => {
+        // if the current color is purple, change it to green
+        if (color.value === labColors.purple) {
+          color.value = labColors.green;
+        } else {
+          color.value = labColors.purple;
+        }
+      })
+    );
 
     const { plane, advancedTexture } = canLabCardSimple(8, 4.4, scene);
     plane.position.y = 1.3;
@@ -65,6 +79,11 @@
           counterControl.text = newValue.toString();
         }
       }
+    });
+
+    // watch() the color value and update the cube material
+    watch(color, (newValue) => {
+      material.diffuseColor = Color3.FromHexString(newValue);
     });
   };
 
