@@ -5,11 +5,11 @@
   definePageMeta({
     featured: false,
     title: "Title Card Generator",
-    description: ""
+    description: "Just a quick sidequest to generate a title card some blog posts."
   });
 
-  const title = ref("Enter a title");
-  const subtitle = ref("Subtitle with a longer text string");
+  const title = ref("Text Image Card");
+  const subtitle = ref("With a title, subtitle and background. Rendered with Babylon JS.");
 
   const createLabContent = async (scene: Scene) => {
     const cam = scene.getCameraByName("camera");
@@ -22,6 +22,8 @@
 
   const createLabCard = (scene: Scene) => {
     const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("lab-overlay", true, scene);
+    // increase the render scale to improve text quality
+    advancedTexture.renderScale = 2;
 
     advancedTexture.name = "can-texture";
 
@@ -29,31 +31,33 @@
     const rect = new Rectangle();
     rect.width = 0.7;
     rect.height = 0.7;
-    rect.cornerRadius = 28;
+    rect.cornerRadius = 96;
     rect.color = labColors.slate8;
-    rect.thickness = 6;
+    rect.thickness = 12;
     rect.background = labColors.slate2;
-    rect.alpha = 0.8;
+
     advancedTexture.addControl(rect);
 
     const cardText = new TextBlock("card-text");
     cardText.text = title.value;
     cardText.fontFamily = "Verdana";
     cardText.color = labColors.slate8;
-    cardText.fontSize = 70;
-    cardText.top = -40;
+    cardText.fontSize = 144;
+    cardText.top = -100;
     cardText.textWrapping = true;
+    cardText.verticalAlignment = 2;
     rect.addControl(cardText);
 
     const cardText2 = new TextBlock("card-text2");
     cardText2.text = subtitle.value;
     cardText2.color = labColors.slate8;
-    cardText2.fontSize = 28;
+    cardText2.fontSize = 52;
     cardText2.fontFamily = "Verdana";
-    cardText2.top = 60;
+    cardText2.top = 140;
+    cardText2.width = 0.8;
+    cardText2.textWrapping = true;
     rect.addControl(cardText2);
 
-    // watch for changes to the title and subtitle
     watch(title, (newVal) => {
       cardText.text = newVal;
     });
@@ -65,21 +69,14 @@
     return;
   };
 
-  // If a lab uses the default options, you can just call useBabylonScene() with the bjsCanvas ref and the createLabContent function.
-  // Otherwise, you can pass in an options object with the following properties:
   const labSceneOptions = {
     useCamera: true,
     useLight: true,
     useRoom: true,
     useWebXRPlayer: false
   };
-
   const bjsCanvas = ref(null);
-  // With scene options
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
-
-  // Without scene options (see lab001 for an example)
-  // useCanvatoriumScene(bjsCanvas, createLabContent);
 </script>
 <template>
   <canvas id="bjsCanvasLocal" ref="bjsCanvas"></canvas>
@@ -100,7 +97,6 @@
     display: block;
   }
 
-  /* Add some css to style the inputs and parent div  */
   input {
     width: 100%;
     padding: 12px 20px;
