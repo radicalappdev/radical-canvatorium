@@ -17,9 +17,26 @@
 
     const boxMaterial = new StandardMaterial("box-mat", scene);
     boxMaterial.diffuseColor = Color3.FromHexString(labColors.purple);
+    boxMaterial.specularColor = Color3.Black();
 
     const subject = MeshBuilder.CreateBox("box", { size: 1 }, scene);
     subject.material = boxMaterial;
+
+    const cylinderMaterial = new StandardMaterial("cylinder-mat", scene);
+    cylinderMaterial.diffuseColor = Color3.FromHexString(labColors.blue);
+    cylinderMaterial.specularColor = Color3.Black();
+
+    const cylinder = MeshBuilder.CreateCylinder("cylinder", { diameterTop: 1, diameterBottom: 1, height: 1 }, scene);
+    cylinder.position = new Vector3(1, 1, 1);
+    cylinder.material = cylinderMaterial;
+
+    const sphereMaterial = new StandardMaterial("sphere-mat", scene);
+    sphereMaterial.diffuseColor = Color3.FromHexString(labColors.green);
+    sphereMaterial.specularColor = Color3.Black();
+
+    const sphere = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
+    sphere.position = new Vector3(-1, 1.5, 0.5);
+    sphere.material = sphereMaterial;
 
     const camera = new ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 8, subject.position, scene);
     camera.wheelDeltaPercentage = 0.01;
