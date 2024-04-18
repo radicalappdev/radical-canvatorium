@@ -9,6 +9,7 @@
     labNotes: ``
   });
 
+  let handleScroll: EventListenerOrEventListenerObject;
   const cameraOrthoSize = ref(10);
   const cameraMode = ref("perspective");
 
@@ -61,6 +62,17 @@
         // adjust ortho size based on current engine size
         adjustOrthoSize(camera, engine, cameraOrthoSize.value);
       }
+    });
+
+    watch(cameraOrthoSize, (newValue) => {
+      nextTick(() => {
+        if (newValue) {
+          console.log("Ortho size changed", newValue);
+          if (camera.mode == Camera.ORTHOGRAPHIC_CAMERA) {
+            adjustOrthoSize(camera, engine, newValue);
+          }
+        }
+      });
     });
 
     createOverlay(scene);
@@ -124,6 +136,33 @@
   };
 
   const bjsCanvas = ref(null);
+
+  handleScroll = function (event: Event) {
+    if (cameraMode.value == "perspective") {
+      return;
+    }
+    // Cast the event to WheelEvent
+    const wheelEvent = event as WheelEvent;
+
+    const dampeningFactor = 0.5;
+
+    // Adjust the scaling factor based on the scroll speed
+    const scalingFactor = Math.abs(wheelEvent.deltaY) / 100;
+
+    // Adjust the cameraOrthoSize based on the scroll input, the scaling factor, and the dampening factor
+    // Note: wheelEvent.deltaY will be positive if scrolling down, negative if scrolling up
+    const newCameraOrthoSize = cameraOrthoSize.value - wheelEvent.deltaY * scalingFactor * dampeningFactor;
+
+    // Ensure the new value is within the range [1, 100]
+    cameraOrthoSize.value = Math.max(10, Math.min(100, newCameraOrthoSize));
+  };
+
+  onMounted(() => {
+    const canvas = document.getElementById("bjsCanvas");
+    if (canvas) {
+      canvas.addEventListener("wheel", handleScroll);
+    }
+  });
 
   useCanvatoriumScene(bjsCanvas, createLabContent, labSceneOptions);
 </script>
