@@ -165,7 +165,8 @@
     const dampeningFactor = 0.5;
 
     // Adjust the scaling factor based on the scroll speed
-    const scalingFactor = Math.abs(wheelEvent.deltaY) / 100;
+    const scalingFactor = wheelEvent.deltaY / 100;
+    // const scalingFactor = Math.abs(wheelEvent.deltaY) / 100;
 
     // Adjust the cameraOrthoSize based on the scroll input, the scaling factor, and the dampening factor
     // Note: wheelEvent.deltaY will be positive if scrolling down, negative if scrolling up
