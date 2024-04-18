@@ -46,12 +46,20 @@
     camera.attachControl(bjsCanvas, true);
 
     // watch for changes in cameraMode
-    watch(cameraMode, (value) => {
-      if (value === "orthographic") {
-        camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
-        adjustOrthoSize(camera, engine, cameraOrthoSize.value);
-      } else {
+    watch(cameraMode, (newValue) => {
+      if (newValue == "perspective") {
         camera.mode = Camera.PERSPECTIVE_CAMERA;
+        if (!camera.inputs.attached.mousewheel) {
+          camera.inputs.addMouseWheel();
+        }
+        console.log("Camera mode is perspective");
+      } else {
+        camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
+        camera.inputs.removeByType("ArcRotateCameraMouseWheelInput");
+        console.log("Camera mode is orthographic");
+
+        // adjust ortho size based on current engine size
+        adjustOrthoSize(camera, engine, cameraOrthoSize.value);
       }
     });
 
