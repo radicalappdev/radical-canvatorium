@@ -11,7 +11,12 @@
 
   let handleScroll: EventListenerOrEventListenerObject;
   const cameraOrthoSize = ref(10);
-  const cameraMode = ref("perspective");
+  let targetTop = 0;
+  let targetBottom = 0;
+  let targetLeft = 0;
+  let targetRight = 0;
+
+  const cameraMode = ref("orthographic");
 
   const createLabContent = async (scene: Scene) => {
     const engine = scene.getEngine();
@@ -44,7 +49,20 @@
     camera.upperBetaLimit = Math.PI / 1.5;
     camera.lowerRadiusLimit = 2;
     camera.upperRadiusLimit = 20;
+    camera.mode = Camera.ORTHOGRAPHIC_CAMERA;
+    adjustOrthoSize(camera, engine, cameraOrthoSize.value);
     camera.attachControl(bjsCanvas, true);
+
+    scene.onBeforeRenderObservable.add(() => {
+      if (cameraMode.value != "orthographic") {
+        return;
+      }
+      const speed = 0.1;
+      camera!.orthoTop! += (targetTop - camera!.orthoTop!) * speed;
+      camera!.orthoBottom! += (targetBottom - camera!.orthoBottom!) * speed;
+      camera!.orthoLeft! += (targetLeft - camera!.orthoLeft!) * speed;
+      camera!.orthoRight! += (targetRight - camera!.orthoRight!) * speed;
+    });
 
     // watch for changes in cameraMode
     watch(cameraMode, (newValue) => {
@@ -67,7 +85,7 @@
     watch(cameraOrthoSize, (newValue) => {
       nextTick(() => {
         if (newValue) {
-          console.log("Ortho size changed", newValue);
+          //   console.log("Ortho size changed", newValue);
           if (camera.mode == Camera.ORTHOGRAPHIC_CAMERA) {
             adjustOrthoSize(camera, engine, newValue);
           }
@@ -80,10 +98,10 @@
 
   // Calculate the ortho size based on current engine size
   const adjustOrthoSize = (camera: Camera, engine: Engine, value: number) => {
-    camera.orthoTop = engine.getRenderHeight() / value / 10;
-    camera.orthoBottom = -(engine.getRenderHeight() / value / 10);
-    camera.orthoLeft = -(engine.getRenderWidth() / value / 10);
-    camera.orthoRight = engine.getRenderWidth() / value / 10;
+    targetTop = engine.getRenderHeight() / value / 10;
+    targetBottom = -(engine.getRenderHeight() / value / 10);
+    targetLeft = -(engine.getRenderWidth() / value / 10);
+    targetRight = engine.getRenderWidth() / value / 10;
   };
 
   const createOverlay = (scene: Scene) => {
@@ -95,7 +113,7 @@
     button1.width = "200px";
     button1.height = "40px";
     button1.color = "white";
-    button1.background = labColors.slate6;
+    button1.background = labColors.purple;
     button1.onPointerClickObservable.add(() => {
       console.log("button1 clicked");
       cameraMode.value = "orthographic";
@@ -108,7 +126,7 @@
     button2.width = "200px";
     button2.height = "40px";
     button2.color = "white";
-    button2.background = labColors.purple;
+    button2.background = labColors.slate6;
     button2.onPointerClickObservable.add(() => {
       console.log("button2 clicked");
       cameraMode.value = "perspective";
@@ -154,7 +172,7 @@
     const newCameraOrthoSize = cameraOrthoSize.value - wheelEvent.deltaY * scalingFactor * dampeningFactor;
 
     // Ensure the new value is within the range [1, 100]
-    cameraOrthoSize.value = Math.max(10, Math.min(100, newCameraOrthoSize));
+    cameraOrthoSize.value = Math.max(5, Math.min(50, newCameraOrthoSize));
   };
 
   onMounted(() => {
