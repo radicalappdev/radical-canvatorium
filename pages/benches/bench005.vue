@@ -9,6 +9,8 @@
     labNotes: ``
   });
 
+  // Last playground: https://playground.babylonjs.com/#9UNE5Z#18
+
   let handleScroll: EventListenerOrEventListenerObject;
   const cameraOrthoSize = ref(10);
   let targetTop = 0;
