@@ -53,17 +53,6 @@
     adjustOrthoSize(camera, engine, cameraOrthoSize.value);
     camera.attachControl(bjsCanvas, true);
 
-    scene.onBeforeRenderObservable.add(() => {
-      if (cameraMode.value != "orthographic") {
-        return;
-      }
-      const speed = 0.1;
-      camera!.orthoTop! += (targetTop - camera!.orthoTop!) * speed;
-      camera!.orthoBottom! += (targetBottom - camera!.orthoBottom!) * speed;
-      camera!.orthoLeft! += (targetLeft - camera!.orthoLeft!) * speed;
-      camera!.orthoRight! += (targetRight - camera!.orthoRight!) * speed;
-    });
-
     // watch for changes in cameraMode
     watch(cameraMode, (newValue) => {
       if (newValue == "perspective") {
@@ -94,10 +83,23 @@
     });
 
     createOverlay(scene);
+
+    // https://playground.babylonjs.com/#9UNE5Z#15
+    scene.onBeforeRenderObservable.add(() => {
+      if (cameraMode.value != "orthographic") {
+        return;
+      }
+      const speed = 0.1;
+      camera!.orthoTop! += (targetTop - camera!.orthoTop!) * speed;
+      camera!.orthoBottom! += (targetBottom - camera!.orthoBottom!) * speed;
+      camera!.orthoLeft! += (targetLeft - camera!.orthoLeft!) * speed;
+      camera!.orthoRight! += (targetRight - camera!.orthoRight!) * speed;
+    });
   };
 
   // Calculate the ortho size based on current engine size
   const adjustOrthoSize = (camera: Camera, engine: Engine, value: number) => {
+    console.log("adjustOrthoSize", engine.getRenderHeight() / value / 10);
     targetTop = engine.getRenderHeight() / value / 10;
     targetBottom = -(engine.getRenderHeight() / value / 10);
     targetLeft = -(engine.getRenderWidth() / value / 10);
@@ -166,10 +168,13 @@
 
     // Adjust the scaling factor based on the scroll speed
     const scalingFactor = Math.abs(wheelEvent.deltaY) / 100;
+    // console.log("wheel", wheelEvent.deltaY);
+    // console.log("scalingFactor", scalingFactor);
 
     // Adjust the cameraOrthoSize based on the scroll input, the scaling factor, and the dampening factor
     // Note: wheelEvent.deltaY will be positive if scrolling down, negative if scrolling up
     const newCameraOrthoSize = cameraOrthoSize.value - wheelEvent.deltaY * scalingFactor * dampeningFactor;
+    // console.log("newCameraOrthoSize", newCameraOrthoSize);
 
     // Ensure the new value is within the range [1, 100]
     cameraOrthoSize.value = Math.max(5, Math.min(50, newCameraOrthoSize));
