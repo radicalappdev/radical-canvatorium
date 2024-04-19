@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { Engine, Scene, ArcRotateCamera, Camera, Vector3, Color3, MeshBuilder, StandardMaterial } from "@babylonjs/core";
-  import { AdvancedDynamicTexture, StackPanel, Control, Button } from "@babylonjs/gui";
+  import { AdvancedDynamicTexture, Button } from "@babylonjs/gui";
 
   definePageMeta({
     featured: false,
@@ -157,6 +157,7 @@
 
   const bjsCanvas = ref(null);
 
+  // TODO: make sure this event gets added and removed properly
   handleScroll = function (event: Event) {
     if (cameraMode.value == "perspective") {
       return;
@@ -168,13 +169,12 @@
 
     // Adjust the scaling factor based on the scroll speed
     const scalingFactor = Math.abs(wheelEvent.deltaY) / 100;
-    // console.log("wheel", wheelEvent.deltaY);
-    // console.log("scalingFactor", scalingFactor);
 
     // Adjust the cameraOrthoSize based on the scroll input, the scaling factor, and the dampening factor
     // Note: wheelEvent.deltaY will be positive if scrolling down, negative if scrolling up
-    const newCameraOrthoSize = cameraOrthoSize.value - wheelEvent.deltaY * scalingFactor * dampeningFactor;
-    // console.log("newCameraOrthoSize", newCameraOrthoSize);
+    // const newCameraOrthoSize = cameraOrthoSize.value - wheelEvent.deltaY * scalingFactor * dampeningFactor;
+    const delta = cameraOrthoSize.value * scalingFactor * dampeningFactor;
+    const newCameraOrthoSize = wheelEvent.deltaY > 0 ? cameraOrthoSize.value - delta : cameraOrthoSize.value + delta;
 
     // Ensure the new value is within the range [1, 100]
     cameraOrthoSize.value = Math.max(5, Math.min(50, newCameraOrthoSize));
