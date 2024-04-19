@@ -87,6 +87,9 @@
     width: 100%;
     height: 100%;
     border: #64748b 1px solid;
+    /* Prevent scrolling */
+    touch-action: none;
+    overflow: hidden;
   }
 
   /* Hacking the style of the webxr button */
