@@ -21,7 +21,7 @@
     const cardMat = new StandardMaterial("card-mat", scene);
     cardMat.diffuseColor = Color3.FromHexString(labColors.slate4);
     cardMat.specularColor = new Color3(0.2, 0.2, 0.2);
-    cardMat.alpha = 0;
+    cardMat.alpha = 0.2;
 
     const cardWidth = 0.1;
     const cardHeight = 0.1;
@@ -39,7 +39,7 @@
     var panel = new SpherePanel();
     panel.margin = 0.15;
     panel.radius = 1.5;
-    panel.columns = 15;
+    panel.columns = 6;
 
     manager.addControl(panel);
     panel.linkToTransformNode(anchor);
@@ -48,7 +48,7 @@
     let cards = [];
 
     panel.blockLayout = true;
-    for (var index = 0; index < 60; index++) {
+    for (var index = 0; index < 18; index++) {
       const newCard = card.clone("card" + index);
       const meshButton3D = new MeshButton3D(newCard, "button" + index);
 
@@ -75,8 +75,8 @@
     const surfaceMagnetismBehavior = new SurfaceMagnetismBehavior();
     surfaceMagnetismBehavior.meshes = cards;
     surfaceMagnetismBehavior.hitNormalOffset = 0;
-    surfaceMagnetismBehavior.keepOrientationVertical = true;
-    surfaceMagnetismBehavior.maxStickingDistance = 0.5;
+    surfaceMagnetismBehavior.keepOrientationVertical = false;
+    surfaceMagnetismBehavior.maxStickingDistance = 1;
     subject.addBehavior(surfaceMagnetismBehavior);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
@@ -93,7 +93,7 @@
 
     sixDofDragBehavior.onDragEndObservable.add(() => {
       surfaceMagnetismBehavior.enabled = false;
-      cardMat.alpha = 0;
+      cardMat.alpha = 0.2;
     });
 
     subject.addBehavior(sixDofDragBehavior);
