@@ -3,11 +3,12 @@
   import { MeshButton3D, GUI3DManager, SpherePanel } from "@babylonjs/gui";
 
   definePageMeta({
-    featured: true,
+    featured: false,
+    failure: true,
     title: "Lab 056 - Sphere Panel + Surface Magnetism Behavior",
     description: "Can I snap a subject to objects in a Sphere Panel?",
     labNotes: `This functions, but has some quirks.
-- There is not way to tell the surface magnetism behavior to attach to a given face of the mesh. It will always attach to the closest face.
+- There is no way to tell the surface magnetism behavior to attach to a given face of the mesh. It will always attach to the closest face.
 - If the subject overlaps the target too much, the behavior may not trigger.`
   });
 
@@ -25,8 +26,8 @@
 
     const cardWidth = 0.1;
     const cardHeight = 0.1;
-    const cardThickness = 0.1;
-    const card = MeshBuilder.CreateBox("card", { width: cardWidth, height: cardHeight, depth: cardThickness }, scene);
+
+    const card = MeshBuilder.CreatePlane("card", { width: cardWidth, height: cardHeight }, scene);
     card.isPickable = false;
     card.material = cardMat;
     card.position = new Vector3(0, 1.5, 0);
@@ -39,7 +40,7 @@
     var panel = new SpherePanel();
     panel.margin = 0.15;
     panel.radius = 1.5;
-    panel.columns = 15;
+    panel.columns = 6;
 
     manager.addControl(panel);
     panel.linkToTransformNode(anchor);
@@ -48,7 +49,7 @@
     let cards = [];
 
     panel.blockLayout = true;
-    for (var index = 0; index < 60; index++) {
+    for (var index = 0; index < 18; index++) {
       const newCard = card.clone("card" + index);
       const meshButton3D = new MeshButton3D(newCard, "button" + index);
 
@@ -76,7 +77,7 @@
     surfaceMagnetismBehavior.meshes = cards;
     surfaceMagnetismBehavior.hitNormalOffset = 0;
     surfaceMagnetismBehavior.keepOrientationVertical = false;
-    surfaceMagnetismBehavior.maxStickingDistance = 0.5;
+    surfaceMagnetismBehavior.maxStickingDistance = 1;
     subject.addBehavior(surfaceMagnetismBehavior);
 
     const sixDofDragBehavior = new SixDofDragBehavior();
