@@ -241,7 +241,7 @@ const labCreateOverlay = (scene: Scene, engine: Engine) => {
   codeLink.onPointerClickObservable.add(() => {
     // Open the code on GitHub in the main branch.
     // This isn't perfect, but it's a start. It should work for everything in the pages directory.
-    const baseURL = "https://github.com/radicalappdev/radical-canvatorium/blob/main/pages";
+    const baseURL = "https://github.com/radicalappdev/radical-canvatorium/blob/main-02/pages";
     const labPath = route.path + ".vue";
     const target = baseURL + labPath;
     window.open(target, "_blank");
