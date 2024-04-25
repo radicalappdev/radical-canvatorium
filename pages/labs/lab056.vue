@@ -7,7 +7,7 @@
     title: "Lab 056 - Sphere Panel + Surface Magnetism Behavior",
     description: "Can I snap a subject to objects in a Sphere Panel?",
     labNotes: `This functions, but has some quirks.
-- There is not way to tell the surface magnetism behavior to attach to a given face of the mesh. It will always attach to the closest face.
+- There is no way to tell the surface magnetism behavior to attach to a given face of the mesh. It will always attach to the closest face.
 - If the subject overlaps the target too much, the behavior may not trigger.`
   });
 
@@ -21,12 +21,12 @@
     const cardMat = new StandardMaterial("card-mat", scene);
     cardMat.diffuseColor = Color3.FromHexString(labColors.slate4);
     cardMat.specularColor = new Color3(0.2, 0.2, 0.2);
-    cardMat.alpha = 0.2;
+    cardMat.alpha = 0;
 
     const cardWidth = 0.1;
     const cardHeight = 0.1;
-    const cardThickness = 0.1;
-    const card = MeshBuilder.CreateBox("card", { width: cardWidth, height: cardHeight, depth: cardThickness }, scene);
+
+    const card = MeshBuilder.CreatePlane("card", { width: cardWidth, height: cardHeight }, scene);
     card.isPickable = false;
     card.material = cardMat;
     card.position = new Vector3(0, 1.5, 0);
@@ -75,7 +75,7 @@
     const surfaceMagnetismBehavior = new SurfaceMagnetismBehavior();
     surfaceMagnetismBehavior.meshes = cards;
     surfaceMagnetismBehavior.hitNormalOffset = 0;
-    surfaceMagnetismBehavior.keepOrientationVertical = false;
+    surfaceMagnetismBehavior.keepOrientationVertical = true;
     surfaceMagnetismBehavior.maxStickingDistance = 0.5;
     subject.addBehavior(surfaceMagnetismBehavior);
 
@@ -93,7 +93,7 @@
 
     sixDofDragBehavior.onDragEndObservable.add(() => {
       surfaceMagnetismBehavior.enabled = false;
-      cardMat.alpha = 0.2;
+      cardMat.alpha = 0;
     });
 
     subject.addBehavior(sixDofDragBehavior);
