@@ -6,7 +6,7 @@
     </nuxt-link>
 
     <nuxt-link v-for="route in labRoutes" :to="route.path" :key="route.path">
-      <p class="p-2 hover:bg-slate-100 drop-shadow-lg rounded">{{ route.meta.title }}</p>
+      <p class="p-2 hover:bg-slate-100 drop-shadow-lg rounded"><span v-if="route.meta.failure" class="text-red-700">X</span> {{ route.meta.title }}</p>
     </nuxt-link>
   </div>
 </template>

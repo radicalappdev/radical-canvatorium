@@ -3,7 +3,8 @@
   import { MeshButton3D, GUI3DManager, SpherePanel } from "@babylonjs/gui";
 
   definePageMeta({
-    featured: true,
+    featured: false,
+    failure: true,
     title: "Lab 056 - Sphere Panel + Surface Magnetism Behavior",
     description: "Can I snap a subject to objects in a Sphere Panel?",
     labNotes: `This functions, but has some quirks.
