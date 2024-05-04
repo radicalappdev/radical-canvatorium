@@ -15,7 +15,7 @@
     scene.clearColor = new Color4(0, 0, 0, 1);
 
     // enable the inspector
-    scene.debugLayer.show();
+    // scene.debugLayer.show();
 
     const texture = new Texture("../assets/matcaps/28292A_D3DAE5_A3ACB8_818183-256px.png", scene);
     texture.coordinatesMode = Texture.SPHERICAL_MODE; // SPHERICAL_MODE is used to make the texture wrap around the mesh
