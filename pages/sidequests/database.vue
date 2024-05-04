@@ -1,8 +1,17 @@
 <script lang="ts" setup>
-  import { Scene, Vector3, MeshBuilder, StandardMaterial, Color3, Color4, HemisphericLight, Texture } from "@babylonjs/core";
+  import { Scene, Vector3, MeshBuilder, StandardMaterial, Color3, Color4, HemisphericLight, Texture, DebugLayer } from "@babylonjs/core";
   // import the inspector module
   // import "@babylonjs/core/Debug/debugLayer";
+
   // import "@babylonjs/inspector";
+
+  import("@babylonjs/inspector");
+  // .then((module) => {
+  //   // Use module...
+  // })
+  // .catch((err) => {
+  //   // Handle error...
+  // });
 
   definePageMeta({
     featured: false,
@@ -16,6 +25,10 @@
 
     // enable the inspector
     // scene.debugLayer.show();
+    scene.debugLayer.show({
+      embedMode: true,
+      overlay: true
+    });
 
     const texture = new Texture("../assets/matcaps/28292A_D3DAE5_A3ACB8_818183-256px.png", scene);
     texture.coordinatesMode = Texture.SPHERICAL_MODE; // SPHERICAL_MODE is used to make the texture wrap around the mesh
