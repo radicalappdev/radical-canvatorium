@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.6.4",
+    "@tweakpane/core": "^2.0.3",
     "@types/earcut": "^2.1.1",
     "nuxt": "^3.3.2"
   },
@@ -22,6 +23,7 @@
     "@babylonjs/materials": "^7.5.0",
     "@babylonjs/procedural-textures": "^7.5.0",
     "@vueuse/core": "^10.4.1",
-    "earcut": "^2.2.4"
+    "earcut": "^2.2.4",
+    "tweakpane": "^4.0.3"
   }
 }

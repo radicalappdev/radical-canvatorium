@@ -1,11 +1,10 @@
 <script lang="ts" setup>
   import { Scene, Vector3, MeshBuilder, StandardMaterial, Color3, Color4, HemisphericLight, Texture, DebugLayer } from "@babylonjs/core";
+  import { Pane } from "tweakpane";
   // import the inspector module
   // import "@babylonjs/core/Debug/debugLayer";
 
-  // import "@babylonjs/inspector";
-
-  import("@babylonjs/inspector");
+  // import("@babylonjs/inspector");
   // .then((module) => {
   //   // Use module...
   // })
@@ -25,10 +24,10 @@
 
     // enable the inspector
     // scene.debugLayer.show();
-    scene.debugLayer.show({
-      embedMode: true,
-      overlay: true
-    });
+    // scene.debugLayer.show({
+    //   embedMode: true,
+    //   overlay: true
+    // });
 
     const texture = new Texture("../assets/matcaps/28292A_D3DAE5_A3ACB8_818183-256px.png", scene);
     texture.coordinatesMode = Texture.SPHERICAL_MODE; // SPHERICAL_MODE is used to make the texture wrap around the mesh
@@ -55,9 +54,14 @@
     light.diffuse = new Color3(0.8, 0.8, 0.8);
     light.groundColor = new Color3(0.4, 0.4, 0.4);
 
-    // const light2 = new HemisphericLight("light2", new Vector3(0, 1, 0), scene);
-    // light2.intensity = 1;
-    // light2.diffuse = new Color3(0.8, 0.8, 0.8);
+    const light2 = new HemisphericLight("light2", new Vector3(0, 1, 0), scene);
+    light2.intensity = 1;
+    light2.diffuse = new Color3(0.8, 0.8, 0.8);
+
+    const pane = new Pane();
+
+    pane.addBinding(light, "intensity", { min: 0, max: 1, label: "Light 1" });
+    pane.addBinding(light2, "intensity", { min: 0, max: 1, label: "Light 2" });
   };
 
   const bjsCanvas = ref(null);
