@@ -11,6 +11,7 @@
 
   const createLabContent = async (scene: Scene, xrPromise: any) => {
     const scaler = ref(5);
+    const posY = ref(0);
     const color = ref(labColors.purple);
 
     // Create a cube for the user to interact with
@@ -159,7 +160,8 @@
           // This will return a value from 0 to 1 based on pressure applied
           let button6 = motionController.getComponent("tip-force");
           button6.onButtonStateChangedObservable.add(() => {
-            console.log("Force applied to stylus tip", button6.value);
+            // console.log("Force applied to stylus tip", button6.value);
+            posY.value = button6.value;
           });
 
           console.log("Unknown: ", motionController.getComponentIds());
@@ -173,6 +175,10 @@
       cube.scaling = new Vector3(newValue / 10, newValue / 10, newValue / 10);
       counterText.text = (newValue / 10).toString();
       console.log("scale changed, new value:", (newValue / 10).toString());
+    });
+
+    watch(posY, (newValue) => {
+      cube.position.y = 1 + newValue * 2;
     });
 
     watch(color, (newValue) => {
