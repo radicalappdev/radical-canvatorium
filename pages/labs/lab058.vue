@@ -11,6 +11,7 @@
 
   const createLabContent = async (scene: Scene, xrPromise: any) => {
     const scaler = ref(5);
+    const posX = ref(0);
     const posY = ref(0);
     const color = ref(labColors.purple);
 
@@ -154,7 +155,8 @@
           // This will return a value from 0 to 1 based on the position of the finger on the touch pad
           let button5 = motionController.getComponent("touch-pad");
           button5.onButtonStateChangedObservable.add(() => {
-            console.log("Touch pad", button5.value);
+            // console.log("Touch pad", button5.value);
+            posX.value = button5.value;
           });
 
           // This will return a value from 0 to 1 based on pressure applied
@@ -175,6 +177,10 @@
       cube.scaling = new Vector3(newValue / 10, newValue / 10, newValue / 10);
       counterText.text = (newValue / 10).toString();
       console.log("scale changed, new value:", (newValue / 10).toString());
+    });
+
+    watch(posX, (newValue) => {
+      cube.position.x = 1 + newValue * 2;
     });
 
     watch(posY, (newValue) => {
