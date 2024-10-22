@@ -156,9 +156,10 @@
             console.log("Touch pad", button5.value);
           });
 
+          // This will return a value from 0 to 1 based on pressure applied
           let button6 = motionController.getComponent("tip-force");
           button6.onButtonStateChangedObservable.add(() => {
-            console.log("Force applied to stylus tip");
+            console.log("Force applied to stylus tip", button6.value);
           });
 
           console.log("Unknown: ", motionController.getComponentIds());
