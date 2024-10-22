@@ -18,6 +18,8 @@
     const maxIndex = collectionData.length - 1;
     const activeRecord = computed(() => computingData[activeIndex.value] as ComputingRecord);
 
+    const scaler = ref(0);
+
     // Position the non-VR camera to better see the card
     const cam = scene.getCameraByName("camera");
     if (cam) {
@@ -47,15 +49,10 @@
         xrInput: xr.input
       });
 
-      //   xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
-      //     xrCamera.position = new Vector3(0, 0, -0.6);
-      //   });
-
       xr.input.onControllerAddedObservable.add((controller: { onMotionControllerInitObservable: { add: (arg0: (motionController: any) => void) => void } }) => {
         controller.onMotionControllerInitObservable.add((motionController: { handness: string; getComponentIds: () => any; getComponent: (arg0: any) => any }) => {
           console.log("Available inputs: ", motionController.getComponentIds());
 
-          // Using the Meta Quest Trigger button (decrement with rollover)
           let button2 = motionController.getComponent("xr-standard-trigger");
           button2.onButtonStateChangedObservable.add(() => {
             if (button2.pressed) {
@@ -65,7 +62,6 @@
             }
           });
 
-          // Using the Meta Quest Grip button (increment with rollover)
           let button3 = motionController.getComponent("xr-standard-squeeze");
           button3.onButtonStateChangedObservable.add(() => {
             if (button3.pressed) {
@@ -74,9 +70,22 @@
               console.log(`Active Index: ${activeIndex.value}`);
             }
           });
+
+          // This will return a value from 0 to 1 based on the force applied to the touchpad
+          let button5 = motionController.getComponent("touch-pad");
+          button5.onButtonStateChangedObservable.add(() => {
+            // console.log("Touch pad", button5.value);
+            scaler.value = button5.value;
+          });
         });
       });
     }
+
+    // Watchers for reactive updates
+    watch(scaler, (newValue) => {
+      newValue = Math.min(1, Math.max(0.1, newValue));
+      windowGroupMesh.scaling = new Vector3(0.2 + newValue, 0.2 + newValue, 0.2 + newValue);
+    });
   };
 
   const bjsCanvas = ref(null);
