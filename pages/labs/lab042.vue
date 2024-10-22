@@ -8,6 +8,9 @@
   });
 
   const createLabContent = async (scene: Scene) => {
+    // Idea: create an array of positions sorted along an axis and then use the positions to place the objects
+    // When the objects are dragged, swap the indices that the objects use in the array
+
     const addBoxesToLayout = (numBoxes: number, layout: Mesh, scene: Scene) => {
       // Add the layout box
       layout.position.y = 0.5;
