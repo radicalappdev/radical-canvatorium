@@ -120,7 +120,49 @@
       xr.baseExperience.onInitialXRPoseSetObservable.add((xrCamera) => {
         group.scaling = new Vector3(0.3, 0.3, 0.3);
         group.position = new Vector3(0, 0.8, 0);
-        xrCamera.position = new Vector3(0, 0, -0.4);
+        xrCamera.position = new Vector3(0, 0, -0.6);
+      });
+
+      xr.input.onControllerAddedObservable.add((controller: { onMotionControllerInitObservable: { add: (arg0: (motionController: any) => void) => void } }) => {
+        controller.onMotionControllerInitObservable.add((motionController: { handness: string; getComponentIds: () => any; getComponent: (arg0: any) => any }) => {
+          const xr_ids = motionController.getComponentIds();
+
+          // Using the same input as the Meta Quest Trigger button
+          // Or xr_ids[0] in Babylon JS terms
+          let button2 = motionController.getComponent("xr-standard-trigger");
+          button2.onButtonStateChangedObservable.add(() => {
+            if (button2.pressed) {
+              console.log("xr-standard-trigger pressed");
+            }
+          });
+
+          // Using the same input as the Meta Quest Grip button
+          // Or xr_ids[1] in Babylon JS terms
+          let button3 = motionController.getComponent("xr-standard-squeeze");
+          button3.onButtonStateChangedObservable.add(() => {
+            if (button3.pressed) {
+              console.log("xr-standard-squeeze pressed");
+            }
+          });
+
+          let button4 = motionController.getComponent("docked");
+          button4.onButtonStateChangedObservable.add(() => {
+            console.log("MX Ink was docked!");
+          });
+
+          // This will return a value from 0 to 1 based on the position of the finger on the touch pad
+          let button5 = motionController.getComponent("touch-pad");
+          button5.onButtonStateChangedObservable.add(() => {
+            console.log("Touch pad", button5.value);
+          });
+
+          let button6 = motionController.getComponent("tip-force");
+          button6.onButtonStateChangedObservable.add(() => {
+            console.log("Force applied to stylus tip");
+          });
+
+          console.log("Unknown: ", motionController.getComponentIds());
+        });
       });
     }
 
@@ -136,8 +178,6 @@
       material.diffuseColor = Color3.FromHexString(newValue);
       console.log("color changed, new value:", newValue.toString());
     });
-
-    customizeXRForLab(xrPromise);
   };
 
   const createLabConsoleCard = (scene: Scene) => {
@@ -214,49 +254,6 @@
 
     return plane;
   };
-
-  async function customizeXRForLab(xrPromise: any) {
-    const xr = await xrPromise;
-
-    // console.log("Enter immersive mode and press any of the buttons to see the console log in VR");
-    console.log("");
-
-    xr.input.onControllerAddedObservable.add((controller: { onMotionControllerInitObservable: { add: (arg0: (motionController: any) => void) => void } }) => {
-      controller.onMotionControllerInitObservable.add((motionController: { handness: string; getComponentIds: () => any; getComponent: (arg0: any) => any }) => {
-        const xr_ids = motionController.getComponentIds();
-
-        let button1 = motionController.getComponent(xr_ids[1]);
-        button1.onButtonStateChangedObservable.add(() => {
-          if (button1.pressed) {
-            console.log("1 button pressed");
-          }
-        });
-
-        let button2 = motionController.getComponent(xr_ids[2]);
-        button2.onButtonStateChangedObservable.add(() => {
-          if (button2.pressed) {
-            console.log("2 button pressed");
-          }
-        });
-
-        let button3 = motionController.getComponent(xr_ids[2]);
-        button3.onButtonStateChangedObservable.add(() => {
-          if (button3.pressed) {
-            console.log("3 button pressed");
-          }
-        });
-
-        let button4 = motionController.getComponent(xr_ids[2]);
-        button4.onButtonStateChangedObservable.add(() => {
-          if (button4.pressed) {
-            console.log("4 button pressed");
-          }
-        });
-
-        console.log("Unknown: ", motionController.getComponentIds());
-      });
-    });
-  }
 
   const labSceneOptions = {
     useCamera: true,
