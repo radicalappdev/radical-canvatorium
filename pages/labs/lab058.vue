@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-  import { ActionManager, Color3, ExecuteCodeAction, Mesh, MeshBuilder, Scene, StandardMaterial, Vector3, WebXRFeatureName, WebXRSessionManager } from "@babylonjs/core";
+  import { ActionManager, Color3, ExecuteCodeAction, Mesh, MeshBuilder, Scene, StandardMaterial, Vector2, Vector3, WebXRFeatureName, WebXRSessionManager } from "@babylonjs/core";
   import { ScrollViewer, TextBlock, Control, StackPanel } from "@babylonjs/gui";
 
   definePageMeta({
     featured: true,
     title: "Lab 058 - MX Ink Demos",
     description: "Playing with the MX Ink virtual stylus",
-    labNotes: ``
+    labNotes: `I used this lab to learn the basics of input with the MX Ink virtual stylus.`
   });
 
   const createLabContent = async (scene: Scene, xrPromise: any) => {
@@ -127,7 +127,7 @@
 
       xr.input.onControllerAddedObservable.add((controller: { onMotionControllerInitObservable: { add: (arg0: (motionController: any) => void) => void } }) => {
         controller.onMotionControllerInitObservable.add((motionController: { handness: string; getComponentIds: () => any; getComponent: (arg0: any) => any }) => {
-          const xr_ids = motionController.getComponentIds();
+          console.log("Available inputs: ", motionController.getComponentIds());
 
           // Using the same input as the Meta Quest Trigger button
           let button2 = motionController.getComponent("xr-standard-trigger");
@@ -152,7 +152,7 @@
             console.log("MX Ink was docked!");
           });
 
-          // This will return a value from 0 to 1 based on the position of the finger on the touch pad
+          // This will return a value from 0 to 1 based on the force applied to the touchpad
           let button5 = motionController.getComponent("touch-pad");
           button5.onButtonStateChangedObservable.add(() => {
             // console.log("Touch pad", button5.value);
@@ -165,8 +165,6 @@
             // console.log("Force applied to stylus tip", button6.value);
             posY.value = button6.value;
           });
-
-          console.log("Unknown: ", motionController.getComponentIds());
         });
       });
     }
