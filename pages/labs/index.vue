@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-screen-md h-[calc(100%_-_2rem)] overflow-y-auto container mx-auto">
+  <div class="max-w-screen-md h-[100vh] overflow-y-auto container mx-auto">
     <h2 class="text-lg font-bold my-4">Canvatorium Labs</h2>
     <nuxt-link to="/">
       <p class="p-2 hover:bg-slate-100 drop-shadow-lg rounded">← back</p>
