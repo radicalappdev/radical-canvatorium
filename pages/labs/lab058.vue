@@ -128,7 +128,6 @@
           const xr_ids = motionController.getComponentIds();
 
           // Using the same input as the Meta Quest Trigger button
-          // Or xr_ids[0] in Babylon JS terms
           let button2 = motionController.getComponent("xr-standard-trigger");
           button2.onButtonStateChangedObservable.add(() => {
             if (button2.pressed) {
@@ -137,7 +136,6 @@
           });
 
           // Using the same input as the Meta Quest Grip button
-          // Or xr_ids[1] in Babylon JS terms
           let button3 = motionController.getComponent("xr-standard-squeeze");
           button3.onButtonStateChangedObservable.add(() => {
             if (button3.pressed) {
@@ -145,6 +143,8 @@
             }
           });
 
+          // Will fire when the stylus is docked in the ink well.
+          // This has been unreliable for me.
           let button4 = motionController.getComponent("docked");
           button4.onButtonStateChangedObservable.add(() => {
             console.log("MX Ink was docked!");
