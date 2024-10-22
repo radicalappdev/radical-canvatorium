@@ -174,7 +174,7 @@ const labCreateWebXRPlayer = async (scene: Scene, teleportMeshes: GroundMesh[]) 
     floorMeshes: teleportMeshes
   });
 
-  console.log("xr player created by useCanvatoriumScene composable", xr);
+  // console.log("xr player created by useCanvatoriumScene composable", xr);
 
   if (window) {
     // could be undefined in SSR

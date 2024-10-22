@@ -37,8 +37,8 @@
     );
 
     // Create a 2D GUI
-    const { plane, advancedTexture } = canLabCardSimple(8, 4.4, scene);
-    plane.position = new Vector3(-1, 1.3, 0);
+    const { plane, advancedTexture } = canLabCardSimple(6, 3.4, scene);
+    plane.position = new Vector3(-1, 2.1, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
     plane.isNearPickable = true; // This will enable direct touch interactions in WebXR
 
@@ -49,21 +49,21 @@
     advancedTexture.addControl(stack);
 
     const titleText = new TextBlock("title-text");
-    titleText.text = "Universal Input with Babylon.js";
+    titleText.text = "MX Ink Input with Babylon.js";
     titleText.color = "black";
     titleText.fontSize = 36;
     titleText.height = "60px";
     stack.addControl(titleText);
 
     const lineOne = new TextBlock("title-text");
-    lineOne.text = "Tab or click on the cube to change the color.";
+    lineOne.text = "Interact with the cube to change the color.";
     lineOne.color = "black";
     lineOne.fontSize = 24;
     lineOne.height = "40px";
     stack.addControl(lineOne);
 
     const lineTwo = new TextBlock("title-text");
-    lineTwo.text = "Use the buttons to scale the cube.";
+    lineTwo.text = "Use the UI buttons to scale the cube.";
     lineTwo.color = "black";
     lineTwo.fontSize = 24;
     lineTwo.height = "40px";
@@ -129,10 +129,12 @@
       newValue = Math.min(10, Math.max(1, newValue));
       cube.scaling = new Vector3(newValue / 10, newValue / 10, newValue / 10);
       counterText.text = (newValue / 10).toString();
+      console.log("scale changed, new value:", (newValue / 10).toString());
     });
 
     watch(color, (newValue) => {
       material.diffuseColor = Color3.FromHexString(newValue);
+      console.log("color changed, new value:", newValue.toString());
     });
 
     customizeXRForLab(xrPromise);
@@ -159,14 +161,14 @@
     // call once to override console.log()
     overrideConsole();
 
-    console.log("Lab 058 - MX Ink Demos");
+    console.log("Lab 058 - Initializing Console Log...");
     console.log("");
 
     const width = 6;
     const height = 3.6;
     const { plane, advancedTexture } = canLabCardSimple(width, height, scene);
     plane.name = "card-logger";
-    plane.position = new Vector3(-1, 2.6, 0);
+    plane.position = new Vector3(-1, 1, 0);
     plane.scaling = new Vector3(0.3, 0.3, 0.3);
     advancedTexture.name = "logger-texture";
 
@@ -180,7 +182,7 @@
     scrollViewer.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
     advancedTexture.addControl(scrollViewer);
 
-    console.log("scrollViewer", scrollViewer.width, scrollViewer.height);
+    // console.log("scrollViewer", scrollViewer.width, scrollViewer.height);
 
     const loggerText = new TextBlock("logger-text");
     loggerText.textWrapping = true;
@@ -216,8 +218,7 @@
   async function customizeXRForLab(xrPromise: any) {
     const xr = await xrPromise;
 
-    console.log("Lab 008 applying customizations to the XR experience.");
-    console.log("Enter immersive mode and press any of the buttons to see the console log in VR");
+    // console.log("Enter immersive mode and press any of the buttons to see the console log in VR");
     console.log("");
 
     xr.input.onControllerAddedObservable.add((controller: { onMotionControllerInitObservable: { add: (arg0: (motionController: any) => void) => void } }) => {
