@@ -13,17 +13,17 @@
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@tweakpane/core": "^2.0.5",
-    "@types/earcut": "^2.1.4",
-    "nuxt": "^3.21.2"
+    "@types/earcut": "^3.0.0",
+    "nuxt": "^4.5.2"
   },
   "dependencies": {
-    "@babylonjs/core": "^7.54.3",
-    "@babylonjs/gui": "^7.54.3",
-    "@babylonjs/inspector": "^7.54.3",
-    "@babylonjs/materials": "^7.54.3",
-    "@babylonjs/procedural-textures": "^7.54.3",
-    "@vueuse/core": "^10.11.1",
-    "earcut": "^2.2.4",
+    "@babylonjs/core": "^9.22.1",
+    "@babylonjs/gui": "^9.22.1",
+    "@babylonjs/inspector": "^9.22.1",
+    "@babylonjs/materials": "^9.22.1",
+    "@babylonjs/procedural-textures": "^9.22.1",
+    "@vueuse/core": "^14.4.0",
+    "earcut": "^3.2.3",
     "tweakpane": "^4.0.5"
   }
 }

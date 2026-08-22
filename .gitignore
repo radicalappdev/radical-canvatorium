@@ -128,3 +128,5 @@ dist
 
 # certs
 .certs
+
+.output
